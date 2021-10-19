@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+    <head>
+        <title>Admin - AstroMedibles</title>
+        <%- include('./head') %>
+    </head>
+
+    <body>
+        <%- include('./navbar') %>
+
+        <main>
+            <section class="clean-block clean-cart dark">
+                <div class="container">
+                    <div class="block-heading">
+                        <h2 class="text-info">Admin</h2>
+
+                        <!-- Radio Button Group -->
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+
+                            <label class="btn btn-secondary active">
+                              <input type="radio" name="options" id="radioOrders" autocomplete="off" onclick="radioOrdersClick()" checked> Orders
+                            </label>
+
+                            <label class="btn btn-secondary">
+                              <input type="radio" name="options" id="radioCodes" autocomplete="off" onclick="radioCodesClick()"> Codes
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row content">
+                        <div class="col-md-12">
+
+
+                            <div id="orders-items" class="items"  >
+
+                                <!-- ORDERS -->
+
+                            </div>
+
+
+                            <div id="codes-items" class="items" hidden >
+
+                                <!-- CODES -->
+
+
+                                <div class="product">
+                                    <div class="row product-image d-flex justify-content-between align-items-start ">  
+                    
+                                        <div class="col-md-6 product-info ">
+                                            <div class="product-specs d-flex flex-column  align-items-center">
+                                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                                    <span>Description</span>
+                                                    <br>
+                                                    <span class="value">A single <b>Access Code</b> can be used for a user to register their new account.
+                                                    Once used, it is consumed.</span>
+                                                </div>
+                                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                                    <button type="button" class="btn btn-primary">Generate Codes (10)</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 product-info">
+                                            <div class="product-specs d-flex flex-column  align-items-center">
+                                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                                    <span>Active Access Codes</span>
+                                                    <br>
+                                                    <textarea class="form-control" id="activeAccessCodes" rows="10" style="text-align: center;"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                       
+                    
+                                    </div>
+                                </div>
+
+
+                                
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <%- include('./footer') %>
+
+        <script type="text/javascript" src="../javascripts/admin.js"></script>
+
+    </body>
+</html>

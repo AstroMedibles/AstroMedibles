@@ -1,0 +1,737 @@
+ 
+const cors = require('cors'); 
+var express = require('express'); 
+var session = require('express-session'); 
+// var bodyParser = require('body-parser'); 
+var path = require('path'); 
+var dotenv = require('dotenv'); 
+dotenv.config(); 
+const cookieParser = require('cookie-parser'); 
+const { Console } = require('console'); 
+const dbService = require('./dbService'); 
+ 
+// express object 
+var app = express(); 
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: false })); 
+ 
+// set public folder as root 
+app.use(express.static(path.join(__dirname, 'public'))); 
+ 
+// setup Cross-Origin Resource Sharing (CORS) 
+// origin: allow data from anywhere 
+// credentials: allow cookies 
+ 
+app.use( 
+	cors( 
+		{ 
+			origin: "*", 
+			credentials: true 
+		} 
+	) 
+); 
+ 
+// session config 
+app.use(session( 
+	{ 
+		secret: 'secret', 
+		resave: true, 
+		saveUninitialized: true 
+	})); 
+ 
+// setup cookieparser 
+app.use(cookieParser("MY SECRET")); 
+ 
+// view engine setup 
+app.set('views', path.join(__dirname,'/public/views')); 
+app.set('view engine', 'ejs'); 
+ 
+// website root index route  
+app.get('/', function (request, response) 
+{ 
+	console.log("\n" + "route(/) "); 
+	// read cookies 
+	// Cookies that have not been signed 
+	console.log("Cookies: ", request.cookies) 
+ 
+	// Cookies that have been signed 
+	console.log("Signed Cookies: ", request.signedCookies) 
+ 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((isAdmin) => 
+	{ 
+		if (isAdmin === true) 
+		{ 
+			response.redirect('admin'); 
+		} 
+		else 
+		{ 
+			response.redirect('menu'); 
+		} 
+	}) 
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	}); 
+}); 
+ 
+// Route to Login Page 
+app.get('/login', (request, response) => 
+{ 
+	console.log("\n" + "route(/login)"); 
+ 
+	// expire the cookies 
+	var options = 
+	{ 
+		maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
+		httpOnly: false, // The cookie only accessible by the web server 
+		signed: false // Indicates if the cookie should be signed 
+	} 
+ 
+	// Set cookie 
+	response.cookie('email', "", options) // options is optional 
+	response.cookie('password', "", options) // options is optional 
+ 
+	response.render('login'); 
+});
+
+// Route to Login Page 
+app.get('/ForgotPassword', (request, response) => 
+{ 
+	console.log("\n" + "route(/ForgotPassword)"); 
+ 
+	// expire the cookies 
+	var options = 
+	{ 
+		maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
+		httpOnly: false, // The cookie only accessible by the web server 
+		signed: false // Indicates if the cookie should be signed 
+	} 
+ 
+	// Set cookie 
+	response.cookie('email', "", options) // options is optional 
+	response.cookie('password', "", options) // options is optional 
+ 
+	response.render('ForgotPassword'); 
+});
+
+app.patch('/forgotPasswordGenerateCode', function(request, response) 
+{ 
+	console.log("\n" + "route(/forgotPasswordGenerateCode)");
+	const email = request.body.email; 
+
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.forgotPasswordGenerateCode(email); 
+ 
+	result.then(data =>  
+	{
+		response.json({ data: data });
+	})
+	.catch((error) => 
+	{ 
+		console.log("route(/forgotPasswordGenerateCode) \tresult.catch()"); 
+		console.log(error); 
+	}); 
+}); 
+
+
+app.patch('/updatePassword', function(request, response) 
+{ 
+	console.log("\n" + "route(/updatePassword)");
+	const email 			= request.body.email; 
+	const password 			= request.body.password; 
+	const verificationCode 	= request.body.verificationCode; 
+
+    console.log(email);
+    console.log(password);
+    console.log(verificationCode);
+
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.updatePassword(email, password, verificationCode); 
+ 
+	result.then(data =>  
+	{
+		response.json({ data: data });
+	})
+	.catch((error) => 
+	{ 
+		console.log("route(/updatePassword) \tresult.catch()"); 
+		console.log(error); 
+	}); 
+}); 
+
+// render 
+app.get('/TryAgain', (request, response) => 
+{ 
+	console.log("\n" + "route(/TryAgain)");
+	
+	const db = dbService.getDbServiceInstance();
+	// db.consumeAccountCreationCode('5CY9NUSD');
+	// db.generateAccountCreationCodes(50);
+	
+	response.render('TryAgain'); 
+}); 
+ 
+// render 
+app.get('/register', (request, response) => 
+{ 
+	console.log("\n" + "route(/register)"); 
+	response.render('register'); 
+}); 
+ 
+// render 
+app.get('/menu', function (request, response) 
+{ 
+	console.log("\n" + "route(/menu)"); 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then(() => 
+	{ 
+		response.render('menu'); 
+	}) 
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	}); 
+}); 
+ 
+app.post('/auth', function (request, response) 
+{ 
+	console.log("\n" + "route(/auth)"); 
+ 
+	try 
+	{ 
+		// check  
+		const email = request.body.email; 
+		const password = request.body.password; 
+ 
+		console.log("email, password: "); 
+		console.log(email); 
+		console.log(password); 
+ 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.getData(email, password); 
+		var loggedIn = false; 
+		result.then(results => 
+		{ 
+			if (results.length > 0) 
+			{ 
+				console.log("loggedIn === true"); 
+				loggedIn = true; 
+				console.log("results: "); 
+				console.log(results); 
+				console.log(results[0]); 
+				console.log("results.length: "); 
+				console.log(results.length); 
+			} 
+			else 
+			{ 
+				console.log("loggedIn === false"); 
+				loggedIn = false; 
+			} 
+ 
+ 
+ 
+			console.log("route(/auth) " + "\t" + "result.then()"); 
+			console.log(loggedIn); 
+			// if logged in, route to /menu 
+ 
+			if (loggedIn === true) 
+			{ 
+				console.log("route(/auth) \tif loggedIn === true"); 
+				let options = 
+				{ 
+					maxAge: 1000 * 60 * 90, // Would expire after 1.5 hours (90) 
+					httpOnly: false, // The cookie only accessible by the web server 
+					signed: false // Indicates if the cookie should be signed 
+				} 
+ 
+				// Set cookie 
+				response.cookie('email', email, options) // options is optional 
+				response.cookie('password', password, options) // options is optional 
+ 
+				console.log("Cookies created: email, password"); 
+				// response.redirect('/menu'); 
+				response.json(loggedIn); 
+ 
+			} 
+ 
+			if (loggedIn === false) 
+			{ 
+				console.log("route(/auth) \tif loggedIn === false"); 
+ 
+				// expire the false cookies 
+				var options = 
+				{ 
+					maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
+					httpOnly: false, // The cookie only accessible by the web server 
+					signed: false // Indicates if the cookie should be signed 
+				} 
+ 
+				// Set cookie 
+				response.cookie('email', email, options) // options is optional 
+				response.cookie('password', password, options) // options is optional 
+				response.json(loggedIn); 
+			} 
+			// if logged out, route to /login 
+ 
+		}).catch((dataResult) => 
+		{ 
+			console.log("route(/auth) \tresult.catch()"); 
+			console.log(dataResult); 
+			if (loggedIn === false) 
+			{ 
+				console.log("route(/auth) \tif loggedIn === false"); 
+				response.redirect('/login'); 
+				return; 
+			} 
+		}); 
+	} 
+	catch (error)  
+	{ 
+		console.log("route(/auth) \tError:" + error); 
+		response.redirect('/login'); 
+	} 
+ 
+}); 
+ 
+// render 
+app.get('/getMenuData', (request, response) => 
+{ 
+	console.log("\n" + "route(/getMenuData) "); 
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.getMenuData(); 
+ 
+	result.then(data =>  
+		{ 
+			// console.log("/getMenuData .then"); 
+			console.log(data); 
+			response.json({ data: data }) 
+			// console.log(data[0]); 
+		} 
+		) 
+		.catch(err => console.log(err)); 
+}); 
+ 
+// render 
+app.get('/ShoppingCart', (request, response) => 
+{ 
+	console.log("\n" + "route(/ShoppingCart)"); 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then(() => 
+	{ 
+		response.render('shopping-cart'); 
+	}) 
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	}); 
+}); 
+ 
+// render 
+app.get('/MyOrders', (request, response) => 
+{ 
+	console.log("\n" + "route(/MyOrders)"); 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then(() => 
+	{ 
+		response.render('MyOrders'); 
+	}) 
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	}); 
+}); 
+ 
+// render 
+app.get('/ThankYou', (request, response) => 
+{ 
+	console.log("\n" + "route(/ThankYou)"); 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then(() => 
+	{ 
+		response.render('ThankYou'); 
+	}) 
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	}); 
+}); 
+ 
+// read 
+app.get('/getCartData', (request, response) => 
+{ 
+	// console.log("\n"+ "route(/getCartData) "); 
+	const email = request.cookies.email; 
+	const password = request.cookies.password; 
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.getCartData(email, password); 
+	result 
+		.then(data =>  
+		{ 
+			// console.log("/getCartData .then"); 
+			try 
+			{ 
+				// console.log(data); 
+				// console.log(data[0].cart.cart); 
+			} catch (error) 
+			{ 
+				console.log(error); 
+			} 
+			response.json({ data: data }) 
+		} 
+		) 
+		.catch(err => console.log(err)); 
+}); 
+ 
+// read 
+app.get('/getUserOrders', (request, response) => 
+{ 
+	// console.log("\n"+ "route(/getUserOrders) "); 
+	const email = request.cookies.email; 
+	const password = request.cookies.password; 
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.getUserOrders0(email, password); 
+ 
+	result.then(data =>  
+		{ 
+			response.json({ data: data }) 
+		} 
+		) 
+		.catch(err => console.log(err)); 
+}); 
+ 
+// read 
+app.get('/adminGetUserOrders', (request, response) => 
+{  
+	console.log("/adminGetUserOrders");
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((isAdmin) => 
+	{
+		console.log("admin(/) \tresult.then()"); 
+		if (isAdmin === true) 
+		{ 
+			console.log("/adminGetUserOrders ADMIN TRUE");
+			const db = dbService.getDbServiceInstance(); 
+			const result = db.adminGetUserOrders(); 
+			
+			result.then(data =>  
+				{ 
+					response.json({ data: data }) 
+				}) 
+				.catch(err => console.log(err));			
+		} 
+		else 
+		{ 
+			console.log("/adminGetUserOrders ADMIN FALSE");
+			response.end(); 
+		} 
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+
+
+}); 
+ 
+// read 
+app.get('/getCartDetails', (request, response) => 
+{ 
+	console.log("\n" + "route(/getCartDetails) "); 
+	const name = request.cookies.name; 
+	const password = request.cookies.password; 
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.getCartDetails(name, password); 
+	result 
+		.then(data =>  
+		{ 
+			console.log("/getCartDetails .then"); 
+			response.json({ data: data }) 
+			console.log(data); 
+			console.log(data[0]); 
+		} 
+		) 
+		.catch(err => console.log(err)); 
+}); 
+ 
+// read 
+app.get('/admin', (request, response) => 
+{ 
+	console.log("\n" + "route(/admin) "); 
+ 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((isAdmin) => 
+	{ 
+		console.log("admin(/) \tresult.then()"); 
+		if (isAdmin === true) 
+		{ 
+			response.render('admin'); 
+		} 
+		else 
+		{ 
+			response.redirect('/'); 
+		} 
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+}); 
+ 
+// update 
+app.patch('/cartAddItem', (request, response) => 
+{ 
+	// console.log("\n"+ "route(/cartAddItem) "); 
+	const email = request.cookies.email; 
+	const password = request.cookies.password; 
+	const { itemId, itemQty } = request.body; 
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.cartAddItem(email, password, itemId, itemQty); 
+ 
+	result.then(data => 
+	{ 
+		console.log("\n" + "route(/cartAddItem) \t RESULTS:"); 
+		try 
+		{ 
+			console.log(data.cart); 
+			// data                 = results[], array [?] 
+			// data[0]              = results[i], first index value [0] 
+			// data[0].cart         = database column "cart" value, JSON object { cart: [ [ 1, 11 ], [ 4, 44 ], [ 7, 77 ] ] } 
+			// data[0].cart.cart    = value named "cart" in JSON object, 2D array [?][2] 
+		} 
+		catch (error) 
+		{ 
+			console.log(error); 
+		} 
+ 
+		// console.log("cartAddItem: Completed"); 
+		response.json({ data: data }); 
+	}) 
+		.catch(err => console.log(err)); 
+}); 
+ 
+// update 
+app.patch('/cartSubtractItem', (request, response) => 
+{ 
+	// console.log("\n"+ "route(/cartSubtractItem) "); 
+	const email = request.cookies.email; 
+	const password = request.cookies.password; 
+	const { itemId, itemQty } = request.body; 
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.cartSubtractItem(email, password, itemId, itemQty); 
+ 
+	result.then(data => 
+	{ 
+		console.log("\n" + "route(/cartSubtractItem) \t RESULTS:"); 
+		response.json({ data: data }); 
+	}).catch(err => console.log(err)); 
+}); 
+
+app.patch('/adminUpdateOrderStatus', (request, response) =>
+{
+	console.log("\n"+ "route(/adminUpdateOrderStatus) "); 
+
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((isAdmin) => 
+	{ 
+		console.log("adminUpdateOrderStatus(/) \tresult.then()"); 
+		if (isAdmin === true) 
+		{ 
+			const { orderId, status } = request.body; 
+			const db = dbService.getDbServiceInstance(); 
+			const result = db.adminUpdateOrderStatus(orderId, status); 
+		 
+			result.then((data) => 
+			{ 
+				console.log("\n" + "route(/adminUpdateOrderStatus) \t RESULTS:"); 
+				response.json({ data: data }); 
+			}).catch(err => console.log(err));
+		} 
+		else 
+		{ 
+			response.end(); 
+		} 
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+
+
+
+});
+
+ 
+// create 
+app.post('/userPlaceOrder', (request, response) =>  
+{ 
+	console.log("\n" + "route(/userPlaceOrder) "); 
+	const email = request.cookies.email; 
+	const password = request.cookies.password;
+
+	const date = request.body.date; 
+
+	console.log(email);
+	console.log(password);
+	console.log(request.body); 
+
+
+
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.submitUserOrder(email, password, date); 
+	result 
+		.then(() =>  
+		{ 
+			console.log("\n" + "result(/userPlaceOrder) ");
+			console.log('Success');
+			response.json(true);
+		}) 
+		.catch((err) => 
+		{
+			console.log('Fail');
+			console.log(err)
+			
+		}); 
+}); 
+ 
+// create 
+app.post('/register', (request, response) =>  
+{ 
+	console.log("\n" + ".(/register) POST"); 
+	const { name, email, password, code} = request.body; 
+ 
+
+	console.log(request.body); 
+
+
+
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.createUserAccount(name, password, email, code); 
+ 
+	result 
+		.then((result) =>  
+		{ 
+			console.log("\n" + ".then(/register) POST"); 
+ 
+			var options = 
+			{ 
+				maxAge: 1000 * 60 * 90, // Would expire after 1.5 hours (90) 
+				httpOnly: false, // The cookie only accessible by the web server 
+				signed: false // Indicates if the cookie should be signed 
+			} 
+ 
+			// Set cookie 
+			response.cookie('email', email, options) // options is optional 
+			response.cookie('password', password, options) // options is optional 
+ 
+			console.log("Cookies created: name, password"); 
+ 
+			// response.redirect('/login'); 
+			response.json(true); 
+ 
+		}) 
+		.catch(err => // Error: Account could not be created 
+		{ 
+			console.log("/createUserAccount " + "\n" + "Error: Account could not be created"); 
+			console.log(err) 
+			// response.redirect('/TryAgain'); 
+			response.json(false); 
+ 
+		}); 
+}); 
+ 
+// delete 
+app.delete('/cancelOrder', (request, response) => 
+{ 
+	// console.log("\n"+ "route(/cartAddItem) "); 
+	const email = request.cookies.email; 
+	const password = request.cookies.password; 
+	const { order_id } = request.body; 
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.cancelOrder(order_id, email, password); 
+ 
+	result.then(data => 
+	{ 
+		console.log("\n" + "route(/cancelOrder) \t RESULTS:"); 
+		try 
+		{ 
+			console.log("Order canceled!"); 
+		} 
+		catch (error) 
+		{ 
+			console.log(error); 
+		} 
+ 
+		response.json({ data: data }); 
+	}) 
+	.catch(err => console.log(err)); 
+}); 
+ 
+ 
+// check if user is logged in  
+function checkIfLoggedIn(request) 
+{ 
+	const response = new Promise((resolve, reject) => 
+	{ 
+		const email = request.cookies.email; 
+		const password = request.cookies.password; 
+ 
+		// console.log("email, password: "); 
+		// console.log(email); 
+		// console.log(password); 
+ 
+		// no login creds 
+		if (typeof email === 'undefined' || typeof password === 'undefined') 
+		{ 
+			console.log("loggedIn === false"); 
+			reject(false); 
+			return; 
+		} 
+ 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.getData(email, password); 
+ 
+		result.then((results) => // valid login 
+		{ 
+			console.log("loggedIn === true"); 
+			const isAdmin = results[0].isAdmin; 
+			if (isAdmin === 1) 
+			{ 
+				console.log("isAdmin: " + isAdmin + " (true)"); 
+				resolve(true); 
+			} 
+			else 
+			{ 
+				console.log("isAdmin: " + isAdmin + " (false)"); 
+				resolve(false); 
+			} 
+ 
+		}) 
+		.catch(() =>  // invalid login 
+		{ 
+			console.log("loggedIn === false"); 
+			reject(false); 
+		}); 
+	}); 
+	return response; 
+} 
+ 
+ 
+// server listening to PORT 
+app.listen(process.env.PORT); 

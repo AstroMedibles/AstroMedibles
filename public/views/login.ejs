@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <title>Login - AstroMedibles</title>
+    <%- include('./head') %>
+</head>
+
+<body>
+
+  <%- include('./navbarLoggedOut') %>
+
+  <main class="page login-page">
+    <section class="clean-block clean-form dark">
+        <div class="container">
+            <div class="block-heading">
+                <h2 class="text-info">Sign in</h2>
+                <p>See whats on the menu today!</p>
+            </div>
+            <form>
+                <div class="mb-3"><label class="form-label" for="email">Email</label><input class="form-control item" name="email" type="email" id="inputEmail" required></div>
+                <div class="mb-3"><label class="form-label" for="password">Password</label><input class="form-control" name="password" type="password" id="inputPassword" required></div>
+                <a href="/ForgotPassword">Forgot password</a>
+                <br><br>
+                <button type="button" class="btn btn-primary" onclick="signIn()">Sign In</button>
+                <div id="alertSignIn"></div>
+                <br><br>
+                <a href="/register">Create an account</a>
+            </form>
+        </div>
+    </section>
+</main>
+  
+  <%- include('./footer') %>
+  <script type="text/javascript" src="../javascripts/login.js"></script>
+</body>
+</html>
