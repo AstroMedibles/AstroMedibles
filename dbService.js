@@ -7,7 +7,7 @@ var instance = null;
 
 const connection = mysql.createPool(
     {
-        connectionLimit : 10,
+        connectionLimit : 20, // <- Keep an eye on this
         host: process.env.HOST,
         user: process.env.USER,
         password: process.env.PASSWORD,
@@ -53,7 +53,7 @@ console.log(process.env.PORT);
 console.log(process.env.DB_PORT);
 console.log("\n");
 
-const address = 'https://astromedibles-rjjul.ondigitalocean.app';
+const address = 'https://astro-medibles-s8zwx.ondigitalocean.app';
 // const address = 'http://localhost:8080';
 
 // connection.connect((err) => 

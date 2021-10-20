@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function ()
         .then(ready());
 });
 
-const address = 'https://astromedibles-rjjul.ondigitalocean.app';
+const address = 'https://astro-medibles-s8zwx.ondigitalocean.app';
 // const address = 'http://localhost:8080';
 
 
