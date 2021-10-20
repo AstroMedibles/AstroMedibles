@@ -403,16 +403,17 @@ app.get('/getUserOrders', (request, response) =>
 	const result = db.getUserOrders0(email, password); 
  
 	result.then(data =>  
-		{ 
-			response.json({ data: data }) 
-		} 
-		) 
-		.catch(err => console.log(err)); 
-}); 
+	{ 
+		response.json({ data: data });
+	} 
+	)
+	.catch(err => console.log(err)); 
+});
  
-// read 
+
+// read  
 app.get('/adminGetUserOrders', (request, response) => 
-{  
+{
 	console.log("/adminGetUserOrders");
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((isAdmin) => 
@@ -437,15 +438,49 @@ app.get('/adminGetUserOrders', (request, response) =>
 		} 
 	})
 	.catch(() => 
+	{
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
+
+
+// read 
+app.get('/adminGetAccessCodes', (request, response) => 
+{  
+	console.log("/adminGetAccessCodes");
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((isAdmin) => 
+	{
+		console.log("admin(/) \tresult.then()"); 
+		if (isAdmin === true) 
+		{ 
+			console.log("/adminGetAccessCodes ADMIN TRUE");
+			const db = dbService.getDbServiceInstance(); 
+			const result = db.adminGetAccessCodes(); 
+			
+			result.then(data =>  
+				{ 
+					response.json({ data: data }) 
+				}) 
+				.catch(err => console.log(err));			
+		} 
+		else 
+		{ 
+			console.log("/adminGetAccessCodes ADMIN FALSE");
+			response.end(); 
+		} 
+	})
+	.catch(() => 
 	{ 
 		console.log("route(/) \tresult.catch()"); 
 		console.log("route(/) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
+});
 
 
-}); 
- 
 // read 
 app.get('/getCartDetails', (request, response) => 
 { 
@@ -727,8 +762,8 @@ function checkIfLoggedIn(request)
 		{ 
 			console.log("loggedIn === false"); 
 			reject(false); 
-		}); 
-	}); 
+		});
+	});
 	return response; 
 } 
  

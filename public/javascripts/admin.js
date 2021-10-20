@@ -282,16 +282,21 @@ function radioOrdersClick()
 function radioCodesClick()
 {
     console.log('radioCodesClick()');
-    $('#orders-items').attr('hidden', '');
-           
-    $('#codes-items').removeAttr('hidden');
 
-    var text = 
-    [
-        'Work in Progress \n'
-    ]
-    $('#activeAccessCodes').val(text);
-
+    fetch(address + '/adminGetAccessCodes')
+    .then(response => response.json())
+    .then((response) =>
+    {
+        $('#orders-items').attr('hidden', '');
+        
+        $('#codes-items').removeAttr('hidden');
+    
+        // var text = 
+        // [
+        //     'Work in Progress \n'
+        // ]
+        $('#activeAccessCodes').val(response['data']);
+    });
 }
 
 function ready()
