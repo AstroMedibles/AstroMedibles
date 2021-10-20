@@ -75,7 +75,7 @@ function populateUserOrders()
                 status = '<a href="https://account.venmo.com/pay?txn=pay&recipients=Astro-Medibles">' + status + '</a>';
                 cancelOrderButton =
                 `<span class="value">
-                <button name="cancel-order-button" ${dataAttributes} class="btn btn-primary" type="button" style="padding: 0px;width: 100%;">Cancel Order</button>
+                <button name="cancel-order-button" ${dataAttributes} class="btn btn-warning btn-sm rounded-pill" type="button" >Cancel Order</button>
                 </span>`;
             }
 
@@ -115,9 +115,8 @@ function populateUserOrders()
                             </div>
 
                             <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                <span>Name</span>
                                 <br>
-                                <span class="value">${name}</span>
+                                <span class="value">${cancelOrderButton}</span>
                             </div>
                             
                         </div>

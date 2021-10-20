@@ -71,7 +71,12 @@ function populateUserOrders()
 
 
             var statusText = status;
-            if (status === 'Payment Required')
+            var dropDownButton = 
+            `
+            <button  id="selected-${order_id}" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
+            `;
+
+            if (statusText === 'Payment Required')
             {
                 status = 
                 `
@@ -80,8 +85,7 @@ function populateUserOrders()
                 <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
                 <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
                 `;
-
-            } else if (status === 'Preparing Order')
+            } else if (statusText === 'Preparing Order')
             {
                 status = 
                 `
@@ -90,8 +94,12 @@ function populateUserOrders()
                 <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
                 <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
                 `;
-            } else if (status === 'Ready for Pickup')
+            } else if (statusText === 'Ready for Pickup')
             {
+                dropDownButton = 
+                `
+                <button  id="selected-${order_id}" class="btn btn-warning btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
+                `;
                 status = 
                 `
                 <button class="dropdown-item disabled">Payment Required</button>
@@ -99,8 +107,12 @@ function populateUserOrders()
                 <button class="dropdown-item disabled">Ready for Pickup</button>
                 <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
                 `;
-            } else if (status === 'Complete')
+            } else if (statusText === 'Complete')
             {
+                dropDownButton = 
+                `
+                <button  id="selected-${order_id}" class="btn btn-success btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
+                `;
                 status = 
                 `
                 <button class="dropdown-item disabled">Payment Required</button>
@@ -109,6 +121,8 @@ function populateUserOrders()
                 <button class="dropdown-item disabled">Complete</button>
                 `;
             }
+
+
 
             // var date_created = userOrder[5].date_created.substring(0, 10) + "<br>" // date
             //     + timeHour + userOrder[5].date_created.substring(13, 16) + amOrPm;    // time
@@ -119,7 +133,6 @@ function populateUserOrders()
                 var cartElement = cart[j];
                 cartText += "(" + cartElement[1] + ") " + cartElement[2] + "<br>";
             }
-
 
             
 
@@ -138,9 +151,9 @@ function populateUserOrders()
                                 <span>Status</span>
                                 <br>
                                 <div class="dropdown" >
-                                    <button  id="selected-${order_id}" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
+                                    ${dropDownButton}
                                     <div class="dropdown-menu" name="${order_id}">
-                                        ${status}
+                                    ${status}
                                     </div>
                                 </div>
                             </div>
