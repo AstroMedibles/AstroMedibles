@@ -18,12 +18,16 @@
                         <!-- Radio Button Group -->
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
 
-                            <label class="btn btn-secondary active">
-                              <input type="radio" name="options" id="radioOrders" autocomplete="off" onclick="radioOrdersClick()" checked> Orders
+                            <label id="radioOrders" class="btn btn-secondary active">
+                              <input type="radio" name="options"  autocomplete="off" onclick="radioOrdersClick()" checked> Orders
                             </label>
 
-                            <label class="btn btn-secondary">
-                              <input type="radio" name="options" id="radioCodes" autocomplete="off" onclick="radioCodesClick()"> Codes
+                            <label id="radioCodes" class="btn btn-secondary">
+                              <input type="radio" name="options"  autocomplete="off" onclick="radioCodesClick()"> Codes
+                            </label>
+
+                            <label id="radioChart" class="btn btn-secondary">
+                                <input type="radio" name="options"  autocomplete="off" onclick="radioChartClick()"> Chart
                             </label>
 
                         </div>
@@ -78,8 +82,39 @@
                                     </div>
                                 </div>
 
+                            </div>
 
-                                
+
+                            <div id="chart-items" class="items"  >
+
+                                <!-- CHART -->
+
+                                <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Item</th>
+                                        <th scope="col">Payment Required</th>
+                                        <th scope="col">Preparing Order</th>
+                                        <th scope="col">Total</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <th scope="row">Krispy Treats</th>
+                                        <td class="table-danger"  >0</td>
+                                        <td class="table-primary" >8</td>
+                                        <td>8</td>
+                                      </tr>
+                                      <tr>
+                                        <th scope="row">Variety Treats</th>
+                                        <td class="table-danger" >4</td>
+                                        <td class="table-primary">6</td>
+                                        <td>10</td>
+                                      </tr>
+ 
+                                    </tbody>
+                                  </table>
+
 
                             </div>
 

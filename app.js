@@ -499,7 +499,7 @@ app.post('/generateAccessCodes', (request, response) =>
 			{
 				response.json({ data: data });
 			})
-			.catch(err => console.log(err));		
+			.catch(err => console.log("/admin error \n" + err));		
 		} 
 		else 
 		{ 

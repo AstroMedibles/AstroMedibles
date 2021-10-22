@@ -71,13 +71,15 @@ function populateUserOrders()
 
 
             var statusText = status;
-            var dropDownButton = 
-            `
-            <button  id="selected-${order_id}" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
-            `;
+            var dropDownButton = '';
 
             if (statusText === 'Payment Required')
             {
+                dropDownButton = 
+                `
+                <button  id="selected-${order_id}" class="btn btn-danger btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
+                `;
+
                 status = 
                 `
                 <button class="dropdown-item disabled">Payment Required</button>
@@ -87,6 +89,11 @@ function populateUserOrders()
                 `;
             } else if (statusText === 'Preparing Order')
             {
+                dropDownButton = 
+                `
+                <button  id="selected-${order_id}" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
+                `;
+
                 status = 
                 `
                 <button class="dropdown-item disabled">Payment Required</button>
@@ -273,15 +280,33 @@ function radioOrdersClick()
 {
     console.log('radioOrdersClick()');
     $('#codes-items').attr('hidden', '');
-           
+    $('#chart-items').attr('hidden', '');
+
     $('#orders-items').removeAttr('hidden');
 
 
+    // set radioOrders active
+    document.getElementById("radioOrders").classList.add("active");
+
+    document.getElementById("radioCodes").classList.remove("active");
+    document.getElementById("radioChart").classList.remove("active");
 }
 
 function radioCodesClick()
 {
     console.log('radioCodesClick()');
+    $('#orders-items').attr('hidden', '');
+    $('#chart-items').attr('hidden', '');
+
+    $('#codes-items').removeAttr('hidden');
+
+
+    // set radioCodes active
+    document.getElementById("radioCodes").classList.add("active");
+
+    document.getElementById("radioOrders").classList.remove("active");
+    document.getElementById("radioChart").classList.remove("active");
+
 
     fetch(address + '/adminGetAccessCodes')
     .then(response => response.json())
@@ -296,7 +321,27 @@ function radioCodesClick()
         //     'Work in Progress \n'
         // ]
         $('#activeAccessCodes').val(response['data']);
+    })
+    .catch(() =>
+    {
+        $('#activeAccessCodes').val();
     });
+}
+
+function radioChartClick()
+{
+    console.log('radioChartClick()');
+    $('#codes-items').attr('hidden', '');
+    $('#orders-items').attr('hidden', '');
+
+    $('#chart-items').removeAttr('hidden');
+
+
+    // set radioChart active
+    document.getElementById("radioChart").classList.add("active");
+
+    document.getElementById("radioOrders").classList.remove("active");
+    document.getElementById("radioCodes").classList.remove("active");
 }
 
 function generateAccessCodes()
