@@ -427,7 +427,7 @@ app.get('/adminGetUserOrders', (request, response) =>
 			
 			result.then(data =>  
 				{ 
-					response.json({ data: data }) 
+					response.json({ data: data });
 				}) 
 				.catch(err => console.log(err));			
 		} 
@@ -462,13 +462,48 @@ app.get('/adminGetAccessCodes', (request, response) =>
 			
 			result.then(data =>  
 				{ 
-					response.json({ data: data }) 
+					response.json({ data: data });
 				}) 
 				.catch(err => console.log(err));			
 		} 
 		else 
 		{ 
 			console.log("/adminGetAccessCodes ADMIN FALSE");
+			response.end(); 
+		} 
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
+
+
+// post 
+app.post('/generateAccessCodes', (request, response) => 
+{  
+	console.log("/generateAccessCodes");
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((isAdmin) => 
+	{
+		console.log("admin(/) \tresult.then()"); 
+		if (isAdmin === true) 
+		{ 
+			console.log("/generateAccessCodes ADMIN TRUE");
+			const db = dbService.getDbServiceInstance(); 
+			const result = db.generateAccessCodes(10); 
+			
+			result.then(data =>  
+			{
+				response.json({ data: data });
+			})
+			.catch(err => console.log(err));		
+		} 
+		else 
+		{ 
+			console.log("/generateAccessCodes ADMIN FALSE");
 			response.end(); 
 		} 
 	})

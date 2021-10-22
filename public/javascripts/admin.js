@@ -299,6 +299,35 @@ function radioCodesClick()
     });
 }
 
+function generateAccessCodes()
+{
+    if (confirm('This action will create (10) more access codes. Are you sure?'))
+    {
+        // continue
+        console.log('Confirm pressed.');
+    } else
+    {
+        // stop
+        console.log('Cancel action pressed.');
+        return;
+    }
+
+    $('#activeAccessCodes').val();
+
+    fetch(address + '/generateAccessCodes',
+    {
+        credentials: "include",
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then((response) =>
+    {
+        radioCodesClick();
+    });
+}
+
+
+
 function ready()
 {
     // get cart total
