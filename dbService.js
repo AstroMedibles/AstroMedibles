@@ -551,11 +551,11 @@ class DbService
         return response;
     }
 
-    async generateAccountCreationCodes(quantity)
+    async generateAccessCodes(quantity)
     {
         const response = await new Promise((resolve, reject) => 
         {
-            console.log(`generateAccountCreationCodes(${quantity})`);
+            console.log(`generateAccessCodes(${quantity})`);
             var values = [];
             for (let i = 0; i < quantity; i++)
             {
@@ -590,7 +590,7 @@ class DbService
 
         const response = await new Promise((resolve, reject) => 
         {
-            console.log(`generateAccountCreationCodes(${code})`);
+            console.log(`generateAccessCodes(${code})`);
 
             console.log(code);
             code = [code];
