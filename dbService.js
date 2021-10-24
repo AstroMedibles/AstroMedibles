@@ -1134,7 +1134,7 @@ class DbService
             var mailOptions =
             {
                 from:    process.env.AM_USER,
-                to:      process.env.AM_USER + ', ' + process.env.AM_USER_DEV01 + ', ' + toEmail,
+                to:      toEmail,
                 subject: subject,
                 html:    html
             };
