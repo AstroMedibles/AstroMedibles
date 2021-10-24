@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function ()
     ready();
 });
 
-const address = 'https://astro-medibles-s8zwx.ondigitalocean.app';
+const address = 'https://astromedibles.com';
 // const address = 'http://localhost:8080';
 
 function loadCartTotal(data)

@@ -53,7 +53,7 @@ console.log(process.env.PORT);
 console.log(process.env.DB_PORT);
 console.log("\n");
 
-const address = 'https://astro-medibles-s8zwx.ondigitalocean.app';
+const address = 'https://astromedibles.com';
 // const address = 'http://localhost:8080';
 
 // connection.connect((err) => 

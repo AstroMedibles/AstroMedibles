@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function ()
     ready();
 });
 
-const address = 'https://astro-medibles-s8zwx.ondigitalocean.app';
+const address = 'https://astromedibles.com';
 // const address = 'http://localhost:8080';
 
 function loadCartTotal(data)
@@ -39,6 +39,12 @@ function populateUserOrders()
     .then(data =>  
     {
         var orders = Array.from(data['data']);
+
+
+        var chartMapPaymentRequired = new Map(); // (id, {quantity: 5, name: 'Krispy Treats'})
+        var chartMapPaymentRecieved = new Map(); // (id, {quantity: 5, name: 'Krispy Treats'})
+
+
 
         for (let i = 0; i < orders.length; i++)
         {
@@ -213,7 +219,105 @@ function populateUserOrders()
             var myform = $('#orders-items');
             myform.append(card);
 
+
+
+            // create chartMap
+
+            if (statusText === 'Payment Required')
+            {
+                for (let j = 1; j < cart.length; j++)
+                {
+                    var cartElement = cart[j];
+                    var id = cartElement[0];
+    
+                    // if item exists in chartMapPaymentRequired, add to its quantity
+                    if (chartMapPaymentRequired.has(id))
+                    {
+                        console.log(`chartMapPaymentRequired.has(${id}) TRUE`);
+                        var quantity = chartMapPaymentRequired.get(id).quantity;
+                        var name     = chartMapPaymentRequired.get(id).name;
+    
+                        var newQuantity = quantity + cartElement[1];
+    
+                        chartMapPaymentRequired.set(id, {quantity: newQuantity, name: name});
+                    }
+                    // if item does not exist in chartMapPaymentRequired, add its entry into the chartMapPaymentRequired
+                    else
+                    {
+                        console.log(`chartMapPaymentRequired.has(${id}) FALSE`);
+                        chartMapPaymentRequired.set(id, {quantity: cartElement[1], name: cartElement[2]});
+                    }
+                }
+            } else if (statusText === 'Preparing Order')
+            {
+                for (let j = 1; j < cart.length; j++)
+                {
+                    var cartElement = cart[j];
+                    var id = cartElement[0];
+    
+                    // if item exists in chartMapPaymentRecieved, add to its quantity
+                    if (chartMapPaymentRecieved.has(id))
+                    {
+                        console.log(`chartMapPaymentRecieved.has(${id}) TRUE`);
+                        var quantity = chartMapPaymentRecieved.get(id).quantity;
+                        var name     = chartMapPaymentRecieved.get(id).name;
+    
+                        var newQuantity = quantity + cartElement[1];
+    
+                        chartMapPaymentRecieved.set(id, {quantity: newQuantity, name: name});
+                    }
+                    // if item does not exist in chartMapPaymentRecieved, add its entry into the chartMapPaymentRecieved
+                    else
+                    {
+                        console.log(`chartMapPaymentRecieved.has(${id}) FALSE`);
+                        chartMapPaymentRecieved.set(id, {quantity: cartElement[1], name: cartElement[2]});
+                    }
+                }
+            }
+
         }
+
+        console.log(chartMapPaymentRequired);
+        console.log(chartMapPaymentRecieved);
+
+        // console.log(chartMapPaymentRequired.entries());
+        // console.log(chartMapPaymentRecieved.entries());
+        // $('#chartMapPaymentRequired').val(chartMapPaymentRequired.entries);
+        // $('#chartMapPaymentRecieved').val(chartMapPaymentRecieved.entries);
+        // var chartMapTotal = new Map();
+
+        // var maps = [chartMapPaymentRequired, chartMapPaymentRecieved];
+
+        // maps.forEach(chartMap =>
+        // {
+            
+        // });
+
+
+        // for (let i = 0; i < chartMap.size; i++)
+        // {
+        //     var chartMapElement = chartMap[i];
+        //     var id = chartMapElement[0];
+
+        //     // if item exists in chartMapTotal, add to its quantity
+        //     if (chartMapTotal.has(id))
+        //     {
+        //         console.log(`chartMapTotal.has(${id}) TRUE`);
+        //         var quantity = chartMap.get(id).quantity;
+        //         var name     = chartMap.get(id).name;
+
+        //         var newQuantity = quantity + chartMapElement[1];
+
+        //         chartMapTotal.set(id, {quantity: newQuantity, name: name});
+        //     }
+        //     // if item does not exist in chartMapTotal, add its entry into the chartMapTotal
+        //     else
+        //     {
+        //         console.log(`chartMapTotal.has(${id}) FALSE`);
+        //         chartMapTotal.set(id, {quantity: chartMapElement[1], name: chartMapElement[2]});
+        //     }
+        // }
+        
     });
 }
 
