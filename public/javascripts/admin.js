@@ -267,8 +267,37 @@ function dropDownUpdateOrderStatus(event)
         {
             // Update Status to7 new option
             $(dropDownSubElementID).text(status);
+
+            // disable used option
             $(event).addClass("disabled");
             $(event).on(('onClick'), null);
+
+            console.log('Status check: ' + status);
+
+            status = status.toLowerCase();
+            console.log("status.includes('complete')");
+            console.log(status.includes('complete'));
+
+            if (status === 'preparing order')
+            {
+                console.log(1);
+                dropDownSubElementID.removeClass("btn-danger");
+                dropDownSubElementID.addClass("btn-primary");
+            } else if (status === 'ready for pickup')
+            {
+                console.log(2);
+                dropDownSubElementID.removeClass("btn-danger");
+                dropDownSubElementID.removeClass("btn-primary");
+                dropDownSubElementID.addClass("btn-warning");
+            } else if (status === 'complete')
+            {
+                console.log(3);
+                dropDownSubElementID.removeClass("btn-danger");
+                dropDownSubElementID.removeClass("btn-primary");
+                dropDownSubElementID.removeClass("btn-warning");
+                dropDownSubElementID.addClass("btn-success");
+            }
+
             console.log("dropDownUpdateOrderStatus(event) complete");
         }).catch((error => 
         {
