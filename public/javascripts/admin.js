@@ -288,8 +288,8 @@ function populateUserOrders()
             if (chartMapTotal.has(key))
             {
                 console.log(`chartMapTotal.has(${key}) TRUE`);
-                var quantity = chartMap.get(key).quantity;
-                var name     = chartMap.get(key).name;
+                var quantity = chartMapTotal.get(key).quantity;
+                var name     = chartMapTotal.get(key).name;
 
                 var newQuantity = quantity + value.quantity;
 
@@ -312,8 +312,8 @@ function populateUserOrders()
             if (chartMapTotal.has(key))
             {
                 console.log(`chartMapTotal.has(${key}) TRUE`);
-                var quantity = chartMap.get(key).quantity;
-                var name     = chartMap.get(key).name;
+                var quantity = chartMapTotal.get(key).quantity;
+                var name     = chartMapTotal.get(key).name;
 
                 var newQuantity = quantity + value.quantity;
 
