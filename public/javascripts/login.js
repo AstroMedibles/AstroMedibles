@@ -3,6 +3,15 @@ const address = 'https://www.astromedibles.com';
 // const address = 'http://localhost:8080';
 
 
+console.log(window.location.href);
+if (window.location.href.includes('www.'))
+{
+    console.log('GOOD');
+} else
+{
+    console.log('Bad, redirecting');
+}
+
 function signIn()
 {
     var email = $('#inputEmail').val();
