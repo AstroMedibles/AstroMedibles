@@ -535,7 +535,7 @@ function radioChartClick()
             tableHTML +=
                     `
                     <tr>
-                        <th scope="row">[${key}] ${value.name}</th>
+                        <th scope="row">${value.name}</th>
                         <td class="table-danger"  >${quantityRequired}</td>
                         <td class="table-primary" >${quantityRecieved}</td>
                         <td>${value.quantity}</td>
