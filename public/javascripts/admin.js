@@ -277,52 +277,64 @@ function populateUserOrders()
 
         }
 
+        var chartMapTotal = new Map();
+
         var text = '';
         for (let [key, value] of chartMapPaymentRequired.entries())
         {
             text += `(${value.quantity}) ${value.name}<br>`;
+            
+            // if item exists in chartMapTotal, add to its quantity
+            if (chartMapTotal.has(key))
+            {
+                console.log(`chartMapTotal.has(${key}) TRUE`);
+                var quantity = chartMap.get(key).quantity;
+                var name     = chartMap.get(key).name;
+
+                var newQuantity = quantity + value.quantity;
+
+                chartMapTotal.set(key, {quantity: newQuantity, name: name});
+            }
+            // if item does not exist in chartMapTotal, add its entry into the chartMapTotal
+            else
+            {
+                console.log(`chartMapTotal.has(${key}) FALSE`);
+                chartMapTotal.set(key, {quantity: value.quantity, name: value.name});
+            }
         }
         $('#chartMapPaymentRequired').val(text);
         text = '';
         for (let [key, value] of chartMapPaymentRecieved.entries())
         {
             text += `(${value.quantity}) ${value.name}<br>`;
-        }
-        $('#chartMapPaymentRecieved').val(text);
-
-        // total
-        var maps = [chartMapPaymentRequired, chartMapPaymentRecieved];
-        var chartMapTotal = new Map();
-
-        maps.forEach(chartMap =>
-        {
-
-        });
-
-
-        for (let i = 0; i < chartMap.size; i++)
-        {
-            var chartMapElement = chartMap[i];
-            var id = chartMapElement[0];
-
+            
             // if item exists in chartMapTotal, add to its quantity
-            if (chartMapTotal.has(id))
+            if (chartMapTotal.has(key))
             {
-                console.log(`chartMapTotal.has(${id}) TRUE`);
-                var quantity = chartMap.get(id).quantity;
-                var name     = chartMap.get(id).name;
+                console.log(`chartMapTotal.has(${key}) TRUE`);
+                var quantity = chartMap.get(key).quantity;
+                var name     = chartMap.get(key).name;
 
-                var newQuantity = quantity + chartMapElement[1];
+                var newQuantity = quantity + value.quantity;
 
-                chartMapTotal.set(id, {quantity: newQuantity, name: name});
+                chartMapTotal.set(key, {quantity: newQuantity, name: name});
             }
             // if item does not exist in chartMapTotal, add its entry into the chartMapTotal
             else
             {
-                console.log(`chartMapTotal.has(${id}) FALSE`);
-                chartMapTotal.set(id, {quantity: chartMapElement[1], name: chartMapElement[2]});
+                console.log(`chartMapTotal.has(${key}) FALSE`);
+                chartMapTotal.set(key, {quantity: value.quantity, name: value.name});
             }
         }
+        $('#chartMapPaymentRecieved').val(text);
+
+        text = '';
+        for (let [key, value] of chartMapTotal.entries())
+        {
+            text += `(${value.quantity}) ${value.name}<br>`;
+            
+        }
+        $('#chartMapTotal').val(text);
         
     });
 }
