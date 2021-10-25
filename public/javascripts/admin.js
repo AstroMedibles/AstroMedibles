@@ -40,10 +40,8 @@ function populateUserOrders()
     {
         var orders = Array.from(data['data']);
 
-
-        var chartMapPaymentRequired = new Map(); // (id, {quantity: 5, name: 'Krispy Treats'})
-        var chartMapPaymentRecieved = new Map(); // (id, {quantity: 5, name: 'Krispy Treats'})
-
+        // $('#orders-items').val('');
+        document.getElementById("orders-items").innerHTML = '';
 
 
         for (let i = 0; i < orders.length; i++)
@@ -216,154 +214,39 @@ function populateUserOrders()
             `;
 
             // create card
-            var myform = $('#orders-items');
-            myform.append(card);
-
-
-
-            // create chartMap
-
-            if (statusText === 'Payment Required')
-            {
-                for (let j = 1; j < cart.length; j++)
-                {
-                    var cartElement = cart[j];
-                    var id = cartElement[0];
-    
-                    // if item exists in chartMapPaymentRequired, add to its quantity
-                    if (chartMapPaymentRequired.has(id))
-                    {
-                        console.log(`chartMapPaymentRequired.has(${id}) TRUE`);
-                        var quantity = chartMapPaymentRequired.get(id).quantity;
-                        var name     = chartMapPaymentRequired.get(id).name;
-    
-                        var newQuantity = quantity + cartElement[1];
-    
-                        chartMapPaymentRequired.set(id, {quantity: newQuantity, name: name});
-                    }
-                    // if item does not exist in chartMapPaymentRequired, add its entry into the chartMapPaymentRequired
-                    else
-                    {
-                        console.log(`chartMapPaymentRequired.has(${id}) FALSE`);
-                        chartMapPaymentRequired.set(id, {quantity: cartElement[1], name: cartElement[2]});
-                    }
-                }
-            } else if (statusText === 'Preparing Order')
-            {
-                for (let j = 1; j < cart.length; j++)
-                {
-                    var cartElement = cart[j];
-                    var id = cartElement[0];
-    
-                    // if item exists in chartMapPaymentRecieved, add to its quantity
-                    if (chartMapPaymentRecieved.has(id))
-                    {
-                        console.log(`chartMapPaymentRecieved.has(${id}) TRUE`);
-                        var quantity = chartMapPaymentRecieved.get(id).quantity;
-                        var name     = chartMapPaymentRecieved.get(id).name;
-    
-                        var newQuantity = quantity + cartElement[1];
-    
-                        chartMapPaymentRecieved.set(id, {quantity: newQuantity, name: name});
-                    }
-                    // if item does not exist in chartMapPaymentRecieved, add its entry into the chartMapPaymentRecieved
-                    else
-                    {
-                        console.log(`chartMapPaymentRecieved.has(${id}) FALSE`);
-                        chartMapPaymentRecieved.set(id, {quantity: cartElement[1], name: cartElement[2]});
-                    }
-                }
-            }
+            var ordersHTML = $('#orders-items');
+            ordersHTML.append(card);
 
         }
 
-        var chartMapTotal = new Map();
-
-        var text = '';
-        for (let [key, value] of chartMapPaymentRequired.entries())
-        {
-            text += `(${value.quantity}) ${value.name}<br>`;
-            
-            // if item exists in chartMapTotal, add to its quantity
-            if (chartMapTotal.has(key))
-            {
-                console.log(`chartMapTotal.has(${key}) TRUE`);
-                var quantity = chartMapTotal.get(key).quantity;
-                var name     = chartMapTotal.get(key).name;
-
-                var newQuantity = quantity + value.quantity;
-
-                chartMapTotal.set(key, {quantity: newQuantity, name: name});
-            }
-            // if item does not exist in chartMapTotal, add its entry into the chartMapTotal
-            else
-            {
-                console.log(`chartMapTotal.has(${key}) FALSE`);
-                chartMapTotal.set(key, {quantity: value.quantity, name: value.name});
-            }
-        }
-        $('#chartMapPaymentRequired').val(text);
-        text = '';
-        for (let [key, value] of chartMapPaymentRecieved.entries())
-        {
-            text += `(${value.quantity}) ${value.name}<br>`;
-            
-            // if item exists in chartMapTotal, add to its quantity
-            if (chartMapTotal.has(key))
-            {
-                console.log(`chartMapTotal.has(${key}) TRUE`);
-                var quantity = chartMapTotal.get(key).quantity;
-                var name     = chartMapTotal.get(key).name;
-
-                var newQuantity = quantity + value.quantity;
-
-                chartMapTotal.set(key, {quantity: newQuantity, name: name});
-            }
-            // if item does not exist in chartMapTotal, add its entry into the chartMapTotal
-            else
-            {
-                console.log(`chartMapTotal.has(${key}) FALSE`);
-                chartMapTotal.set(key, {quantity: value.quantity, name: value.name});
-            }
-        }
-        $('#chartMapPaymentRecieved').val(text);
-
-        text = '';
-        for (let [key, value] of chartMapTotal.entries())
-        {
-            text += `(${value.quantity}) ${value.name}<br>`;
-            
-        }
-        $('#chartMapTotal').val(text);
-        
     });
 }
 
 function dropDownUpdateOrderStatus(event)
 {
-    console.log('start dropDownUpdateOrderStatus(event)');
+    // console.log('start dropDownUpdateOrderStatus(event)');
 
     event = event.currentTarget;
     var parentDiv = event.parentNode;
     var orderId = $(parentDiv).attr("name");
-    console.log(orderId);
+    // console.log(orderId);
 
     var status = $(event).attr("name");
-    console.log(status);
+    // console.log(status);
 
     var dropDownSubElementID = $(`#selected-${orderId}`); 
-    console.log(dropDownSubElementID);
+    // console.log(dropDownSubElementID);
 
 
 
     if (confirm('Are you sure you want to update this order?'))
     {
         // 
-        console.log('Update order pressed.');
+        // console.log('Update order pressed.');
     } else
     {
         // 
-        console.log('Cancel action pressed.');
+        // console.log('Cancel action pressed.');
         return;
     }
 
@@ -394,42 +277,42 @@ function dropDownUpdateOrderStatus(event)
             $(event).addClass("disabled");
             $(event).on(('onClick'), null);
 
-            console.log('Status check: ' + status);
+            // console.log('Status check: ' + status);
 
             status = status.toLowerCase();
-            console.log("status.includes('complete')");
-            console.log(status.includes('complete'));
+            // console.log("status.includes('complete')");
+            // console.log(status.includes('complete'));
 
             if (status === 'preparing order')
             {
-                console.log(1);
+                // console.log(1);
                 dropDownSubElementID.removeClass("btn-danger");
                 dropDownSubElementID.addClass("btn-primary");
             } else if (status === 'ready for pickup')
             {
-                console.log(2);
+                // console.log(2);
                 dropDownSubElementID.removeClass("btn-danger");
                 dropDownSubElementID.removeClass("btn-primary");
                 dropDownSubElementID.addClass("btn-warning");
             } else if (status === 'complete')
             {
-                console.log(3);
+                // console.log(3);
                 dropDownSubElementID.removeClass("btn-danger");
                 dropDownSubElementID.removeClass("btn-primary");
                 dropDownSubElementID.removeClass("btn-warning");
                 dropDownSubElementID.addClass("btn-success");
             }
 
-            console.log("dropDownUpdateOrderStatus(event) complete");
+            // console.log("dropDownUpdateOrderStatus(event) complete");
         }).catch((error => 
         {
-            console.log("dropDownUpdateOrderStatus(event)  catch:" + error);
+            // console.log("dropDownUpdateOrderStatus(event)  catch:" + error);
         }));
 }
 
 function radioOrdersClick()
 {
-    console.log('radioOrdersClick()');
+    // console.log('radioOrdersClick()');
     $('#codes-items').attr('hidden', '');
     $('#chart-items').attr('hidden', '');
 
@@ -441,11 +324,13 @@ function radioOrdersClick()
 
     document.getElementById("radioCodes").classList.remove("active");
     document.getElementById("radioChart").classList.remove("active");
+
+    populateUserOrders();
 }
 
 function radioCodesClick()
 {
-    console.log('radioCodesClick()');
+    // console.log('radioCodesClick()');
     $('#orders-items').attr('hidden', '');
     $('#chart-items').attr('hidden', '');
 
@@ -463,10 +348,6 @@ function radioCodesClick()
     .then(response => response.json())
     .then((response) =>
     {
-        $('#orders-items').attr('hidden', '');
-        
-        $('#codes-items').removeAttr('hidden');
-    
         // var text = 
         // [
         //     'Work in Progress \n'
@@ -481,7 +362,8 @@ function radioCodesClick()
 
 function radioChartClick()
 {
-    console.log('radioChartClick()');
+    // console.log('radioChartClick()');
+    // hide other divs, reveal chart div
     $('#codes-items').attr('hidden', '');
     $('#orders-items').attr('hidden', '');
 
@@ -493,6 +375,184 @@ function radioChartClick()
 
     document.getElementById("radioOrders").classList.remove("active");
     document.getElementById("radioCodes").classList.remove("active");
+
+    // update chart
+    fetch(address + '/adminGetUserOrders')
+    .then(response => response.json())
+    .then(data =>  
+    {
+        var orders = Array.from(data['data']);
+
+
+        var chartMapPaymentRequired = new Map(); // (id, {quantity: 5, name: 'Krispy Treats'})
+        var chartMapPaymentRecieved = new Map(); // (id, {quantity: 5, name: 'Krispy Treats'})
+
+        var chartMapTotal = new Map(); // will be used to combine the two above Maps
+
+
+        for (let i = 0; i < orders.length; i++)
+        {
+            // console.log(orders[i]);
+
+            var userOrder = orders[i];
+
+            var statusText  = userOrder[0].status;
+            var cart        = JSON.parse(userOrder[3].cart).cart;
+
+            // create chartMap
+
+            if (statusText === 'Payment Required')
+            {
+                for (let j = 1; j < cart.length; j++)
+                {
+                    var cartElement = cart[j];
+                    var id = cartElement[0];
+    
+                    // if item exists in chartMapPaymentRequired, add to its quantity
+                    if (chartMapPaymentRequired.has(id))
+                    {
+                        // console.log(`chartMapPaymentRequired.has(${id}) TRUE`);
+                        var quantity = chartMapPaymentRequired.get(id).quantity;
+                        var name     = chartMapPaymentRequired.get(id).name;
+    
+                        var newQuantity = quantity + cartElement[1];
+    
+                        chartMapPaymentRequired.set(id, {quantity: newQuantity, name: name});
+                    }
+                    // if item does not exist in chartMapPaymentRequired, add its entry into the chartMapPaymentRequired
+                    else
+                    {
+                        // console.log(`chartMapPaymentRequired.has(${id}) FALSE`);
+                        chartMapPaymentRequired.set(id, {quantity: cartElement[1], name: cartElement[2]});
+                    }
+                }
+            } else if (statusText === 'Preparing Order')
+            {
+                for (let j = 1; j < cart.length; j++)
+                {
+                    var cartElement = cart[j];
+                    var id = cartElement[0];
+    
+                    // if item exists in chartMapPaymentRecieved, add to its quantity
+                    if (chartMapPaymentRecieved.has(id))
+                    {
+                        // console.log(`chartMapPaymentRecieved.has(${id}) TRUE`);
+                        var quantity = chartMapPaymentRecieved.get(id).quantity;
+                        var name     = chartMapPaymentRecieved.get(id).name;
+    
+                        var newQuantity = quantity + cartElement[1];
+    
+                        chartMapPaymentRecieved.set(id, {quantity: newQuantity, name: name});
+                    }
+                    // if item does not exist in chartMapPaymentRecieved, add its entry into the chartMapPaymentRecieved
+                    else
+                    {
+                        // console.log(`chartMapPaymentRecieved.has(${id}) FALSE`);
+                        chartMapPaymentRecieved.set(id, {quantity: cartElement[1], name: cartElement[2]});
+                    }
+                }
+            }
+
+        }
+
+
+        // var text = '';
+        chartMapPaymentRequired = new Map([...chartMapPaymentRequired].sort((a, b) => a[0] - b[0]));
+        for (let [key, value] of chartMapPaymentRequired.entries())
+        {
+            // text += `[${key}]  (${value.quantity}) ${value.name}<br>`;
+            
+            // if item exists in chartMapTotal, add to its quantity
+            if (chartMapTotal.has(key))
+            {
+                // console.log(`chartMapTotal.has(${key}) TRUE`);
+                var quantity = chartMapTotal.get(key).quantity;
+                var name     = chartMapTotal.get(key).name;
+
+                var newQuantity = quantity + value.quantity;
+
+                chartMapTotal.set(key, {quantity: newQuantity, name: name});
+            }
+            // if item does not exist in chartMapTotal, add its entry into the chartMapTotal
+            else
+            {
+                // console.log(`chartMapTotal.has(${key}) FALSE`);
+                chartMapTotal.set(key, {quantity: value.quantity, name: value.name});
+            }
+        }
+        // $('#chartMapPaymentRequired').val(text);
+        // document.getElementById("chartMapPaymentRequired").innerHTML = text;
+        // text = '';
+        
+        chartMapPaymentRecieved = new Map([...chartMapPaymentRecieved].sort((a, b) => a[0] - b[0]));
+
+        // chartMapPaymentRecieved = new Map([...chartMapPaymentRecieved].sort((a, b) => a[0]) - (b[0]));
+        for (let [key, value] of chartMapPaymentRecieved.entries())
+        {
+            // text += `[${key}]  (${value.quantity}) ${value.name}<br>`;
+            
+            // if item exists in chartMapTotal, add to its quantity
+            if (chartMapTotal.has(key))
+            {
+                // console.log(`chartMapTotal.has(${key}) TRUE`);
+                var quantity = chartMapTotal.get(key).quantity;
+                var name     = chartMapTotal.get(key).name;
+
+                var newQuantity = quantity + value.quantity;
+
+                chartMapTotal.set(key, {quantity: newQuantity, name: name});
+            }
+            // if item does not exist in chartMapTotal, add its entry into the chartMapTotal
+            else
+            {
+                // console.log(`chartMapTotal.has(${key}) FALSE`);
+                chartMapTotal.set(key, {quantity: value.quantity, name: value.name});
+            }
+        }
+        // $('#chartMapPaymentRecieved').val(text);
+        // document.getElementById("chartMapPaymentRecieved").innerHTML = text;
+
+
+        // text = '';
+        // chartMapTotal = new Map([...chartMapTotal.entries()].sort());
+        var tableHTML = '';
+        chartMapTotal = new Map([...chartMapTotal].sort((a, b) => a[0] - b[0]));
+        for (let [key, value] of chartMapTotal.entries())
+        {
+            var quantityRequired = 0;
+            var quantityRecieved = 0;
+
+            if (chartMapPaymentRequired.has(key))
+            {
+                quantityRequired = chartMapPaymentRequired.get(key).quantity;
+            }
+            if (chartMapPaymentRecieved.has(key))
+            {
+                quantityRecieved = chartMapPaymentRecieved.get(key).quantity;
+            }
+
+            // text += `[${key}]  (${value.quantity}) ${value.name}<br>`;
+            tableHTML +=
+                    `
+                    <tr>
+                        <th scope="row">[${key}] ${value.name}</th>
+                        <td class="table-danger"  >${quantityRequired}</td>
+                        <td class="table-primary" >${quantityRecieved}</td>
+                        <td>${value.quantity}</td>
+                    </tr>
+                    `;
+
+        }
+        // $('#chartMapTotal').val(text);
+        // document.getElementById("chartMapTotal").innerHTML = text;
+        document.getElementById("chartTable").innerHTML = tableHTML;
+
+        chartTable
+    });
+
+
+
+
 }
 
 function generateAccessCodes()
@@ -500,11 +560,11 @@ function generateAccessCodes()
     if (confirm('This action will create (10) more access codes. Are you sure?'))
     {
         // continue
-        console.log('Confirm pressed.');
+        // console.log('Confirm pressed.');
     } else
     {
         // stop
-        console.log('Cancel action pressed.');
+        // console.log('Cancel action pressed.');
         return;
     }
 
@@ -528,11 +588,12 @@ function ready()
 {
     // get cart total
     fetch(address + '/getCartData')
-        .then(response => response.json())
-        .then(data => 
-        {
-            loadCartTotal(data['data']);
-        });
+    .then(response => response.json())
+    .then(data => 
+    {
+        loadCartTotal(data['data']);
+    });
 
-    populateUserOrders();
+    radioOrdersClick();
+// populateUserOrders();
 }
