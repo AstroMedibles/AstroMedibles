@@ -81,7 +81,7 @@ function populateUserOrders()
             {
                 dropDownButton = 
                 `
-                <button  id="selected-${order_id}" class="btn btn-danger btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
+                <button  id="selected-${order_id}" class="btn btn-danger btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" ">${statusText}</button>
                 `;
 
                 status = 
@@ -95,7 +95,7 @@ function populateUserOrders()
             {
                 dropDownButton = 
                 `
-                <button  id="selected-${order_id}" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
+                <button  id="selected-${order_id}" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" ">${statusText}</button>
                 `;
 
                 status = 
@@ -109,7 +109,7 @@ function populateUserOrders()
             {
                 dropDownButton = 
                 `
-                <button  id="selected-${order_id}" class="btn btn-warning btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
+                <button  id="selected-${order_id}" class="btn btn-warning btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" ">${statusText}</button>
                 `;
                 status = 
                 `
@@ -122,7 +122,7 @@ function populateUserOrders()
             {
                 dropDownButton = 
                 `
-                <button  id="selected-${order_id}" class="btn btn-success btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 165px;">${statusText}</button>
+                <button  id="selected-${order_id}" class="btn btn-success btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" ">${statusText}</button>
                 `;
                 status = 
                 `
@@ -535,7 +535,7 @@ function radioChartClick()
             tableHTML +=
                     `
                     <tr>
-                        <th scope="row">[${key}] ${value.name}</th>
+                        <th scope="row">${value.name}</th>
                         <td class="table-danger"  >${quantityRequired}</td>
                         <td class="table-primary" >${quantityRecieved}</td>
                         <td>${value.quantity}</td>
