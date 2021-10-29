@@ -283,7 +283,7 @@ app.post('/auth', function (request, response)
 			if (loggedIn === false) 
 			{ 
 				console.log("route(/auth) \tif loggedIn === false ERROR"); 
-				response.redirect('/login'); 
+				response.json(loggedIn); 
 				return; 
 			} 
 		}); 

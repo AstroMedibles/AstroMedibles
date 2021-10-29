@@ -123,6 +123,11 @@ class DbService
                             return;
                         }
                     }
+                    else
+                    {
+                        reject(results);
+                        return;
+                    }
                 });
             }
             catch (error)

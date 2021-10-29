@@ -38,14 +38,26 @@ function loadMenuCards(data)
         // <div name="card" class="col-md-6 col-xl-3" ${dataAttributes} ">
         card +=
             `
-            <div name="card" class="card  col-6  col-sm-4  col-md-3 " ${dataAttributes} style="max-width: 304px" >
-                <img class="card-img-top" src="../images/${name.toLowerCase()}.jpg" style="object-fit: contain;"  alt="...">
-                <div class="card-body">
-                    <h5 class="card-title"><b>${name}</b></h5>
-                    <p class="card-text">Why choose one when you can get three? Enjoy multiple treats!</p>
-                    <h6 class="card-text"><b>$${price}</b></h6>
-                    <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill " type="button" style="padding: 0px; width: 100%;">Add to cart</button>
+            <div class="col-6 col-md-3 d-flex   text-center">
+
+            <div name="card" class="card  d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
+                <img class="card-img-top" src="../images/${name.toLowerCase()}.jpg"   alt="...">
+
+                <div class="card-header" style="width: 100%;">
+                    <h6 class="card-title"><b>${name}</b></h6>
                 </div>
+
+                <div class="card-body">
+
+                    <p class="card-text">Why choose one when you can get three? Enjoy multiple treats!</p>
+                </div>
+
+                <div class="card-footer" style="width: 100%;>
+                    <h5 class="card-text"><b>$${price}</b></h5>
+                    <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill " type="button" style="width: 100%;">Add to cart</button>
+                </div>
+            </div>
+
             </div>
         `;
 
