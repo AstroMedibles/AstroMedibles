@@ -106,6 +106,9 @@ class DbService
                     {
                         var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
 
+                        console.log('OriginalText: ' + password);
+                        console.log('decryptedText: ' + decryptedText);
+
                         if (password == decryptedText)
                         {
                             resolve(results);
