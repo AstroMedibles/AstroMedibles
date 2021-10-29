@@ -117,9 +117,12 @@ class DbService
                             resolve(results);
                             return;
                         }
+                        else
+                        {
+                            reject(results);
+                            return;
+                        }
                     }
-                    reject(results);
-                    return;
                 });
             }
             catch (error)
