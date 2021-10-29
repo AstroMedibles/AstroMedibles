@@ -115,11 +115,9 @@ class DbService
                             return;
                         }
                     }
-                    else // password does not match
-                    {
-                        reject(results);
-                        return;
-                    }
+
+                    reject(results);
+                    return;
                 });
             }
             catch (error)
