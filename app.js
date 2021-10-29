@@ -232,9 +232,7 @@ app.post('/auth', function (request, response)
 				console.log("loggedIn === false"); 
 				loggedIn = false; 
 			} 
- 
- 
- 
+
 			console.log("route(/auth) " + "\t" + "result.then()"); 
 			console.log(loggedIn); 
 			// if logged in, route to /menu 
@@ -284,7 +282,7 @@ app.post('/auth', function (request, response)
 			console.log(dataResult); 
 			if (loggedIn === false) 
 			{ 
-				console.log("route(/auth) \tif loggedIn === false"); 
+				console.log("route(/auth) \tif loggedIn === false ERROR"); 
 				response.redirect('/login'); 
 				return; 
 			} 
@@ -374,7 +372,7 @@ app.get('/getCartData', (request, response) =>
 	const email = request.cookies.email; 
 	const password = request.cookies.password; 
 	const db = dbService.getDbServiceInstance(); 
-	const result = db.getCartData(email, password); 
+	const result = db.getUserData(email, password); 
 	result 
 		.then(data =>  
 		{ 
@@ -388,7 +386,7 @@ app.get('/getCartData', (request, response) =>
 				console.log(error); 
 			} 
 			response.json({ data: data }) 
-		} 
+		}
 		) 
 		.catch(err => console.log(err)); 
 }); 

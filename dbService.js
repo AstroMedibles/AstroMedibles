@@ -111,11 +111,11 @@ class DbService
 
                         if (password == decryptedText)
                         {
+                            console.log('Login success!');
                             resolve(results);
                             return;
                         }
                     }
-
                     reject(results);
                     return;
                 });
@@ -126,34 +126,6 @@ class DbService
                 reject();
             }
             });
-        return response;
-    }
-
-    async getUserID(email, password)
-    {
-        const response = await new Promise((resolve, reject) => 
-        {
-            try
-            {
-                const sql = "SELECT id FROM " + process.env.TABLE_NAMES + " WHERE email = ? AND password = ?;";
-                connection.query(sql, [email, password], (error, results) =>
-                {
-                    if (error) 
-                    {
-                        reject(new Error("dbService.js ERROR\n" + error));
-                    }
-                    if (typeof results[0] === 'undefined')
-                    {
-                        reject("Login failed, or cart is undefined.");
-                    }
-                    resolve(results[0].id);
-                })
-            }
-            catch (error)
-            {
-                console.trace(error);
-                reject(error);
-            }});
         return response;
     }
 
@@ -180,54 +152,46 @@ class DbService
         return response;
     }
 
-    async getCartData(email, password)
-    {
-        const response = await new Promise((resolve, reject) => 
-        {
-            try
-            {
-                const sql = "SELECT cart FROM " + process.env.TABLE_NAMES + " WHERE email = ? AND password = ?;";
-                connection.query(sql, [email, password], (error, results) =>
-                {
-                    if (error) 
-                    {
-                        reject(new Error("dbService.js ERROR\n" + error));
-                    }
-                    else
-                    {
-                        resolve(results);
-                    }
-                })
-            }
-            catch (error)
-            {
-                console.log(error);
-                reject();
-            }});
-        return response;
-    }
-
     // Return's user's cart after action
     async setCartData(email, password, cart)
     {
         const response = await new Promise((resolve, reject) =>
         {
-                try
+            try
+            {
+                const query = "UPDATE " + process.env.TABLE_NAMES + " SET cart = ? WHERE email = ?;";
+                connection.query(query, [cart, email], (err, results) =>
                 {
-                const query = "UPDATE " + process.env.TABLE_NAMES + " SET cart = ? WHERE email = ? AND password = ?;";
-                connection.query(query, [cart, email, password], (err, result) =>
-                {
-                    if (err) reject(new Error(err.message));
+                    if (err) 
+                    {
+                        reject(new Error("dbService.js getUserData(email, password) ERROR\n" + err.message));
+                    }
 
-                    result.affectedRows;     // Save SQL changes
+                    if (results.length > 0)
+                    {
+                        var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
+
+                        console.log('OriginalText: ' + password);
+                        console.log('decryptedText: ' + decryptedText);
+
+                        if (password == decryptedText)
+                        {
+                            console.log('Login success!');
+                            resolve(results);
+                            return;
+                        }
+                    }
+                    results.affectedRows;     // Save SQL changes
                     cart = JSON.parse(cart); // Return user's cart as JSON object
                     resolve(cart);
+                    return;
                 });
             } catch (error)
             {
                 console.log(error);
                 reject(false);
-            }});
+            }
+        });
         return response;
     }
 
@@ -238,7 +202,7 @@ class DbService
         {
             const db = DbService.getDbServiceInstance();
             // Grab user's cart from database with given email and password
-            var cartResult = db.getCartData(email, password);
+            var cartResult = db.getUserData(email, password);
             cartResult.then(results => 
             {
                 var cart = [[0, 0]];
@@ -249,6 +213,10 @@ class DbService
                 }
                 catch (error)
                 {
+                    console.log('cartAddItem(email, password, itemId, itemQty)');
+                    console.log('cart = results[0].cart.cart; FAILURE');
+                    console.log(error);
+
                     // if user's cart is null, make it an empty array
                     cart = [[0, 0]];
                 }
@@ -315,7 +283,7 @@ class DbService
         {
             const db = DbService.getDbServiceInstance();
             // Grab user's cart from database with given email and password
-            var cartResult = db.getCartData(email, password);
+            var cartResult = db.getUserData(email, password);
             cartResult.then(results => 
             {
                 console.log("cartSubtractItem .then");
@@ -766,9 +734,10 @@ class DbService
         const db = DbService.getDbServiceInstance();
         const response = await new Promise((resolve, reject) => 
         {
-            db.getUserID(email, password)
-                .then(user_id => 
+            db.getUserData(email, password)
+                .then(results => 
                 {
+                    var user_id = results[0].id;
                     resolve(db.getUserOrders1(user_id));
                 });
         });
