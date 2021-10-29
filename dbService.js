@@ -112,6 +112,8 @@ class DbService
                         if (password == decryptedText)
                         {
                             console.log('Login success!');
+                            console.log("results[0]");
+                            console.log(results[0]);
                             resolve(results);
                             return;
                         }
@@ -548,6 +550,7 @@ class DbService
         .then((results) =>
         {
             userData            = results[0];
+            userData            = userData[0];
             total               = results[1][0];
             menuItems           = results[1][1];
 
@@ -562,8 +565,8 @@ class DbService
             const cart          = JSON.stringify(userData.cart);
             // date_created.toLocaleString('en-US', { timeZone: 'America/New_York' });
 
-            // console.log(userData);
-            // console.log(user_id);
+            console.log(userData);
+            console.log(user_id);
             // console.log(status);
             // console.log(order_id);
             // console.log(user_name);
@@ -649,12 +652,12 @@ class DbService
         const db = DbService.getDbServiceInstance();
         var response = new Promise((resolve, reject) => 
         {
-            db.getUserData(email, password).then((dataResult) =>
+            db.getUserData(email, password).then((results) =>
             {
-                var cart = dataResult.cart.cart;
+                var cart = results[0].cart.cart;
                 db.cartCalculateTotalCost(cart).then((usersCartTotalResult) =>
                 {
-                    resolve([dataResult, usersCartTotalResult]);
+                    resolve([results, usersCartTotalResult]);
                 });
             });
         });
@@ -837,6 +840,7 @@ class DbService
         
         db.getUserData(email, password).then((dataResult) =>
         {
+            dataResult = dataResult[0];
             var userId    = dataResult.id
             var userEmail = dataResult.email;
             var userName = dataResult.name;
