@@ -1,9 +1,11 @@
+const CryptoJS = require("crypto-js");
 const dotenv = require('dotenv');
-dotenv.config();
 const mysql = require('mysql2');
-var nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer');
+
 
 var instance = null;
+dotenv.config();
 
 const connection = mysql.createPool(
     {
@@ -14,9 +16,6 @@ const connection = mysql.createPool(
         database: process.env.DATABASE,
         multipleStatements: false,
         port: process.env.DB_PORT
-        // (Default: false) Allow multiple mysql statements per query.
-        // Be careful with this, it exposes database to SQL injection attacks.
-        // Connection Querys have been sanitized to prevent this.
     });
 
 connection.on('acquire', function (connection)
@@ -54,24 +53,6 @@ console.log(process.env.DB_PORT);
 console.log("\n");
 
 const address = 'https://astromedibles.com';
-// const address = 'http://localhost:8080';
-
-// connection.connect((err) => 
-// {
-//     console.log("Attempting Connection:");
-//     if (err)
-//     {
-//         console.log("Fail!");
-//         console.log(err.message);
-//         connection.end();
-//     }
-//     else
-//     {
-//         console.log("Success!");
-//     }
-// });
-
-
 
 class DbService
 {
@@ -106,40 +87,37 @@ class DbService
         return response;
     }
 
-    // returns BOOL loggedIn: true or false
-    async getData(email, password)
+    async getUserData(email, password)
     {
         const response = await new Promise((resolve, reject) => 
         {
             try
             {
                 email = email.toLowerCase();
-                const query = "SELECT * FROM " + process.env.TABLE_NAMES + " WHERE email = ? AND password = ?;";
+                const query = "SELECT * FROM " + process.env.TABLE_NAMES + " WHERE email = ?";
                 connection.query(query, [email, password], (err, results) =>
                 {
-                    if (err) reject(new Error("dbService.js ERROR\n" + err.message));
+                    if (err) 
+                    {
+                        reject(new Error("dbService.js getUserData(email, password) ERROR\n" + err.message));
+                    }
 
-                        var loggedIn = false;
-                        if (results.length > 0)
+                    if (results.length > 0)
+                    {
+                        var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
+
+                        if (password == decryptedText)
                         {
-                            console.log("loggedIn === true");
-                            loggedIn = true;
-                            // console.log("results: ");
-                            // console.log(results);
-                            // console.log(results[0]);
-                            // console.log("results.length: ");
-                            // console.log(results.length);
                             resolve(results);
                             return;
                         }
-                        else
-                        {
-                            console.log("loggedIn === false");
-                            loggedIn = false;
-                            resolve(results);
-                            return;
-                        }
-                })
+                    }
+                    else // password does not match
+                    {
+                        reject(results);
+                        return;
+                    }
+                });
             }
             catch (error)
             {
@@ -147,40 +125,6 @@ class DbService
                 reject();
             }
             });
-        return response;
-    }
-
-    async getUserData(email, password)
-    {
-        const response = await new Promise((resolve, reject) => 
-        {
-            try 
-            {
-                const query = "SELECT * FROM " + process.env.TABLE_NAMES + " WHERE email = ? AND password = ?;";
-                connection.query(query, [email, password], (err, results) =>
-                {
-                    if (err) reject(new Error("dbService.js ERROR\n" + err.message));
-
-                        if (results.length > 0)
-                        {
-                            console.log("loggedIn === true");
-                            resolve(results[0]);
-                        }
-                        else
-                        {
-                            console.log("loggedIn === false");
-                            reject(results);
-                        }
-
-                })
-            }
-            catch (error) 
-            {
-                console.log("getData() Error");
-                console.log(error);
-                reject(results);
-            }
-        });
         return response;
     }
 
@@ -754,7 +698,7 @@ class DbService
         email = email.toLowerCase();
         const isAdmin = 0;
         var date_created = new Date();
-        // date_created.toLocaleString('en-US', { timeZone: 'America/New_York' });
+        password = CryptoJS.AES.encrypt(password, process.env.KEY).toString();
 
         var cart =
         {
@@ -1084,9 +1028,10 @@ class DbService
         const response = new Promise((resolve, reject) =>
         {
             email = email.toLowerCase();
+            var encryptedText = CryptoJS.AES.encrypt(password, process.env.KEY).toString();
 
             const query = "UPDATE " + process.env.TABLE_NAMES + " SET password = ? WHERE email = ? AND verificationCode = ?;";
-            connection.query(query, [password, email, verificationCode], (err, result) =>
+            connection.query(query, [encryptedText, email, verificationCode], (err, result) =>
             {
                 if (err)
                 {

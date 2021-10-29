@@ -72,8 +72,21 @@ function signIn()
                 { // this will automatically close the alert in 2 secs
                     $("#alertdiv").remove();
                 }, 4000);
-
-
             }
-        });
+        })
+        .catch()
+        {
+            $('#inputPassword').val("");
+            $('#inputPassword').focus();
+            const message = "Login invalid, please try again!";
+            const alerttype = "alert-danger";
+
+            // show pop up
+            $('#alertSignIn').append('<div id="alertdiv" class="alert ' + alerttype + '"><a class="close" data-dismiss="alert"></a><span>' + message + '</span></div>')
+            
+            setTimeout(function ()
+            { // this will automatically close the alert in 2 secs
+                $("#alertdiv").remove();
+            }, 4000);
+        };
 }

@@ -1,14 +1,12 @@
 var CryptoJS = require("crypto-js");
 
-var originalText = 'hello ooooo what does this say';
+var originalText = '123';
 var mySecretPassphrase = 'My Secret Passphrase';
 
-var encryptedAES = CryptoJS.AES.encrypt(originalText, mySecretPassphrase);
-var decryptedBytes = CryptoJS.AES.decrypt(encryptedAES, mySecretPassphrase);
+var encryptedText = CryptoJS.AES.encrypt(originalText, mySecretPassphrase).toString();
+var decryptedText = CryptoJS.AES.decrypt(encryptedText, mySecretPassphrase).toString(CryptoJS.enc.Utf8);
 
-var decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
-
-console.log(encryptedAES);
+console.log(encryptedText);
 
 console.log(originalText);
 console.log(decryptedText);

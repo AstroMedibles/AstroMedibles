@@ -213,7 +213,7 @@ app.post('/auth', function (request, response)
 		console.log(password); 
  
 		const db = dbService.getDbServiceInstance(); 
-		const result = db.getData(email, password); 
+		const result = db.getUserData(email, password); 
 		var loggedIn = false; 
 		result.then(results => 
 		{ 
@@ -775,12 +775,12 @@ function checkIfLoggedIn(request)
 		} 
  
 		const db = dbService.getDbServiceInstance(); 
-		const result = db.getData(email, password); 
+		const result = db.getUserData(email, password); 
  
 		result.then((results) => // valid login 
 		{ 
 			console.log("loggedIn === true"); 
-			const isAdmin = results[0].isAdmin; 
+			const isAdmin = results[0].isAdmin;
 			if (isAdmin === 1) 
 			{ 
 				console.log("isAdmin: " + isAdmin + " (true)"); 
