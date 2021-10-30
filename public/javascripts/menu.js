@@ -49,7 +49,7 @@ function loadMenuCards(data)
                     <h6 class="card-title"><b>${name}</b></h6>
                 </div>
 
-                <div class="card-body" style="font-size: 0.75em;">
+                <div class="card-body" style="font-size: 0.75em; width: 100%;">
                     <p class="card-text">${description}</p>
                 </div>
 
