@@ -28,9 +28,9 @@ function loadMenuCards(data)
     }
 
     var myform = $('#myform');
-    Array.from(data).forEach(function ({ id, name, price, mg })
+    Array.from(data).forEach(function ({ id, name, price, description })
     {
-        console.log(id + "\t" + name + "\t" + price + "\t" + mg);
+        console.log(id + "\t" + name + "\t" + price + "\t" + description);
 
         id = parseInt(id);
         price = parseFloat(price);
@@ -38,7 +38,6 @@ function loadMenuCards(data)
         let card = "";
         let dataAttributes = ` data-id="${id}"  data-name="${name}"  data-price="${price}"`;
         
-        // <div name="card" class="col-md-6 col-xl-3" ${dataAttributes} ">
         card +=
             `
             <div class="col-6 col-md-3 d-flex  text-center">
@@ -50,8 +49,8 @@ function loadMenuCards(data)
                     <h6 class="card-title"><b>${name}</b></h6>
                 </div>
 
-                <div class="card-body">
-                    <p class="card-text">Why choose one when you can get three? Enjoy multiple treats!</p>
+                <div class="card-body" style="font-size: 0.75em;">
+                    <p class="card-text">${description}</p>
                 </div>
 
                 <div class="card-footer" style="width: 100%;>
@@ -97,7 +96,7 @@ function loadMenuCards(data)
 
 function loadCartTotal(data)
 {
-    console.log("function: loadCartTotal() START 12345");
+    console.log("loadCartTotal() START");
 
     try
     {
@@ -127,13 +126,11 @@ function addToCartClicked(event)
     var button = event.target;
     var id = parseInt(button.dataset.id);
     var title = button.dataset.name;
-    var mg = parseInt(button.dataset.mg);
     var price = parseFloat(button.dataset.price);
 
     // console.log(shopItem.dataAttributes);
     console.log("id:\t" + id);
     console.log("title:\t" + title);
-    console.log("mg:\t" + mg);
     console.log("price:\t" + price);
 
     fetch(address + '/cartAddItem',
