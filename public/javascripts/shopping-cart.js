@@ -55,9 +55,9 @@ function getCartDetails(userCart)
 
                 // for each menu item
 
-                Array.from(menuItems).forEach(function ({ id, name, price, mg })
+                Array.from(menuItems).forEach(function ({ id, name, price, description })
                 {
-                    // console.log("id + name + price + mg");
+                    // console.log("id + name + price + description");
 
                     const userCartItemID = element[0];
                     const userCartItemQTY = element[1];
@@ -66,7 +66,7 @@ function getCartDetails(userCart)
                     if (userCartItemID == id)
                     {
                         // console.log("MATCH userCartItemID == id");
-                        // console.log( id + "\t" + name + "\t" + price + "\t" + mg);
+                        // console.log( id + "\t" + name + "\t" + price + "\t" + description);
 
                         let card = "";
 
@@ -92,7 +92,7 @@ function getCartDetails(userCart)
                                 <div class="col-md-4 product-info"><h2 class="product-name" >${name}</h2>
                                     <div class="product-specs">
                                         <div><span>Price:&nbsp;</span><span class="value">${price}</span></div>
-                                        <div><span>Mg:   &nbsp;</span><span class="value">${mg}</span></div>
+                                        <div><span class="value">${description}</span></div>
                                     </div>
                                 </div>
                                 <div class="col-md-3 d-flex flex-row flex-grow-1 justify-content-between align-items-end flex-md-column flex-md-fill price" >
