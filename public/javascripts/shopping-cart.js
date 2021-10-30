@@ -367,6 +367,8 @@ function userPlaceOrder()
     .then(response => response.json())
     .then((response) =>
     {
+        document.getElementById("buttonPlaceOrder").classList.add("disabled");
+
         const message = "Thank you! Your order has been placed!";
         const alerttype = "alert-success";
 
