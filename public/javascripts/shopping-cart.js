@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () 
 {
     // console.log("DOMContentLoaded");
@@ -331,6 +332,14 @@ function updateSummary(cart)
     console.log(total);
 
 
+    if (parseFloat(subtotal) > 0)
+    {
+        $('#pMessage').text('Place your order!');
+    }
+    else
+    {
+        document.getElementById("buttonPlaceOrder").classList.add("disabled");
+    }
     // Update summary
     $("#summary-subtotal").text("$" + parseFloat(subtotal).toFixed(2));
     $("#summary-discount").text("$" + parseFloat(discount).toFixed(2));
@@ -358,24 +367,57 @@ function userPlaceOrder()
     .then(response => response.json())
     .then((response) =>
     {
-        // problem: this happens even if an order didnt go through...
-        console.log(2000);
         const message = "Thank you! Your order has been placed!";
         const alerttype = "alert-success";
 
-        // show pop up
-        $('#textPlaceOrder').append('<div id="alertdiv" class="alert ' + alerttype + '"><a class="close" data-dismiss="alert"></a><span>' + message + '</span></div>')
+        var iconHTML = '<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>';
 
+        var html = 
+        `
+        <div id="alertNotification" class="alert ${alerttype}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+            <span>
+                ${iconHTML}
+                ${message}
+            </span>
+        </div>
+        `;
+
+        // show pop up
+        $('#notification').append(html);
+        
         setTimeout(function ()
-        { // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
-            //   $("#alertdiv").remove();
-            // This Thank you redirect causes error :(
+        { // this will automatically close the alert in 2 secs
+            $("#alertNotification").remove();
             window.location.href = 'ThankYou';
         }, 3000);
+
     })
     .catch((error) =>
     {
         console.log(error);
+        const message = "Oops. Your order could not be placed.";
+        console.log(message);
+
+        const alerttype = "alert-danger";
+        var iconHTML = '<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Failure:"><use xlink:href="#exclamation-triangle-fill"/></svg>';
+        var html = 
+        `
+        <div id="alertNotification" class="alert ${alerttype}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+            <span>
+                ${iconHTML}
+                ${message}
+            </span>
+        </div>
+        `;
+        // show pop up
+        $('#notification').append(html);
+        
+        setTimeout(function ()
+        { // this will automatically close the alert in 2 secs
+            $("#alertNotification").remove();
+        }, 3000);
+
+
     })
     ;
 }

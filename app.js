@@ -163,18 +163,6 @@ app.patch('/updatePassword', function(request, response)
 }); 
 
 // render 
-app.get('/TryAgain', (request, response) => 
-{ 
-	console.log("\n" + "route(/TryAgain)");
-	
-	const db = dbService.getDbServiceInstance();
-	// db.consumeAccountCreationCode('5CY9NUSD');
-	// db.generateAccountCreationCodes(50);
-	
-	response.render('TryAgain'); 
-}); 
- 
-// render 
 app.get('/register', (request, response) => 
 { 
 	console.log("\n" + "route(/register)"); 
@@ -718,7 +706,6 @@ app.post('/register', (request, response) =>
 		{ 
 			console.log("/createUserAccount " + "\n" + "Error: Account could not be created"); 
 			console.log(err) 
-			// response.redirect('/TryAgain'); 
 			response.json(false); 
  
 		}); 

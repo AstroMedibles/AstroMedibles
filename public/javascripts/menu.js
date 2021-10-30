@@ -32,13 +32,16 @@ function loadMenuCards(data)
     {
         console.log(id + "\t" + name + "\t" + price + "\t" + mg);
 
+        id = parseInt(id);
+        price = parseFloat(price);
+
         let card = "";
-        let dataAttributes = " data-id=" + parseInt(id) + " data-name=" + name + " data-price=" + parseFloat(price) + " data-mg=" + parseInt(mg);
+        let dataAttributes = ` data-id="${id}"  data-name="${name}"  data-price="${price}"`;
         
         // <div name="card" class="col-md-6 col-xl-3" ${dataAttributes} ">
         card +=
             `
-            <div class="col-6 col-md-3 d-flex   text-center">
+            <div class="col-6 col-md-3 d-flex  text-center">
 
             <div name="card" class="card  d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
                 <img class="card-img-top" src="../images/${name.toLowerCase()}.jpg"   alt="...">
@@ -48,12 +51,11 @@ function loadMenuCards(data)
                 </div>
 
                 <div class="card-body">
-
                     <p class="card-text">Why choose one when you can get three? Enjoy multiple treats!</p>
                 </div>
 
                 <div class="card-footer" style="width: 100%;>
-                    <h5 class="card-text"><b>$${price}</b></h5>
+                    <h5 class="card-text"><b>$${price.toFixed(2)}</b></h5>
                     <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill " type="button" style="width: 100%;">Add to cart</button>
                 </div>
             </div>
@@ -159,6 +161,33 @@ function addToCartClicked(event)
             var cartQty = document.getElementById('cart-quantity');
             cartQty.dataset.quantity = total;
             $("#cart-quantity").text(total);
+
+
+            const message = `(1) ${title} added to cart!`;
+            const alerttype = "alert-success";
+    
+            var iconHTML = '<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>';
+
+            var html = 
+            `
+            <div id="alertNotification" class="alert ${alerttype}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+                <span>
+                    ${iconHTML}
+                    ${message}
+                </span>
+            </div>
+            `;
+
+            // show pop up
+            $('#notification').append(html);
+            
+            setTimeout(function ()
+            { // this will automatically close the alert in 2 secs
+                $("#alertNotification").remove();
+            }, 1000);
+
+
+
             console.log("addToCartClicked complete");
         }).catch((error => 
         {

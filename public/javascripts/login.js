@@ -16,62 +16,64 @@ function signIn()
 
     if (email.length < 2 || password.length < 2)
     {
-        $('#inputPassword').val("");
-        // $('#inputPassword').focus();
-        const message = "Login invalid, please try again!";
-        const alerttype = "alert-danger";
-
-        // show pop up
-        $('#alertSignIn').append('<div id="alertdiv" class="alert ' + alerttype + '"><a class="close" data-dismiss="alert"></a><span>' + message + '</span></div>')
-        
-        setTimeout(function ()
-        { // this will automatically close the alert in 2 secs
-            $("#alertdiv").remove();
-        }, 4000);
-
+        alert("Please fill in the fields.");
         return;
     }
 
 
     fetch(address + '/auth',
+    {
+        credentials: "include",
+        method: 'POST',
+        headers:
         {
-            credentials: "include",
-            method: 'POST',
-            headers:
-            {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify
-                ({
-                    email: email,
-                    password: password
-                })
-        })
-        .then(response => response.json())
-        .then((userSignedIn) =>
-        {
-            console.log("userSignedIn:");
-            console.log(userSignedIn);
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify
+            ({
+                email: email,
+                password: password
+            })
+    })
+    .then(response => response.json())
+    .then((userSignedIn) =>
+    {
+        console.log("userSignedIn:");
+        console.log(userSignedIn);
 
-            // userSignedIn!
-            if (userSignedIn)
-            {
-                window.location.href = 'menu';
-            }
-            else // invalid credentials
-            {
-                $('#inputPassword').val("");
-                $('#inputPassword').focus();
-                const message = "Login invalid, please try again!";
-                const alerttype = "alert-danger";
+        // userSignedIn!
+        if (userSignedIn)
+        {
+            window.location.href = 'menu';
+        }
+        else // invalid credentials
+        {
+            $('#inputPassword').val("");
+            $('#inputPassword').focus();
+
+            
+            const message = "Login invalid, please try again!";
+            const alerttype = "alert-danger";
     
-                // show pop up
-                $('#alertSignIn').append('<div id="alertdiv" class="alert ' + alerttype + '"><a class="close" data-dismiss="alert"></a><span>' + message + '</span></div>')
-                
-                setTimeout(function ()
-                { // this will automatically close the alert in 2 secs
-                    $("#alertdiv").remove();
-                }, 4000);
-            }
-        });
+            var iconHTML = '<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Failure:"><use xlink:href="#exclamation-triangle-fill"/></svg>';
+    
+            var html = 
+            `
+            <div id="alertNotification" class="alert ${alerttype}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+                <span>
+                    ${iconHTML}
+                    ${message}
+                </span>
+            </div>
+            `;
+    
+            // show pop up
+            $('#notification').append(html);
+            
+            setTimeout(function ()
+            { // this will automatically close the alert in 2 secs
+                $("#alertNotification").remove();
+            }, 3000);
+        }
+    });
 }

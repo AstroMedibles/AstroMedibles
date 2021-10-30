@@ -22,7 +22,7 @@ function createUserAccount()
 
     if (code.length < 2 || name.length < 2 || email.length < 2 || password.length < 2)
     {
-        alert("Please correct the fields.");
+        alert("Please fill in the fields.");
         return;
     }
 
@@ -53,10 +53,22 @@ function createUserAccount()
             {
                 const message = "Your account has been created!";
                 const alerttype = "alert-success";
+        
+                var iconHTML = '<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>';
+    
+                var html = 
+                `
+                <div id="alertNotification" class="alert ${alerttype}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+                    <span>
+                        ${iconHTML}
+                        ${message}
+                    </span>
+                </div>
+                `;
     
                 // show pop up
-                $('#alertCreate').append('<div id="alertdiv" class="alert ' + alerttype + '"><a class="close" data-dismiss="alert"></a><span>' + message + '</span></div>')
-
+                $('#notification').append(html);
+                
                 setTimeout(function ()
                 { // in 2 secs, redirect to login
                     window.location.href = '/';
@@ -65,18 +77,36 @@ function createUserAccount()
             }
             else // account not created, ERROR
             {
+                $('#inputCode').val("");
                 $('#inputEmail').val("");
-                $('#inputEmail').focus();
-                const message = "Email already in use, please try again.<br> Or invalid Access Code.";
+                $('#inputPassword').val("");
+
+                const message = "Email already in use, or invalid Access Code.<br>Please try again.";
                 const alerttype = "alert-danger";
-    
+        
+                var iconHTML = '<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Failure:"><use xlink:href="#exclamation-triangle-fill"/></svg>';
+        
+                var html = 
+                `
+                <div id="alertNotification" class="alert ${alerttype}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+                    <span>
+                        ${iconHTML}
+                        ${message}
+                    </span>
+                </div>
+                `;
+        
                 // show pop up
-                $('#alertEmail').append('<div id="alertdiv" class="alert ' + alerttype + '"><a class="close" data-dismiss="alert"></a><span>' + message + '</span></div>')
-    
+                $('#notification').append(html);
+                
                 setTimeout(function ()
-                { // this will automatically close the alert in 6 secs
-                    $("#alertdiv").remove();
+                { // this will automatically close the alert in 2 secs
+                    $("#alertNotification").remove();
                 }, 6000);
+
+
+
+
 
             }
         });
