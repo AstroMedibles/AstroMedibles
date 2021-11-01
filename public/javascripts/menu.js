@@ -159,31 +159,12 @@ function addToCartClicked(event)
             cartQty.dataset.quantity = total;
             $("#cart-quantity").text(total);
 
-
-            const message = `(1) ${title} added to cart!`;
-            const alerttype = "alert-success";
-    
-            var iconHTML = '<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>';
-
-            var html = 
-            `
-            <div id="alertNotification" class="alert ${alerttype}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
-                <span>
-                    ${iconHTML}
-                    ${message}
-                </span>
-            </div>
-            `;
-
-            // show pop up
-            $('#notification').append(html);
             
-            setTimeout(function ()
-            { // this will automatically close the alert in 2 secs
-                $("#alertNotification").remove();
-            }, 1000);
-
-
+            // Notification
+            const message = `(1) ${title} added to cart!`;
+            const alertType     = 'success';
+            const iconChoice    = 1;
+            alertNotify(message, alertType, iconChoice, 1);
 
             console.log("addToCartClicked complete");
         }).catch((error => 
@@ -198,4 +179,37 @@ function ready()
     fetch(address + '/getCartData')
         .then(response => response.json())
         .then(data => loadCartTotal(data['data']));
+}
+
+
+function alertNotify(message, alertType, iconChoice, duration)
+{
+    if (iconChoice == 1)      // ✔
+        iconChoice = 'check-circle-fill';
+    else if (iconChoice == 2) // i
+        iconChoice = 'info-fill';
+    else if (iconChoice == 3) // !
+        iconChoice = 'exclamation-triangle-fill';
+
+    var iconHTML = `<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="${alertType}}:"><use xlink:href="#${iconChoice}"/></svg>`;
+    alertType = `alert-${alertType}`;
+
+    var html = 
+    `
+    <div id="alertNotification" class="alert ${alertType}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+        <span>
+            ${iconHTML}
+            ${message}
+        </span>
+    </div>
+    `;
+
+    // show pop up
+    $('#notification').append(html);
+    
+    duration *= 1000;
+    setTimeout(function ()
+    { // this will automatically close the alert in 2 secs
+        $("#alertNotification").remove();
+    }, duration);
 }

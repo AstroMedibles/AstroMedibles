@@ -335,6 +335,7 @@ function updateSummary(cart)
     if (parseFloat(subtotal) > 0)
     {
         $('#pMessage').text('Place your order!');
+        document.getElementById("buttonPlaceOrder").classList.remove("disabled");
     }
     else
     {
@@ -367,62 +368,60 @@ function userPlaceOrder()
     .then(response => response.json())
     .then((response) =>
     {
+        // Order placed successfully
         document.getElementById("buttonPlaceOrder").classList.add("disabled");
 
-        const message = "Thank you! Your order has been placed!";
-        const alerttype = "alert-success";
-
-        var iconHTML = '<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>';
-
-        var html = 
-        `
-        <div id="alertNotification" class="alert ${alerttype}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
-            <span>
-                ${iconHTML}
-                ${message}
-            </span>
-        </div>
-        `;
-
-        // show pop up
-        $('#notification').append(html);
-        
-        setTimeout(function ()
-        { // this will automatically close the alert in 2 secs
-            $("#alertNotification").remove();
-            window.location.href = 'ThankYou';
-        }, 3000);
-
+        // Notification
+        const message = 'Thank you! Your order has been placed!';
+        const alertType     = 'success';
+        const iconChoice    = 1;
+        alertNotify(message, alertType, iconChoice, 3);
     })
     .catch((error) =>
     {
         console.log(error);
+
+        // Notification
         const message = "Oops. Your order could not be placed.";
-        console.log(message);
-
-        const alerttype = "alert-danger";
-        var iconHTML = '<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Failure:"><use xlink:href="#exclamation-triangle-fill"/></svg>';
-        var html = 
-        `
-        <div id="alertNotification" class="alert ${alerttype}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
-            <span>
-                ${iconHTML}
-                ${message}
-            </span>
-        </div>
-        `;
-        // show pop up
-        $('#notification').append(html);
-        
-        setTimeout(function ()
-        { // this will automatically close the alert in 2 secs
-            $("#alertNotification").remove();
-        }, 3000);
-
-
-    })
-    ;
+        const alertType     = 'danger';
+        const iconChoice    = 3;
+        alertNotify(message, alertType, iconChoice, 3);
+    });
 }
+
+
+function alertNotify(message, alertType, iconChoice, duration)
+{
+    if (iconChoice == 1)      // ✔
+        iconChoice = 'check-circle-fill';
+    else if (iconChoice == 2) // i
+        iconChoice = 'info-fill';
+    else if (iconChoice == 3) // !
+        iconChoice = 'exclamation-triangle-fill';
+
+    var iconHTML = `<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="${alertType}}:"><use xlink:href="#${iconChoice}"/></svg>`;
+    alertType = `alert-${alertType}`;
+
+    var html = 
+    `
+    <div id="alertNotification" class="alert ${alertType}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+        <span>
+            ${iconHTML}
+            ${message}
+        </span>
+    </div>
+    `;
+
+    // show pop up
+    $('#notification').append(html);
+    
+    duration *= 1000;
+    setTimeout(function ()
+    { // this will automatically close the alert in 2 secs
+        $("#alertNotification").remove();
+    }, duration);
+}
+
 
 function ready()
 {

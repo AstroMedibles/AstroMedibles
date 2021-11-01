@@ -26,7 +26,21 @@ function forgotPassword()
         .then(response => response.json())
         .then((data) => 
         {
-            
+            if (data == false)
+            {
+                var error = 'Email not found.'
+                console.log(error);
+                $('#inputEmail').val('');
+
+                // Notification
+                const message       =  error; 
+                const alertType     = 'danger';
+                const iconChoice    = 3;
+                alertNotify(message, alertType, iconChoice, 3);
+
+                return;
+            }
+
             // verication code has been emailed
 
             // notify user code has been sent, and please enter it in
@@ -50,7 +64,6 @@ function forgotPassword()
 
 function updatePassword()
 {
-    console.log(1000);
     var email = $('#inputEmail').val();
     email = $.trim(email);
 
@@ -63,35 +76,104 @@ function updatePassword()
     var verificationCode = $('#inputCode').val();
     verificationCode = $.trim(verificationCode);
 
-    console.log(email);
-    console.log(password);
-    console.log(verificationCode);
+    // make sure both password fields match
+    if (password != passwordConfirm)
+    {
+        var error = 'New password does not match confirm.'
+        console.log(error);
+        $('#inputPasswordConfirm').val('');
+
+        // Notification
+        const message       =  error; 
+        const alertType     = 'danger';
+        const iconChoice    = 3;
+        alertNotify(message, alertType, iconChoice, 3);
+
+        return;
+    }
 
 
-    console.log(4000);
+    // console.log(email);
+    // console.log(password);
+    // console.log(verificationCode);
 
     fetch(address + '/updatePassword',
+    {
+        credentials: "include",
+        method: 'PATCH',
+        headers:
         {
-            credentials: "include",
-            method: 'PATCH',
-            headers:
-            {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify
-                ({
-                    email: email,
-                    password: password,
-                    verificationCode: verificationCode
-                })
-        })
-        .then(response => response.json())
-        .then((data) => 
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify
+            ({
+                email: email,
+                password: password,
+                verificationCode: verificationCode
+            })
+    })
+    .then(response => response.json())
+    .then((data) => 
+    {
+        if (data == false)
         {
-            $('#directionsLabel').text("Success! Your password has been updated");
-            window.location.href = 'login';
-        }).catch((error => 
-        {
-            console.log("updateNewPassword  catch:" + error);
-        }));
+            var error = 'Verification code does not match.'
+            console.log(error);
+            $('#inputCode').val('');
+            $('#inputCode').focus();
+
+            // Notification
+            const message       =  error; 
+            const alertType     = 'danger';
+            const iconChoice    = 3;
+            alertNotify(message, alertType, iconChoice, 3);
+
+            return;
+        }
+
+
+        $('#directionsLabel').text("Success! Your password has been updated");
+        window.location.href = 'login';
+    }).catch((error => 
+    {
+        console.log("updateNewPassword  catch:" + error);
+
+        // Notification
+        const message       = 'Error! Something went wrong!'; 
+        const alertType     = 'danger';
+        const iconChoice    = 3;
+        alertNotify(message, alertType, iconChoice, 3);
+    }));
+}
+
+function alertNotify(message, alertType, iconChoice, duration)
+{
+    if (iconChoice == 1)      // ✔
+        iconChoice = 'check-circle-fill';
+    else if (iconChoice == 2) // i
+        iconChoice = 'info-fill';
+    else if (iconChoice == 3) // !
+        iconChoice = 'exclamation-triangle-fill';
+
+    var iconHTML = `<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="${alertType}}:"><use xlink:href="#${iconChoice}"/></svg>`;
+    alertType = `alert-${alertType}`;
+
+    var html = 
+    `
+    <div id="alertNotification" class="alert ${alertType}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+        <span>
+            ${iconHTML}
+            ${message}
+        </span>
+    </div>
+    `;
+
+    // show pop up
+    $('#notification').append(html);
+    
+    duration *= 1000;
+    setTimeout(function ()
+    { // this will automatically close the alert in 2 secs
+        $("#alertNotification").remove();
+    }, duration);
 }

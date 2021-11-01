@@ -120,21 +120,22 @@ app.get('/ForgotPassword', (request, response) =>
 app.patch('/forgotPasswordGenerateCode', function(request, response) 
 { 
 	console.log("\n" + "route(/forgotPasswordGenerateCode)");
-	const email = request.body.email; 
+	const email = request.body.email;
 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.forgotPasswordGenerateCode(email); 
+	const db = dbService.getDbServiceInstance();
+	const result = db.forgotPasswordGenerateCode(email);
  
-	result.then(data =>  
+	result.then(data =>
 	{
 		response.json({ data: data });
 	})
 	.catch((error) => 
 	{ 
-		console.log("route(/forgotPasswordGenerateCode) \tresult.catch()"); 
-		console.log(error); 
-	}); 
-}); 
+		console.log("route(/forgotPasswordGenerateCode) \tresult.catch()");
+		console.log(error);
+		response.json(false);
+	});
+});
 
 
 app.patch('/updatePassword', function(request, response) 
@@ -159,6 +160,7 @@ app.patch('/updatePassword', function(request, response)
 	{ 
 		console.log("route(/updatePassword) \tresult.catch()"); 
 		console.log(error); 
+		response.json(false);
 	}); 
 }); 
 

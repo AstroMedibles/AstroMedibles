@@ -980,9 +980,17 @@ class DbService
                 if (err)
                 {
                     reject(err.message);
+                    return;
                 }
                 else
                 {
+                    if (result.affectedRows <= 0)
+                    {
+                        var error = 'forgotPasswordGenerateCode(email) ERROR: Email could not be found. Rejected.';
+                        reject(error);
+                        return;
+                    }
+
                     console.log(`ForgotPasswordGenerateCode Email: ${email} : ${verificationCode} verification code sent!`);
                     var subject = 'Forgot your Password';
                     var html = 
@@ -1000,7 +1008,7 @@ class DbService
 
                     resolve(result.affectedRows);
                 }
-            })
+            });
         });
         return response;
     }
