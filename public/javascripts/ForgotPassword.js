@@ -28,7 +28,7 @@ function forgotPassword()
         {
             if (data == false)
             {
-                var error = 'Email not found.'
+                var error = 'Email not found'
                 console.log(error);
                 $('#inputEmail').val('');
 
@@ -55,7 +55,13 @@ function forgotPassword()
             $('#newPasswordConfirmDiv').removeAttr('hidden');
             $('#buttonNewPassword').removeAttr('hidden');
 
-            console.log("forgotPasswordGenerateCode complete");
+            // Notification
+            const message       =  'Code successfully sent'; 
+            const alertType     = 'primary';
+            const iconChoice    = 3;
+            alertNotify(message, alertType, iconChoice, 2);
+
+            // console.log("forgotPasswordGenerateCode complete");
         }).catch((error => 
         {
             console.log("forgotPasswordGenerateCode  catch:" + error);
@@ -79,7 +85,7 @@ function updatePassword()
     // make sure both password fields match
     if (password != passwordConfirm)
     {
-        var error = 'New password does not match confirm.'
+        var error = 'New password does not match confirm'
         console.log(error);
         $('#inputPasswordConfirm').val('');
 
@@ -117,7 +123,7 @@ function updatePassword()
     {
         if (data == false)
         {
-            var error = 'Verification code does not match.'
+            var error = 'Verification code does not match'
             console.log(error);
             $('#inputCode').val('');
             $('#inputCode').focus();
