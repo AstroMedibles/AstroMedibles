@@ -2,6 +2,29 @@
 const address = 'https://www.astromedibles.com';
 // const address = 'http://localhost:8080';
 
+const passwordInput = document.getElementById('inputPassword');
+const togglePasswordButton = document.getElementById('toggle-password');
+
+togglePasswordButton.addEventListener('click', togglePassword);
+
+function togglePassword()
+{
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      togglePasswordButton.textContent = 'Hide';
+      togglePasswordButton.setAttribute('aria-label',
+        'Hide password.');
+    } else {
+      passwordInput.type = 'password';
+      togglePasswordButton.textContent = 'Show';
+      togglePasswordButton.setAttribute('aria-label',
+        'Show password as plain text. ' +
+        'Warning: this will display your password on the screen.');
+    }
+}
+
+
+
 function forgotPassword()
 {
     var email = $('#inputEmail').val();
@@ -52,7 +75,6 @@ function forgotPassword()
            
             $('#verifyDiv').removeAttr('hidden');
             $('#newPasswordDiv').removeAttr('hidden');
-            $('#newPasswordConfirmDiv').removeAttr('hidden');
             $('#buttonNewPassword').removeAttr('hidden');
 
             // Notification
@@ -76,27 +98,24 @@ function updatePassword()
     var password = $('#inputPassword').val();
     password = $.trim(password);
 
-    var passwordConfirm = $('#inputPasswordConfirm').val();
-    passwordConfirm = $.trim(passwordConfirm);
-
     var verificationCode = $('#inputCode').val();
     verificationCode = $.trim(verificationCode);
 
     // make sure both password fields match
-    if (password != passwordConfirm)
-    {
-        var error = 'New password does not match confirm'
-        console.log(error);
-        $('#inputPasswordConfirm').val('');
+    // if (password != passwordConfirm)
+    // {
+    //     var error = 'New password does not match confirm'
+    //     console.log(error);
+    //     $('#inputPasswordConfirm').val('');
 
-        // Notification
-        const message       =  error; 
-        const alertType     = 'danger';
-        const iconChoice    = 3;
-        alertNotify(message, alertType, iconChoice, 3);
+    //     // Notification
+    //     const message       =  error; 
+    //     const alertType     = 'danger';
+    //     const iconChoice    = 3;
+    //     alertNotify(message, alertType, iconChoice, 3);
 
-        return;
-    }
+    //     return;
+    // }
 
 
     // console.log(email);
