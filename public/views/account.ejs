@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <title>Account - AstroMedibles</title>
+    <%- include('./head') %>
+</head>
+
+<body>
+
+  <%- include('./navbar') %>
+
+  <main class="page login-page">
+    <section class="clean-block clean-form dark">
+        <div class="container" >
+
+            <div class="block-heading">
+                <h2 class="text-info">My Account</h2>
+                <p id="directionsLabel">Check your points, or update your information!</p>
+            </div>
+
+            <form>
+                <div id="nameDiv" class="mb-3">
+                    <label class="form-label" for="name">First Name</label>
+                    <input disabled class="form-control item" type="text" id="inputName">
+                </div>
+
+                <div id="emailDiv" class="mb-3">
+                    <label class="form-label" for="email">Email</label>
+                    <input disabled class="form-control item" type="email" id="inputEmail">
+                </div>
+
+                <div id="birthdayDiv" class="mb-3">
+                    <label class="form-label" for="name">Birthday</label>
+                    <input disabled class="form-control item" type="text" id="inputName">
+                </div>
+                
+                <button disabled id="1"  type="button" class="btn btn-primary rounded-pill w-100 mb-3" onclick="">Change Password</button>
+    
+                <br><br>
+                <button disabled id="2"  type="button" class="btn btn-primary rounded-pill w-100" onclick="">Update</button>
+
+            </form>
+        </div>
+    </section>
+</main>
+
+
+    <%- include('./footer') %>
+    <script type="text/javascript" src="../javascripts/account.js"></script>
+</body>
+</html>

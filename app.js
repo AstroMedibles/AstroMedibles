@@ -97,7 +97,7 @@ app.get('/login', (request, response) =>
 	response.render('login'); 
 });
 
-// Route to Login Page 
+// Route to ForgotPassword Page 
 app.get('/ForgotPassword', (request, response) => 
 { 
 	console.log("\n" + "route(/ForgotPassword)"); 
@@ -115,6 +115,23 @@ app.get('/ForgotPassword', (request, response) =>
 	response.cookie('password', "", options) // options is optional 
  
 	response.render('ForgotPassword'); 
+});
+
+// Route to account Page 
+app.get('/account', (request, response) => 
+{ 
+	console.log("\n" + "route(/account) "); 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((isAdmin) => 
+	{
+		response.render('account'); 
+	})
+	.catch(() =>
+	{
+		console.log("route(/account) \tresult.catch()"); 
+		console.log("route(/account) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
 });
 
 app.patch('/forgotPasswordGenerateCode', function(request, response) 
