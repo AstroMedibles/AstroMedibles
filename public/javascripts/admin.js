@@ -50,12 +50,12 @@ function populateUserOrders()
 
             var userOrder = orders[i];
 
-            var status      = userOrder[0].status;
-            var order_id    = userOrder[1].order_id;
-            var name        = userOrder[2].name;
-            var cart        = JSON.parse(userOrder[3].cart).cart;
-            var total       = userOrder[4].total;
-            var date_created = new Date(userOrder[5].date_created);
+            var status      = userOrder.status;
+            var order_id    = userOrder.order_id;
+            var name        = userOrder.name;
+            var cart        = JSON.parse(userOrder.cart).cart;
+            var total       = userOrder.total;
+            var date_created = new Date(userOrder.date_created);
             var options =
             {
                 hour: '2-digit',
@@ -135,8 +135,8 @@ function populateUserOrders()
 
 
 
-            // var date_created = userOrder[5].date_created.substring(0, 10) + "<br>" // date
-            //     + timeHour + userOrder[5].date_created.substring(13, 16) + amOrPm;    // time
+            // var date_created = userOrder.date_created.substring(0, 10) + "<br>" // date
+            //     + timeHour + userOrder.date_created.substring(13, 16) + amOrPm;    // time
 
             var cartText = "";
             for (let j = 1; j < cart.length; j++)
@@ -396,8 +396,8 @@ function radioChartClick()
 
             var userOrder = orders[i];
 
-            var statusText  = userOrder[0].status;
-            var cart        = JSON.parse(userOrder[3].cart).cart;
+            var statusText  = userOrder.status;
+            var cart        = JSON.parse(userOrder.cart).cart;
 
             // create chartMap
 

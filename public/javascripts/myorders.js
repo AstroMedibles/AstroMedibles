@@ -12,7 +12,7 @@ function loadCartTotal(data)
     // console.log("function: loadCartTotal(data)");
     try
     {
-        var cart = data[0].cart.cart[0][1];
+        var cart = data.cart.cart[0][1];
         // console.log(cart);
 
         if (data == null)
@@ -46,13 +46,13 @@ function populateUserOrders()
 
             var userOrder = orders[i];
 
-            var status      = userOrder[0].status;
-            var order_id    = userOrder[1].order_id;
-            var name        = userOrder[2].name;
-            var cart        = JSON.parse(userOrder[3].cart).cart;
-            var total       = userOrder[4].total;
+            var status      = userOrder.status;
+            var order_id    = userOrder.order_id;
+            var name        = userOrder.name;
+            var cart        = JSON.parse(userOrder.cart).cart;
+            var total       = userOrder.total;
 
-            var date_created = new Date(userOrder[5].date_created);
+            var date_created = new Date(userOrder.date_created);
             var options =
             {
                 hour: '2-digit',

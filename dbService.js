@@ -745,11 +745,11 @@ class DbService
         const response = await new Promise((resolve, reject) => 
         {
             db.getUserData(email, password)
-                .then(results => 
-                {
-                    var user_id = results.id;
-                    resolve(db.getUserOrders1(user_id));
-                });
+            .then(results => 
+            {
+                var user_id = results.id;
+                resolve(db.getUserOrders1(user_id));
+            });
         });
         return response;
     }
@@ -777,16 +777,24 @@ class DbService
                     var userOrders = [];
                     for (let i = 0; i < results.length; i++)
                     {
-                        var status       = { "status":       results[i].status };
-                        var order_id     = { "order_id":     results[i].order_id };
-                        var name         = { "name":         results[i].name };
-                        var cart         = { "cart":         results[i].cart };
-                        var total        = { "total":        results[i].total };
-                        var date_created = { "date_created": results[i].date_created };
-                        var order        = [status, order_id, name, cart, total, date_created];
+                        var order = 
+                        {
+                            status : results[i].status,
+                            order_id : results[i].order_id,
+                            name : results[i].name,
+                            status : results[i].status,
+                            cart : results[i].cart,
+                            total : results[i].total,
+                            date_created : results[i].date_created,
+                        };
+
+                        // console.log('order');
+                        // console.log(order);
                         userOrders.push(order);
                     }
 
+                    console.log('userOrders');
+                    console.log(userOrders);
                     resolve(userOrders);
                 })
             }
@@ -911,13 +919,19 @@ class DbService
                     var userOrders = [];
                     for (let i = 0; i < results.length; i++)
                     {
-                        var status       = { "status":       results[i].status };
-                        var order_id     = { "order_id":     results[i].order_id };
-                        var name         = { "name":         results[i].name };
-                        var cart         = { "cart":         results[i].cart };
-                        var total        = { "total":        results[i].total };
-                        var date_created = { "date_created": results[i].date_created };
-                        var order        = [status, order_id, name, cart, total, date_created];
+                        var order = 
+                        {
+                            status : results[i].status,
+                            order_id : results[i].order_id,
+                            name : results[i].name,
+                            status : results[i].status,
+                            cart : results[i].cart,
+                            total : results[i].total,
+                            date_created : results[i].date_created,
+                        };
+
+                        // console.log('order');
+                        // console.log(order);
                         userOrders.push(order);
                     }
 
