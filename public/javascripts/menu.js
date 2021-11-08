@@ -100,7 +100,7 @@ function loadCartTotal(data)
 
     try
     {
-        var cart = data[0].cart.cart[0][1];
+        var cart = data.cart.cart[0][1];
         console.log(cart);
 
         if (data == null)

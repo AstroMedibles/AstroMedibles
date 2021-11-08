@@ -14,7 +14,7 @@ function loadCartTotal(data)
     // console.log("function: loadCartTotal(data)");
     try
     {
-        var cart = data[0].cart.cart[0][1];
+        var cart = data.cart.cart[0][1];
         // console.log(cart);
 
         if (data == null)
@@ -29,7 +29,7 @@ function loadCartTotal(data)
         $("#cart-quantity").text(cart);
 
         // load cards from cart
-        getCartDetails(data[0].cart.cart);
+        getCartDetails(data.cart.cart);
 
     }
     catch (error)
@@ -376,6 +376,11 @@ function userPlaceOrder()
         const alertType     = 'success';
         const iconChoice    = 1;
         alertNotify(message, alertType, iconChoice, 3);
+
+        setTimeout(function ()
+        { // this will automatically close the alert in 2 secs
+            window.location.replace('/ThankYou');
+        }, 3000);
     })
     .catch((error) =>
     {

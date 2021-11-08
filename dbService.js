@@ -219,7 +219,7 @@ class DbService
                 try
                 {
                     // retrieve the user's cart
-                    cart = results[0].cart.cart;
+                    cart = results.cart.cart;
                 }
                 catch (error)
                 {
@@ -301,7 +301,7 @@ class DbService
                 try
                 {
                     // retrieve the user's cart
-                    cart = results[0].cart.cart;
+                    cart = results.cart.cart;
                     if (cart.length < 1)
                     {
                         return;
@@ -558,7 +558,6 @@ class DbService
         .then((results) =>
         {
             userData            = results[0];
-            userData            = userData[0];
             total               = results[1][0];
             menuItems           = results[1][1];
 
@@ -662,7 +661,7 @@ class DbService
         {
             db.getUserData(email, password).then((results) =>
             {
-                var cart = results[0].cart.cart;
+                var cart = results.cart.cart;
                 db.cartCalculateTotalCost(cart).then((usersCartTotalResult) =>
                 {
                     resolve([results, usersCartTotalResult]);
@@ -748,7 +747,7 @@ class DbService
             db.getUserData(email, password)
                 .then(results => 
                 {
-                    var user_id = results[0].id;
+                    var user_id = results.id;
                     resolve(db.getUserOrders1(user_id));
                 });
         });
@@ -848,7 +847,7 @@ class DbService
         
         db.getUserData(email, password).then((dataResult) =>
         {
-            dataResult = dataResult[0];
+            dataResult = dataResult;
             var userId    = dataResult.id
             var userEmail = dataResult.email;
             var userName = dataResult.name;
