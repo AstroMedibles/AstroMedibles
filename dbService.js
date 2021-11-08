@@ -538,7 +538,6 @@ class DbService
         return response;
     }
 
-
     async submitUserOrder(email, password, date_created)
     {
         const db        = DbService.getDbServiceInstance();
@@ -807,7 +806,6 @@ class DbService
         return response;
     }
 
-
     async adminUpdateOrderStatus(orderId, status)
     {
         const response = new Promise((resolve, reject) =>
@@ -846,7 +844,6 @@ class DbService
         });
         return response;
     }
-
 
     async cancelOrder(order_id, email, password)
     {
@@ -1023,6 +1020,86 @@ class DbService
                 }
             });
         });
+        return response;
+    }
+
+    async updateAccountAttributes(email, password, name)
+    {
+        const response = await new Promise((resolve, reject) => 
+        {
+            try
+            {
+                email = email.toLowerCase();
+                const query = "SELECT * FROM " + process.env.TABLE_NAMES + " WHERE email = ?";
+                connection.query(query, [email, password], (err, results) =>
+                {
+                    if (err) 
+                    {
+                        reject(new Error("dbService.js getUserData(email, password) ERROR\n" + err.message));
+                    }
+
+                    if (results.length > 0)
+                    {
+                        var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
+
+                        console.log('OriginalText: ' + password);
+                        console.log('decryptedText: ' + decryptedText);
+
+                        if (password == decryptedText)
+                        {
+                            console.log('Login success!');
+                            console.log("results[0]");
+                            console.log(results[0]);
+                            const id = results[0].id;
+
+                            console.log(id);
+                            console.log(name);
+                            console.log(email);
+                            const query = "UPDATE " + process.env.TABLE_NAMES + " SET name = ?, SET email = ? WHERE id = ?;";
+                            connection.query(query, [name, email, id], (err, results2) =>
+                            {
+                                if (err) 
+                                {
+                                    reject(new Error("dbService.js getUserData(email, password) ERROR\n" + err.message));
+                                }
+                                            
+                                console.log(`UpdateAccountAttributes Email: ${email} : Name: ${name} user account update sent!`);
+                                var subject = 'Updated Account Information';
+                                var html = 
+                                `
+                                <h3>Your account information has been updated at astromedibles.com</b></h3>
+                                <p>
+                                </p>
+                                `;
+                                
+                                const db = DbService.getDbServiceInstance();
+                                db.sendEmail(email, subject, html);
+
+                                resolve(results2.affectedRows);
+                                console.log('Account Update Success!');
+                                return;
+                                
+                            });
+                        }
+                        else
+                        {
+                            reject('Wrong password');
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        reject('Wrong email.');
+                        return;
+                    }
+                });
+            }
+            catch (error)
+            {
+                console.log(error);
+                reject(error);
+            }
+            });
         return response;
     }
 

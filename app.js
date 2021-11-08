@@ -160,6 +160,31 @@ app.patch('/forgotPasswordGenerateCode', function(request, response)
 	});
 });
 
+app.patch('/updateAccountAttributes', function(request, response) 
+{ 
+	console.log("\n" + "route(/updateAccountAttributes)");
+	const email 			= request.body.email; 
+	const password 			= request.body.password; 
+	const name 				= request.body.name; 
+
+    console.log(email);
+    console.log(password);
+    console.log(name);
+
+	const db = dbService.getDbServiceInstance(); 
+	const result = db.updateAccountAttributes(email, password, name); 
+ 
+	result.then(data =>
+	{
+		response.json(true);
+	})
+	.catch((error) => 
+	{
+		console.log("route(/updateAccountAttributes) \tresult.catch()"); 
+		console.log(error); 
+		response.json(false);
+	});
+});
 
 app.patch('/updatePassword', function(request, response) 
 { 
@@ -175,17 +200,17 @@ app.patch('/updatePassword', function(request, response)
 	const db = dbService.getDbServiceInstance(); 
 	const result = db.updatePassword(email, password, verificationCode); 
  
-	result.then(data =>  
+	result.then(data =>
 	{
 		response.json({ data: data });
 	})
 	.catch((error) => 
-	{ 
+	{
 		console.log("route(/updatePassword) \tresult.catch()"); 
 		console.log(error); 
 		response.json(false);
-	}); 
-}); 
+	});
+});
 
 // render 
 app.get('/register', (request, response) => 

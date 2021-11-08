@@ -155,10 +155,11 @@ function updatePassword()
 
             return;
         }
-
-
-        $('#directionsLabel').text("Success! Your password has been updated");
-        window.location.href = 'login';
+        else
+        {
+            $('#directionsLabel').text("Success! Your password has been updated");
+            window.location.href = 'login';
+        }
     }).catch((error => 
     {
         console.log("updateNewPassword  catch:" + error);
