@@ -114,18 +114,18 @@ class DbService
                             console.log('Login success!');
                             console.log("results[0]");
                             console.log(results[0]);
-                            resolve(results);
+                            resolve(results[0]);
                             return;
                         }
                         else
                         {
-                            reject(results);
+                            reject('Wrong password');
                             return;
                         }
                     }
                     else
                     {
-                        reject(results);
+                        reject('Wrong email.');
                         return;
                     }
                 });
@@ -133,7 +133,7 @@ class DbService
             catch (error)
             {
                 console.log(error);
-                reject();
+                reject(error);
             }
             });
         return response;

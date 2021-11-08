@@ -48,7 +48,7 @@ function signIn()
         else // invalid credentials
         {
             // Clear fields
-            $('#inputEmail').val('');
+            // $('#inputEmail').val('');
             $('#inputPassword').val('');
             $('#inputPassword').focus();
 

@@ -58,17 +58,17 @@ app.get('/', function (request, response)
 	console.log("Signed Cookies: ", request.signedCookies) 
  
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((isAdmin) => 
-	{ 
-		if (isAdmin === true) 
-		{ 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		if (accountAttributes.isAdmin === 1)
+		{
 			response.redirect('admin'); 
 		} 
 		else 
 		{ 
 			response.redirect('menu'); 
-		} 
-	}) 
+		}
+	})
 	.catch(() => 
 	{ 
 		console.log("route(/) \tresult.catch()"); 
@@ -122,14 +122,20 @@ app.get('/account', (request, response) =>
 { 
 	console.log("\n" + "route(/account) "); 
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((isAdmin) => 
+	loggedInResponse.then((accountAttributes) => 
 	{
-		response.render('account'); 
+		// console.log('accountAttributes');
+		// console.log(accountAttributes.isAdmin);
+		response.render('account',
+		{
+			accountAttributes: accountAttributes
+		});
 	})
-	.catch(() =>
+	.catch((error) =>
 	{
-		console.log("route(/account) \tresult.catch()"); 
-		console.log("route(/account) \tif loggedIn === false"); 
+		console.log("route(/account) \tresult.catch()");
+		console.log("route(/account) \tif loggedIn === false");
+		console.log(error);
 		response.redirect('/login'); 
 	});
 });
@@ -193,10 +199,10 @@ app.get('/menu', function (request, response)
 { 
 	console.log("\n" + "route(/menu)"); 
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then(() => 
-	{ 
+	loggedInResponse.then((accountAttributes) => 
+	{
 		response.render('menu'); 
-	}) 
+	})
 	.catch(() => 
 	{ 
 		console.log("route(/) \tresult.catch()"); 
@@ -221,31 +227,16 @@ app.post('/auth', function (request, response)
  
 		const db = dbService.getDbServiceInstance(); 
 		const result = db.getUserData(email, password); 
-		var loggedIn = false; 
+		var loggedIn = false;
+		// console.log(1111);
 		result.then(results => 
 		{ 
-			if (results.length > 0) 
-			{ 
-				console.log("loggedIn === true"); 
-				loggedIn = true; 
-				console.log("results: "); 
-				console.log(results); 
-				console.log(results[0]); 
-				console.log("results.length: "); 
-				console.log(results.length); 
-			} 
-			else 
-			{ 
-				console.log("loggedIn === false"); 
-				loggedIn = false; 
-			} 
+				// console.log(3333);
+			// 	console.log("loggedIn === true"); 
+			// 	loggedIn = true;
 
-			console.log("route(/auth) " + "\t" + "result.then()"); 
-			console.log(loggedIn); 
-			// if logged in, route to /menu 
- 
-			if (loggedIn === true) 
-			{ 
+			// if (loggedIn === true) 
+			// { 
 				console.log("route(/auth) \tif loggedIn === true"); 
 				let options = 
 				{ 
@@ -260,17 +251,35 @@ app.post('/auth', function (request, response)
  
 				console.log("Cookies created: email, password"); 
 				// response.redirect('/menu'); 
-				response.json(loggedIn); 
+				response.json(true); 
  
-			} 
+			// } 
  
-			if (loggedIn === false) 
-			{ 
-				console.log("route(/auth) \tif loggedIn === false"); 
+			// if (loggedIn === false) 
+			// { 
+			// 	console.log("route(/auth) \tif loggedIn === false"); 
  
-				// expire the false cookies 
-				var options = 
-				{ 
+			// 	// expire the false cookies 
+			// 	var options = 
+			// 	{ 
+			// 		maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
+			// 		httpOnly: false, // The cookie only accessible by the web server 
+			// 		signed: false // Indicates if the cookie should be signed 
+			// 	} 
+ 
+			// 	// Set cookie 
+			// 	response.cookie('email', email, options) // options is optional 
+			// 	response.cookie('password', password, options) // options is optional 
+			// 	response.json(loggedIn); 
+			// } 
+			// if logged out, route to /login 
+ 
+		}).catch((dataResult) => 
+		{ 
+			console.log("route(/auth) \tresult.catch()"); 
+			console.log(dataResult); 
+			var options = 
+				{
 					maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
 					httpOnly: false, // The cookie only accessible by the web server 
 					signed: false // Indicates if the cookie should be signed 
@@ -279,20 +288,7 @@ app.post('/auth', function (request, response)
 				// Set cookie 
 				response.cookie('email', email, options) // options is optional 
 				response.cookie('password', password, options) // options is optional 
-				response.json(loggedIn); 
-			} 
-			// if logged out, route to /login 
- 
-		}).catch((dataResult) => 
-		{ 
-			console.log("route(/auth) \tresult.catch()"); 
-			console.log(dataResult); 
-			if (loggedIn === false) 
-			{ 
-				console.log("route(/auth) \tif loggedIn === false ERROR"); 
-				response.json(loggedIn); 
-				return; 
-			} 
+				response.json(false); 			
 		}); 
 	} 
 	catch (error)  
@@ -326,7 +322,7 @@ app.get('/ShoppingCart', (request, response) =>
 { 
 	console.log("\n" + "route(/ShoppingCart)"); 
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then(() => 
+	loggedInResponse.then((accountAttributes) => 
 	{ 
 		response.render('shopping-cart'); 
 	}) 
@@ -343,7 +339,7 @@ app.get('/MyOrders', (request, response) =>
 { 
 	console.log("\n" + "route(/MyOrders)"); 
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then(() => 
+	loggedInResponse.then((accountAttributes) => 
 	{ 
 		response.render('MyOrders'); 
 	}) 
@@ -360,7 +356,7 @@ app.get('/ThankYou', (request, response) =>
 { 
 	console.log("\n" + "route(/ThankYou)"); 
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then(() => 
+	loggedInResponse.then((accountAttributes) => 
 	{ 
 		response.render('ThankYou'); 
 	}) 
@@ -421,20 +417,20 @@ app.get('/adminGetUserOrders', (request, response) =>
 {
 	console.log("/adminGetUserOrders");
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((isAdmin) => 
+	loggedInResponse.then((accountAttributes) => 
 	{
 		console.log("admin(/) \tresult.then()"); 
-		if (isAdmin === true) 
+		if (accountAttributes.isAdmin === 1) 
 		{ 
 			console.log("/adminGetUserOrders ADMIN TRUE");
 			const db = dbService.getDbServiceInstance(); 
 			const result = db.adminGetUserOrders(); 
 			
 			result.then(data =>  
-				{ 
-					response.json({ data: data });
-				}) 
-				.catch(err => console.log(err));			
+			{ 
+				response.json({ data: data });
+			}) 
+			.catch(err => console.log(err));			
 		} 
 		else 
 		{ 
@@ -456,20 +452,20 @@ app.get('/adminGetAccessCodes', (request, response) =>
 {  
 	console.log("/adminGetAccessCodes");
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((isAdmin) => 
+	loggedInResponse.then((accountAttributes) => 
 	{
 		console.log("admin(/) \tresult.then()"); 
-		if (isAdmin === true) 
+		if (accountAttributes.isAdmin === 1) 
 		{ 
 			console.log("/adminGetAccessCodes ADMIN TRUE");
 			const db = dbService.getDbServiceInstance(); 
 			const result = db.adminGetAccessCodes(); 
 			
 			result.then(data =>  
-				{ 
-					response.json({ data: data });
-				}) 
-				.catch(err => console.log(err));			
+			{
+				response.json({ data: data });
+			})
+			.catch(err => console.log(err));			
 		} 
 		else 
 		{ 
@@ -491,10 +487,10 @@ app.post('/generateAccessCodes', (request, response) =>
 {  
 	console.log("/generateAccessCodes");
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((isAdmin) => 
+	loggedInResponse.then((accountAttributes) => 
 	{
 		console.log("admin(/) \tresult.then()"); 
-		if (isAdmin === true) 
+		if (accountAttributes.isAdmin === 1) 
 		{ 
 			console.log("/generateAccessCodes ADMIN TRUE");
 			const db = dbService.getDbServiceInstance(); 
@@ -547,10 +543,10 @@ app.get('/admin', (request, response) =>
 	console.log("\n" + "route(/admin) "); 
  
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((isAdmin) => 
+	loggedInResponse.then((accountAttributes) => 
 	{ 
 		console.log("admin(/) \tresult.then()"); 
-		if (isAdmin === true) 
+		if (accountAttributes.isAdmin === 1) 
 		{ 
 			response.render('admin'); 
 		} 
@@ -621,10 +617,10 @@ app.patch('/adminUpdateOrderStatus', (request, response) =>
 	console.log("\n"+ "route(/adminUpdateOrderStatus) "); 
 
 	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((isAdmin) => 
+	loggedInResponse.then((accountAttributes) => 
 	{ 
 		console.log("adminUpdateOrderStatus(/) \tresult.then()"); 
-		if (isAdmin === true) 
+		if (accountAttributes.isAdmin === 1) 
 		{ 
 			const { orderId, status } = request.body; 
 			const db = dbService.getDbServiceInstance(); 
@@ -774,7 +770,7 @@ function checkIfLoggedIn(request)
 		if (typeof email === 'undefined' || typeof password === 'undefined') 
 		{ 
 			console.log("loggedIn === false"); 
-			reject(false); 
+			reject(false);
 			return; 
 		} 
  
@@ -783,20 +779,11 @@ function checkIfLoggedIn(request)
  
 		result.then((results) => // valid login 
 		{ 
-			console.log("loggedIn === true"); 
-			const isAdmin = results[0].isAdmin;
-			if (isAdmin === 1) 
-			{ 
-				console.log("isAdmin: " + isAdmin + " (true)"); 
-				resolve(true); 
-			} 
-			else 
-			{ 
-				console.log("isAdmin: " + isAdmin + " (false)"); 
-				resolve(false); 
-			} 
- 
-		}) 
+			console.log("loggedIn === true");
+			// console.log(2222);
+			console.log(results);
+			resolve(results);
+		})
 		.catch(() =>  // invalid login 
 		{ 
 			console.log("loggedIn === false"); 

@@ -22,17 +22,17 @@
             <form>
                 <div id="nameDiv" class="mb-3">
                     <label class="form-label" for="name">First Name</label>
-                    <input disabled class="form-control item" type="text" id="inputName">
+                    <input readonly class="form-control item" type="text" id="inputName" value=<%= accountAttributes.name %>>
                 </div>
 
                 <div id="emailDiv" class="mb-3">
                     <label class="form-label" for="email">Email</label>
-                    <input disabled class="form-control item" type="email" id="inputEmail">
+                    <input readonly class="form-control item" type="email" id="inputEmail" value=<%= accountAttributes.email %>>
                 </div>
 
                 <div id="birthdayDiv" class="mb-3">
                     <label class="form-label" for="name">Birthday</label>
-                    <input disabled class="form-control item" type="text" id="inputName">
+                    <input readonly class="form-control item" type="text" id="inputName">
                 </div>
                 
                 <button disabled id="1"  type="button" class="btn btn-primary rounded-pill w-100 mb-3" onclick="">Change Password</button>
