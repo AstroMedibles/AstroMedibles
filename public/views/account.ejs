@@ -16,29 +16,32 @@
 
             <div class="block-heading">
                 <h2 class="text-info">My Account</h2>
-                <p id="directionsLabel">Check your points, or update your information!</p>
+                <p id="directionsLabel">Change your account information here</p>
             </div>
 
             <form>
                 <div id="nameDiv" class="mb-3">
                     <label class="form-label" for="name">First Name</label>
-                    <input readonly class="form-control item" type="text" id="inputName" value=<%= accountAttributes.name %>>
+                    <input  class="form-control item" type="text" id="inputName" value=<%= accountAttributes.name %>>
                 </div>
 
                 <div id="emailDiv" class="mb-3">
                     <label class="form-label" for="email">Email</label>
-                    <input readonly class="form-control item" type="email" id="inputEmail" value=<%= accountAttributes.email %>>
+                    <input  class="form-control item" type="email" id="inputEmail" value=<%= accountAttributes.email %>>
                 </div>
 
-                <div id="birthdayDiv" class="mb-3">
+
+                <a href="/ForgotPassword">Forgot password</a>
+
+                <!-- <div id="birthdayDiv" class="mb-3">
                     <label class="form-label" for="name">Birthday</label>
                     <input readonly class="form-control item" type="text" id="inputBirthday">
-                </div>
+                </div> -->
                 
-                <button disabled id="1"  type="button" class="btn btn-primary rounded-pill w-100 mb-3" onclick="">Change Password</button>
+                <!-- <button disabled id="1"  type="button" class="btn btn-primary rounded-pill w-100 mb-3" onclick="">Change Password</button> -->
     
                 <br><br>
-                <button disabled id="buttonUpdate"  type="button" class="btn btn-primary rounded-pill w-100" onclick="updateAccountAttributes()">Update</button>
+                <button  id="buttonUpdate"  type="button" class="btn btn-primary rounded-pill w-100" onclick="updateAccountAttributes()">Update</button>
 
             </form>
         </div>

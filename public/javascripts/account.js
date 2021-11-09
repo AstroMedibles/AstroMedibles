@@ -1,6 +1,6 @@
 
-// const address = 'https://www.astromedibles.com';
-const address = 'http://localhost:8080';
+const address = 'https://www.astromedibles.com';
+// const address = 'http://localhost:8080';
 
 function updateAccountAttributes()
 {
@@ -13,9 +13,21 @@ function updateAccountAttributes()
     var name = $('#inputName').val();
     name = $.trim(name);
 
+    if (name.length > 20)
+    {
+        name = name.substring(0, 20);
+    }
+
+    if (email.length > 60)
+    {
+        email = email.substring(0, 60);
+    }
     // console.log(email);
     // console.log(password);
     // console.log(name);
+
+    const buttonUpdate = document.getElementById('buttonUpdate');
+    buttonUpdate.classList.add("disabled");
 
     fetch(address + '/updateAccountAttributes',
     {
@@ -35,9 +47,28 @@ function updateAccountAttributes()
     .then(response => response.json())
     .then((data) => 
     {
-        if (data == false)
+        if (data == true)
         {
-            var error = 'Error, could not update'
+            var error = 'Success! Account updated'
+            console.log(error);
+
+            // Notification
+            const message       =  error; 
+            const alertType     = 'success';
+            const iconChoice    = 1;
+            var   duration      = 3;
+            alertNotify(message, alertType, iconChoice, duration);
+
+            // reload page
+            duration *= 1000;
+            setTimeout(function ()
+            { // this will automatically close the alert in 2 secs
+                window.location.replace('/account');
+            }, duration);
+        }
+        else
+        {
+            var error = data;
             console.log(error);
 
             // Notification
@@ -47,17 +78,6 @@ function updateAccountAttributes()
             alertNotify(message, alertType, iconChoice, 3);
 
             return;
-        }
-        else
-        {
-            var error = 'Success! Account updated'
-            console.log(error);
-
-            // Notification
-            const message       =  error; 
-            const alertType     = 'success';
-            const iconChoice    = 1;
-            alertNotify(message, alertType, iconChoice, 3);
         }
     }).catch((error => 
     {

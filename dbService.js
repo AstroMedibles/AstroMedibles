@@ -1023,19 +1023,21 @@ class DbService
         return response;
     }
 
-    async updateAccountAttributes(email, password, name)
+    async updateAccountAttributes(currentEmail, newEmail, password, name)
     {
         const response = await new Promise((resolve, reject) => 
         {
             try
             {
-                email = email.toLowerCase();
+                currentEmail = currentEmail.toLowerCase();
+                newEmail = newEmail.toLowerCase();
+
                 const query = "SELECT * FROM " + process.env.TABLE_NAMES + " WHERE email = ?";
-                connection.query(query, [email, password], (err, results) =>
+                connection.query(query, [currentEmail, password], (err, results) =>
                 {
                     if (err) 
                     {
-                        reject(new Error("dbService.js getUserData(email, password) ERROR\n" + err.message));
+                        reject(new Error("dbService.js updateAccountAttributes(currentEmail, newEmail, password, name) ERROR\n" + err.message));
                     }
 
                     if (results.length > 0)
@@ -1054,16 +1056,17 @@ class DbService
 
                             console.log(id);
                             console.log(name);
-                            console.log(email);
-                            const query = "UPDATE " + process.env.TABLE_NAMES + " SET name = ?, SET email = ? WHERE id = ?;";
-                            connection.query(query, [name, email, id], (err, results2) =>
+                            console.log(newEmail);
+                            const query = "UPDATE " + process.env.TABLE_NAMES + " SET name = ?, email = ? WHERE id = ?;";
+                            connection.query(query, [name, newEmail, id], (err, results2) =>
                             {
                                 if (err) 
                                 {
                                     reject(new Error("dbService.js getUserData(email, password) ERROR\n" + err.message));
                                 }
-                                            
-                                console.log(`UpdateAccountAttributes Email: ${email} : Name: ${name} user account update sent!`);
+
+                                resolve(results2.affectedRows);
+                                console.log(`UpdateAccountAttributes Email: ${newEmail} : Name: ${name} user account update sent!`);
                                 var subject = 'Updated Account Information';
                                 var html = 
                                 `
@@ -1073,12 +1076,9 @@ class DbService
                                 `;
                                 
                                 const db = DbService.getDbServiceInstance();
-                                db.sendEmail(email, subject, html);
-
-                                resolve(results2.affectedRows);
+                                // db.sendEmail(newEmail, subject, html);
                                 console.log('Account Update Success!');
                                 return;
-                                
                             });
                         }
                         else

@@ -163,26 +163,42 @@ app.patch('/forgotPasswordGenerateCode', function(request, response)
 app.patch('/updateAccountAttributes', function(request, response) 
 { 
 	console.log("\n" + "route(/updateAccountAttributes)");
-	const email 			= request.body.email; 
-	const password 			= request.body.password; 
-	const name 				= request.body.name; 
+	const currentEmail 		= request.cookies.email; 
+	const password 			= request.cookies.password; 
 
-    console.log(email);
+	const newEmail 			= request.body.email; 
+	// const password 			= request.body.password; 
+	const name 				= request.body.name;
+
+    console.log(currentEmail);
+	console.log(newEmail);
     console.log(password);
     console.log(name);
 
 	const db = dbService.getDbServiceInstance(); 
-	const result = db.updateAccountAttributes(email, password, name); 
+	const result = db.updateAccountAttributes(currentEmail, newEmail, password, name); 
  
 	result.then(data =>
 	{
+		var options = 
+		{ 
+			maxAge: 1000 * 60 * 20160, // Would expire after two weeks (20160 minutes)
+			httpOnly: false, // The cookie only accessible by the web server 
+			signed: false // Indicates if the cookie should be signed 
+		} 
+
+		// Set cookie 
+		response.cookie('email', newEmail, options) // options is optional 
+		response.cookie('password', password, options) // options is optional 
+
+		// response
 		response.json(true);
 	})
 	.catch((error) => 
 	{
 		console.log("route(/updateAccountAttributes) \tresult.catch()"); 
 		console.log(error); 
-		response.json(false);
+		response.json(error);
 	});
 });
 
@@ -265,7 +281,7 @@ app.post('/auth', function (request, response)
 				console.log("route(/auth) \tif loggedIn === true"); 
 				let options = 
 				{ 
-					maxAge: 1000 * 60 * 90, // Would expire after 1.5 hours (90) 
+					maxAge: 1000 * 60 * 20160, // Would expire after two weeks (20160 minutes)
 					httpOnly: false, // The cookie only accessible by the web server 
 					signed: false // Indicates if the cookie should be signed 
 				} 
@@ -727,7 +743,7 @@ app.post('/register', (request, response) =>
  
 			var options = 
 			{ 
-				maxAge: 1000 * 60 * 90, // Would expire after 1.5 hours (90) 
+				maxAge: 1000 * 60 * 20160, // Would expire after two weeks (20160 minutes)
 				httpOnly: false, // The cookie only accessible by the web server 
 				signed: false // Indicates if the cookie should be signed 
 			} 
