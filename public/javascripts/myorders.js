@@ -102,7 +102,7 @@ function populateUserOrders()
                         <div class="product-specs d-flex flex-column  align-items-center">
                                 
                             <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                <span>Items</span>
+                                <span>Status</span>
                                 <br>
                                 <span class="value">${status}</span>
                             </div>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <title>Help Desk - AstroMedibles</title>
+    <%- include('./head') %>
+</head>
+
+<body>
+
+  <%- include('./navbar') %>
+
+<main class="page login-page">
+    <section class="clean-block clean-form dark">
+        <div class="container">
+            <div class="block-heading">
+                <h2 class="text-info">Help Desk</h2>
+                <p>Fill out your issue below, and recieve support</p>
+            </div>
+            <form>
+                <div class="mb-3">
+                    <label class="form-label" for="email">Order ID</label>
+                    <input class="form-control item" name="email" type="email" id="inputEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="email">Description of issue</label>
+                    <textarea class="form-control" id="textareaHelp" placeholder="Please describe what is wrong with your order, and we will respond with what we can do for you"></textarea>
+                </div>
+                <br>
+                <button disabled type="button" class="btn btn-primary" onclick="submitTicket()">Submit</button>
+            </form>
+        </div>
+    </section>
+</main>
+  
+  <%- include('./footer') %>
+  <script type="text/javascript" src="../javascripts/help.js"></script>
+</body>
+</html>

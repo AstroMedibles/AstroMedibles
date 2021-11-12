@@ -602,7 +602,45 @@ app.get('/admin', (request, response) =>
 		console.log("route(/) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
-}); 
+});
+
+// read 
+app.get('/help', (request, response) => 
+{ 
+	console.log("\n" + "route(/help) "); 
+ 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{ 
+		console.log("help(/) \tresult.then()"); 
+		response.render('help');
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
+
+// read 
+app.get('/feedback', (request, response) => 
+{ 
+	console.log("\n" + "route(/feedback) "); 
+ 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{ 
+		console.log("feedback(/) \tresult.then()"); 
+		response.render('feedback');
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
  
 // update 
 app.patch('/cartAddItem', (request, response) => 

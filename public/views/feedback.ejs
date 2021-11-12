@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <title>Feedback - AstroMedibles</title>
+    <%- include('./head') %>
+</head>
+
+<body>
+
+  <%- include('./navbar') %>
+
+<main class="page login-page">
+    <section class="clean-block clean-form dark">
+        <div class="container">
+            <div class="block-heading">
+                <h2 class="text-info">Send Feedback</h2>
+                <p>Did you enjoy your AstroMedibles service? Could it have been better? Send your feedback, and we will respond. Thank you!</p>
+            </div>
+            <form>
+                <div class="mb-3">
+                    <label class="form-label" for="email">Subject</label>
+                    <input class="form-control item" name="email" type="email" id="inputEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="email">Description</label>
+                    <textarea class="form-control" id="textareaHelp" placeholder=""></textarea>
+                </div>
+                <br>
+                <button disabled type="button" class="btn btn-primary" onclick="submitTicket()">Submit</button>
+            </form>
+        </div>
+    </section>
+</main>
+  
+  <%- include('./footer') %>
+  <script type="text/javascript" src="../javascripts/help.js"></script>
+</body>
+</html>
