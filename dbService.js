@@ -1099,7 +1099,7 @@ class DbService
                 console.log(error);
                 reject(error);
             }
-            });
+        });
         return response;
     }
 
@@ -1143,37 +1143,102 @@ class DbService
         return response;
     }
 
+    async customerSupportEmailFeedback(userEmail, subject, description)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            try
+            {
+                // send to both astromedibles@gmail, and user email
+                var toEmail = `${process.env.AM_USER}, ${userEmail}`;
+
+                subject = `[Feedback] ${subject}`;
+                var html = 
+                `
+                <h3>Feedback Response:</h3>
+                <p>
+                    "${description}"
+                <br><br>
+                This is an automated message.
+                </p>
+                `;
+                
+                // Send email
+                const db = DbService.getDbServiceInstance();
+                db.sendEmail(toEmail, subject, html);
+                resolve(true);
+
+            } catch (error)
+            {
+                reject(error);
+            }
+        });
+        return response;
+    }
+
+    async customerSupportEmailHelpDesk(userEmail, orderId, description)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            try
+            {
+                // send to both astromedibles@gmail, and user email
+                var toEmail = `${process.env.AM_USER}, ${userEmail}`;
+
+                var subject = `[Help Desk] Order: ${orderId}`;
+                var html = 
+                `
+                <h3>Help Desk Response:</h3>
+                <p>
+                    "${description}"
+                <br><br>
+                This is an automated message.
+                </p>
+                `;
+                
+                // Send email
+                const db = DbService.getDbServiceInstance();
+                db.sendEmail(toEmail, subject, html);
+                resolve(true);
+
+            } catch (error)
+            {
+                reject(error);
+            }
+        });
+        return response;
+    }
 
     async sendEmail(toEmail, subject, html)
     {
         var transporter = nodemailer.createTransport(
+        {
+            service: 'gmail',
+            auth:
             {
-                service: 'gmail',
-                auth:
-                {
-                    user: process.env.AM_USER,
-                    pass: process.env.AM_PASSWORD
-                }
-            });
-            
-            var mailOptions =
+                user: process.env.AM_USER,
+                pass: process.env.AM_PASSWORD
+            }
+        });
+        
+        var mailOptions =
+        {
+            from:    process.env.AM_USER,
+            to:      toEmail,
+            subject: subject,
+            html:    html
+        };
+        
+        transporter.sendMail(mailOptions, function (error, info)
+        {
+            if (error)
             {
-                from:    process.env.AM_USER,
-                to:      toEmail,
-                subject: subject,
-                html:    html
-            };
-            
-            transporter.sendMail(mailOptions, function (error, info)
+                console.log(error);
+            } else
             {
-                if (error)
-                {
-                    console.log(error);
-                } else
-                {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
+                console.log('Email sent: ' + info.response);
+            }
+        });
     }
 
 }

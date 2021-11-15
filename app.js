@@ -722,11 +722,7 @@ app.patch('/adminUpdateOrderStatus', (request, response) =>
 		console.log("route(/) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
-
-
-
 });
-
  
 // create 
 app.post('/userPlaceOrder', (request, response) =>  
@@ -751,26 +747,20 @@ app.post('/userPlaceOrder', (request, response) =>
 			console.log("\n" + "result(/userPlaceOrder) ");
 			console.log('Success');
 			response.json(true);
-		}) 
+		})
 		.catch((err) => 
 		{
 			console.log('Fail');
 			console.log(err)
-			
-		}); 
-}); 
+		});
+});
  
 // create 
 app.post('/register', (request, response) =>  
 { 
 	console.log("\n" + ".(/register) POST"); 
 	const { name, email, password, code} = request.body; 
- 
-
 	console.log(request.body); 
-
-
-
 	const db = dbService.getDbServiceInstance(); 
 	const result = db.createUserAccount(name, password, email, code); 
  
@@ -804,7 +794,84 @@ app.post('/register', (request, response) =>
  
 		}); 
 }); 
- 
+
+app.post('/customerSupportEmailHelpDesk', (request, response) =>
+{
+	console.log("\n" + "route(/customerSupportEmailHelpDesk) "); 
+
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{ 
+		console.log("customerSupportEmailHelpDesk(/) \tresult.then()"); 
+
+		var { orderId, description } = request.body;
+		var userEmail = request.cookies.email;
+
+		console.log(userEmail);
+		console.log(request.body);
+
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.customerSupportEmailHelpDesk(userEmail, orderId, description); 
+		
+		result.then((result) => 
+		{
+			console.log("\n" + "route(/customerSupportEmailHelpDesk) \t RESULTS: Success"); 
+			response.json(true); 
+		})
+		.catch((err) => 
+		{
+			console.log("\n" + "route(/customerSupportEmailHelpDesk) \t CATCH:"); 
+			console.log(err);
+			response.json(false);
+		});
+	})
+	.catch(() => 
+	{
+		// user is not logged in
+		console.log("route(/customerSupportEmailHelpDesk) \tresult.catch()"); 
+		response.redirect('/login'); 
+	});
+});
+
+app.post('/customerSupportEmailFeedback', (request, response) =>
+{
+	console.log("\n" + "route(/customerSupportEmailFeedback) "); 
+
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{ 
+		console.log("customerSupportEmailFeedback(/) \tresult.then()"); 
+
+		var { subject, description } = request.body;
+		var userEmail = request.cookies.email;
+
+		console.log(userEmail);
+		console.log(request.body);
+
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.customerSupportEmailFeedback(userEmail, subject, description); 
+		
+		result.then((result) => 
+		{
+			console.log("\n" + "route(/customerSupportEmailFeedback) \t RESULTS: Success"); 
+			response.json(true); 
+		})
+		.catch((err) => 
+		{
+			console.log("\n" + "route(/customerSupportEmailFeedback) \t CATCH:"); 
+			console.log(err);
+			response.json(false);
+		});
+	})
+	.catch(() => 
+	{
+		// user is not logged in
+		console.log("route(/customerSupportEmailFeedback) \tresult.catch()"); 
+		response.redirect('/login'); 
+	});
+});
+
+
 // delete 
 app.delete('/cancelOrder', (request, response) => 
 { 
