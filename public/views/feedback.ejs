@@ -20,11 +20,11 @@
             <form>
                 <div class="mb-3">
                     <label class="form-label">Subject</label>
-                    <input id="inputSubject" class="form-control item" type="text" required>
+                    <input id="inputSubject" class="form-control item" type="text" maxlength="50" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Description</label>
-                    <textarea id="inputDescription" class="form-control" rows="10" type="text" required></textarea>
+                    <textarea id="inputDescription" class="form-control" rows="10" maxlength="1250" type="text" required></textarea>
                 </div>
                 <br>
                 <button id="buttonSubmit" type="button" class="btn btn-primary" onclick="userSendFeedback()">Submit</button>

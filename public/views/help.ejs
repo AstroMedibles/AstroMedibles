@@ -20,11 +20,11 @@
             <form>
                 <div class="mb-3">
                     <label class="form-label" for="email">Order ID</label>
-                    <input class="form-control item" name="email" type="email" id="inputOrderId" required>
+                    <input class="form-control item" type="text" maxlength="30" id="inputOrderId" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="email">Description of issue</label>
-                    <textarea class="form-control" id="inputDescription" rows="10" placeholder="Brief description of the issue"></textarea>
+                    <textarea class="form-control" id="inputDescription" rows="10" maxlength="1250" placeholder="Brief description of the issue"></textarea>
                 </div>
                 <br>
                 <button id="buttonSubmit" type="button" class="btn btn-primary" onclick="sendHelp()">Submit</button>

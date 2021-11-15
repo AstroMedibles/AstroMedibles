@@ -8,8 +8,8 @@ function userSendFeedback()
     subject         = $.trim(subject);
     description     = $.trim(description);
 
-    console.log(subject);
-    console.log(description);
+    // console.log(subject);
+    // console.log(description);
 
     if (subject.length < 3 || description.length < 3)
     {
@@ -34,7 +34,9 @@ function userSendFeedback()
     .then(response => response.json())
     .then((response) =>
     {
-        // Order placed successfully
+        // Response sent successfully
+        document.getElementById("inputSubject").classList.add("disabled");
+        document.getElementById("inputDescription").classList.add("disabled");
         document.getElementById("buttonSubmit").classList.add("disabled");
 
         // Notification

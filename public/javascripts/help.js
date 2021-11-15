@@ -8,8 +8,8 @@ function sendHelp()
     orderId         = $.trim(orderId);
     description     = $.trim(description);
 
-    console.log(orderId);
-    console.log(description);
+    // console.log(orderId);
+    // console.log(description);
 
     if (orderId.length < 3 || description.length < 3)
     {
@@ -34,7 +34,9 @@ function sendHelp()
     .then(response => response.json())
     .then((response) =>
     {
-        // Order placed successfully
+        // Response sent successfully
+        document.getElementById("inputOrderId").classList.add("disabled");
+        document.getElementById("inputDescription").classList.add("disabled");
         document.getElementById("buttonSubmit").classList.add("disabled");
 
         // Notification

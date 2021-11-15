@@ -1,5 +1,5 @@
  
-const cors = require('cors'); 
+const cors = require('cors');
 var express = require('express'); 
 var session = require('express-session'); 
 // var bodyParser = require('body-parser'); 
@@ -98,9 +98,9 @@ app.get('/login', (request, response) =>
 });
 
 // Route to ForgotPassword Page 
-app.get('/ForgotPassword', (request, response) => 
+app.get('/forgot-password', (request, response) => 
 { 
-	console.log("\n" + "route(/ForgotPassword)"); 
+	console.log("\n" + "route(/forgot-password)"); 
  
 	// expire the cookies 
 	var options = 
@@ -114,7 +114,7 @@ app.get('/ForgotPassword', (request, response) =>
 	response.cookie('email', "", options) // options is optional 
 	response.cookie('password', "", options) // options is optional 
  
-	response.render('ForgotPassword'); 
+	response.render('forgot-password'); 
 });
 
 // Route to account Page 
@@ -359,13 +359,13 @@ app.get('/getMenuData', (request, response) =>
 }); 
  
 // render 
-app.get('/ShoppingCart', (request, response) => 
+app.get('/checkout', (request, response) => 
 { 
-	console.log("\n" + "route(/ShoppingCart)"); 
+	console.log("\n" + "route(/checkout)"); 
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{ 
-		response.render('shopping-cart'); 
+		response.render('checkout'); 
 	}) 
 	.catch(() => 
 	{ 
@@ -376,13 +376,13 @@ app.get('/ShoppingCart', (request, response) =>
 }); 
  
 // render 
-app.get('/MyOrders', (request, response) => 
+app.get('/orders', (request, response) => 
 { 
-	console.log("\n" + "route(/MyOrders)"); 
+	console.log("\n" + "route(/orders)"); 
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{ 
-		response.render('MyOrders'); 
+		response.render('orders'); 
 	}) 
 	.catch(() => 
 	{ 
