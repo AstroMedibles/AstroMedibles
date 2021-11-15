@@ -379,7 +379,7 @@ function userPlaceOrder()
 
         setTimeout(function ()
         { // this will automatically close the alert in 2 secs
-            window.location.replace('/ThankYou');
+            window.location.replace('/orders');
         }, 3000);
     })
     .catch((error) =>

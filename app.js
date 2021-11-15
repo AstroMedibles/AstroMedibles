@@ -347,15 +347,22 @@ app.get('/getMenuData', (request, response) =>
 	const db = dbService.getDbServiceInstance(); 
 	const result = db.getMenuData(); 
  
-	result.then(data =>  
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{ 
+		result.then(data =>  
 		{ 
-			// console.log("/getMenuData .then"); 
 			console.log(data); 
-			response.json({ data: data }) 
-			// console.log(data[0]); 
-		} 
-		) 
+			response.json({ data: data });
+		})
 		.catch(err => console.log(err)); 
+	}) 
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	}); 
 }); 
  
 // render 
@@ -413,45 +420,59 @@ app.get('/ThankYou', (request, response) =>
 app.get('/getCartData', (request, response) => 
 { 
 	// console.log("\n"+ "route(/getCartData) "); 
-	const email = request.cookies.email; 
-	const password = request.cookies.password; 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.getUserData(email, password); 
-	result 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{ 
+		const email = request.cookies.email; 
+		const password = request.cookies.password; 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.getUserData(email, password); 
+		result 
 		.then(data =>  
 		{ 
-			// console.log("/getCartData .then"); 
-			try 
-			{ 
-				// console.log(data); 
-				// console.log(data[0].cart.cart); 
-			} catch (error) 
-			{ 
-				console.log(error); 
-			} 
-			response.json({ data: data }) 
-		}
-		) 
-		.catch(err => console.log(err)); 
+			response.json({ data: data });
+		})
+		.catch(err => console.log(err));
+	}) 
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	}); 
+
+
 }); 
  
 // read 
 app.get('/getUserOrders', (request, response) => 
 { 
 	// console.log("\n"+ "route(/getUserOrders) "); 
-	const email = request.cookies.email; 
-	const password = request.cookies.password; 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.getUserOrders0(email, password); 
- 
-	result.then(data =>  
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		const email = request.cookies.email; 
+		const password = request.cookies.password; 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.getUserOrders0(email, password); 
+	 
+		result.then(data =>  
+		{ 
+			response.json({ data: data });
+		})
+		.catch(err =>
+		{
+			console.log(err)
+			response.json(null);
+		});
+	})
+	.catch(() => 
 	{ 
-		response.json({ data: data });
-	} 
-	)
-	.catch(err => console.log(err)); 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	}); 
 });
- 
 
 // read  
 app.get('/adminGetUserOrders', (request, response) => 
@@ -476,7 +497,7 @@ app.get('/adminGetUserOrders', (request, response) =>
 		else 
 		{ 
 			console.log("/adminGetUserOrders ADMIN FALSE");
-			response.end(); 
+			response.end();
 		} 
 	})
 	.catch(() => 
@@ -556,27 +577,6 @@ app.post('/generateAccessCodes', (request, response) =>
 		response.redirect('/login'); 
 	});
 });
-
-
-// read 
-app.get('/getCartDetails', (request, response) => 
-{ 
-	console.log("\n" + "route(/getCartDetails) "); 
-	const name = request.cookies.name; 
-	const password = request.cookies.password; 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.getCartDetails(name, password); 
-	result 
-		.then(data =>  
-		{ 
-			console.log("/getCartDetails .then"); 
-			response.json({ data: data }) 
-			console.log(data); 
-			console.log(data[0]); 
-		} 
-		) 
-		.catch(err => console.log(err)); 
-}); 
  
 // read 
 app.get('/admin', (request, response) => 
@@ -644,51 +644,58 @@ app.get('/feedback', (request, response) =>
  
 // update 
 app.patch('/cartAddItem', (request, response) => 
-{ 
-	// console.log("\n"+ "route(/cartAddItem) "); 
-	const email = request.cookies.email; 
-	const password = request.cookies.password; 
-	const { itemId, itemQty } = request.body; 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.cartAddItem(email, password, itemId, itemQty); 
- 
-	result.then(data => 
+{
+	// console.log("\n"+ "route(/cartAddItem) ");
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		const email = request.cookies.email; 
+		const password = request.cookies.password; 
+		const { itemId, itemQty } = request.body; 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.cartAddItem(email, password, itemId, itemQty); 
+	 
+		result.then(data => 
+		{ 
+			console.log("\n" + "route(/cartAddItem) \t RESULTS:"); 
+			response.json({ data: data }); 
+		}) 
+		.catch(err => console.log(err));
+	})
+	.catch(() => 
 	{ 
-		console.log("\n" + "route(/cartAddItem) \t RESULTS:"); 
-		try 
-		{ 
-			console.log(data.cart); 
-			// data                 = results[], array [?] 
-			// data[0]              = results[i], first index value [0] 
-			// data[0].cart         = database column "cart" value, JSON object { cart: [ [ 1, 11 ], [ 4, 44 ], [ 7, 77 ] ] } 
-			// data[0].cart.cart    = value named "cart" in JSON object, 2D array [?][2] 
-		} 
-		catch (error) 
-		{ 
-			console.log(error); 
-		} 
- 
-		// console.log("cartAddItem: Completed"); 
-		response.json({ data: data }); 
-	}) 
-		.catch(err => console.log(err)); 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
 }); 
  
 // update 
 app.patch('/cartSubtractItem', (request, response) => 
 { 
-	// console.log("\n"+ "route(/cartSubtractItem) "); 
-	const email = request.cookies.email; 
-	const password = request.cookies.password; 
-	const { itemId, itemQty } = request.body; 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.cartSubtractItem(email, password, itemId, itemQty); 
- 
-	result.then(data => 
+	// console.log("\n"+ "route(/cartSubtractItem) ");
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		const email = request.cookies.email; 
+		const password = request.cookies.password; 
+		const { itemId, itemQty } = request.body; 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.cartSubtractItem(email, password, itemId, itemQty); 
+	 
+		result.then(data => 
+		{ 
+			console.log("\n" + "route(/cartSubtractItem) \t RESULTS:"); 
+			response.json({ data: data }); 
+		})
+		.catch(err => console.log(err));
+	})
+	.catch(() => 
 	{ 
-		console.log("\n" + "route(/cartSubtractItem) \t RESULTS:"); 
-		response.json({ data: data }); 
-	}).catch(err => console.log(err)); 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
 }); 
 
 app.patch('/adminUpdateOrderStatus', (request, response) =>
@@ -697,7 +704,7 @@ app.patch('/adminUpdateOrderStatus', (request, response) =>
 
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
-	{ 
+	{
 		console.log("adminUpdateOrderStatus(/) \tresult.then()"); 
 		if (accountAttributes.isAdmin === 1) 
 		{ 
@@ -726,22 +733,24 @@ app.patch('/adminUpdateOrderStatus', (request, response) =>
  
 // create 
 app.post('/userPlaceOrder', (request, response) =>  
-{ 
+{
 	console.log("\n" + "route(/userPlaceOrder) "); 
-	const email = request.cookies.email; 
-	const password = request.cookies.password;
 
-	const date = request.body.date; 
-
-	console.log(email);
-	console.log(password);
-	console.log(request.body); 
-
-
-
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.submitUserOrder(email, password, date); 
-	result 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		const email = request.cookies.email; 
+		const password = request.cookies.password;
+	
+		const date = request.body.date; 
+	
+		// console.log(email);
+		// console.log(password);
+		// console.log(request.body);
+	
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.submitUserOrder(email, password, date); 
+		result 
 		.then(() =>  
 		{ 
 			console.log("\n" + "result(/userPlaceOrder) ");
@@ -753,6 +762,13 @@ app.post('/userPlaceOrder', (request, response) =>
 			console.log('Fail');
 			console.log(err)
 		});
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
 });
  
 // create 
@@ -765,34 +781,29 @@ app.post('/register', (request, response) =>
 	const result = db.createUserAccount(name, password, email, code); 
  
 	result 
-		.then((result) =>  
+	.then((result) =>  
+	{ 
+		console.log("\n" + ".then(/register) POST"); 
+
+		var options = 
 		{ 
-			console.log("\n" + ".then(/register) POST"); 
- 
-			var options = 
-			{ 
-				maxAge: 1000 * 60 * 20160, // Would expire after two weeks (20160 minutes)
-				httpOnly: false, // The cookie only accessible by the web server 
-				signed: false // Indicates if the cookie should be signed 
-			} 
- 
-			// Set cookie 
-			response.cookie('email', email, options) // options is optional 
-			response.cookie('password', password, options) // options is optional 
- 
-			console.log("Cookies created: name, password"); 
- 
-			// response.redirect('/login'); 
-			response.json(true); 
- 
-		}) 
-		.catch(err => // Error: Account could not be created 
-		{ 
-			console.log("/createUserAccount " + "\n" + "Error: Account could not be created"); 
-			console.log(err) 
-			response.json(false); 
- 
-		}); 
+			maxAge: 1000 * 60 * 20160, // Would expire after two weeks (20160 minutes)
+			httpOnly: false, // The cookie only accessible by the web server 
+			signed: false // Indicates if the cookie should be signed 
+		} 
+
+		// Set cookie 
+		response.cookie('email', email, options) // options is optional 
+		response.cookie('password', password, options) // options is optional 
+		console.log("Cookies created: name, password"); 
+		response.json(true); 
+	}) 
+	.catch(err => // Error: Account could not be created 
+	{ 
+		console.log("/createUserAccount " + "\n" + "Error: Account could not be created"); 
+		console.log(err) 
+		response.json(false); 
+	}); 
 }); 
 
 app.post('/customerSupportEmailHelpDesk', (request, response) =>
@@ -874,29 +885,30 @@ app.post('/customerSupportEmailFeedback', (request, response) =>
 
 // delete 
 app.delete('/cancelOrder', (request, response) => 
-{ 
-	// console.log("\n"+ "route(/cartAddItem) "); 
-	const email = request.cookies.email; 
-	const password = request.cookies.password; 
-	const { order_id } = request.body; 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.cancelOrder(order_id, email, password); 
- 
-	result.then(data => 
+{
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
 	{ 
-		console.log("\n" + "route(/cancelOrder) \t RESULTS:"); 
-		try 
+		// console.log("\n"+ "route(/cartAddItem) "); 
+		const email = request.cookies.email; 
+		const password = request.cookies.password; 
+		const { order_id } = request.body; 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.cancelOrder(order_id, email, password); 
+	
+		result.then(data => 
 		{ 
-			console.log("Order canceled!"); 
-		} 
-		catch (error) 
-		{ 
-			console.log(error); 
-		} 
- 
-		response.json({ data: data }); 
-	}) 
-	.catch(err => console.log(err)); 
+			console.log("\n" + "route(/cancelOrder) \t RESULTS:"); 
+			response.json({ data: data }); 
+		}) 
+		.catch(err => console.log(err)); 
+	})
+	.catch(() => 
+	{
+		// user is not logged in
+		console.log("route(/cancelOrder) \tresult.catch()"); 
+		response.redirect('/login'); 
+	});
 }); 
  
  

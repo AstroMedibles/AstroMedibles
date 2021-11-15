@@ -1,6 +1,46 @@
+document.addEventListener('DOMContentLoaded', function () 
+{
+    // console.log("DOMContentLoaded");
+    ready();
+});
 
-const address = 'https://www.astromedibles.com';
-// const address = 'http://localhost:8080';
+
+
+function ready()
+{
+    // get cart total
+    fetch(address + '/getCartData')
+    .then(response => response.json())
+    .then(data => 
+    {
+        loadCartTotal(data['data']);
+    });
+}
+
+function loadCartTotal(data)
+{
+    // console.log("function: loadCartTotal(data)");
+    try
+    {
+        var cart = data.cart.cart[0][1];
+        // console.log(cart);
+
+        if (data == null)
+        {
+            // console.log("data is undefined or null");
+            return;
+        }
+
+        // update navbar
+        var cartQty = document.getElementById('cart-quantity');
+        cartQty.dataset.quantity = cart;
+        $("#cart-quantity").text(cart);
+    }
+    catch (error)
+    {
+        console.log(error);
+    }
+}
 
 function updateAccountAttributes()
 {

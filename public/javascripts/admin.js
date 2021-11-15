@@ -582,8 +582,6 @@ function generateAccessCodes()
     });
 }
 
-
-
 function ready()
 {
     // get cart total
@@ -595,5 +593,4 @@ function ready()
     });
 
     radioOrdersClick();
-// populateUserOrders();
 }
