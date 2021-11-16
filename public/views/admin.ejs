@@ -30,6 +30,10 @@
                                 <input type="radio" name="options"  autocomplete="off" onclick="radioChartClick()"> Chart
                             </label>
 
+                            <!-- <label id="radioPickups" class="btn btn-secondary">
+                                <input type="radio" name="options"  autocomplete="off" onclick="radioPickupsClick()"> Pickups
+                            </label> -->
+
                         </div>
 
                     </div>
@@ -109,7 +113,7 @@
                                                         </thead>
                                                         <tbody id="chartTable" style="font-weight: normal;" >
                                                             <tr>
-                                                                <th scope="row"> ... </th>
+                                                                <td class="table"> ... </td>
                                                                 <td class="table-danger"  >0</td>
                                                                 <td class="table-primary" >0</td>
                                                                 <td>0</td>
@@ -127,24 +131,77 @@
                                                 </div>
                                             </div>
                                         </div>
-                    
-    
-                    
+
                                     </div>
                                 </div>
 
-
                             </div>
 
+                            <div id="pickups-items" class="items" hidden>
 
+                                <!-- PICKUPS -->
 
+                                <div class="product">
+                                    <div class="row product-image d-flex justify-content-between align-items-start ">
+                    
+                    
+                                        <div class="col-md-12 product-info">
+                                            <div class="product-specs d-flex flex-column  align-items-center">
+                                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+    
+                                                    
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Date</th>
+                                                                <th scope="col">Time</th>
+                                                                <th scope="col">Order ID</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="chartTable" style="font-weight: normal;" >
+                                                            <tr>
+                                                                <td class="table" >November 16th</td>
+                                                                <td class="table" colspan="2" >4:15pm</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="table" colspan="2"></td>
+                                                                <td class="table" >X124DS</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="table" colspan="2"></td>
+                                                                <td class="table" >A72DS2</td>
+                                                            </tr>
 
+                                                            <tr>
+                                                                <th class="table" colspan="2" >November 17th</th>
+                                                                <th class="table" >4:30pm</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="table" colspan="2"></td>
+                                                                <td class="table" >835F79</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="table" colspan="2"></td>
+                                                                <td class="table" >A72DS2</td>
+                                                            </tr>
+                                                        </tbody>
+                                                      </table>
+    
+                                                      <br>
+                                                      <p id='chartMapPaymentRequired'></p>
+                                                      <br>
+                                                      <p id='chartMapPaymentRecieved'></p>
+                                                      <br>
+                                                      <p id='chartMapTotal'></p>
 
+                                                </div>
+                                            </div>
+                                        </div>
 
+                                    </div>
+                                </div>
 
-
-
-
+                            </div>
 
 
                         </div>

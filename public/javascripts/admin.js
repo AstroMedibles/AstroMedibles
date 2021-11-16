@@ -312,9 +312,9 @@ function dropDownUpdateOrderStatus(event)
 
 function radioOrdersClick()
 {
-    // console.log('radioOrdersClick()');
     $('#codes-items').attr('hidden', '');
     $('#chart-items').attr('hidden', '');
+    $('#pickups-items').attr('hidden', '');
 
     $('#orders-items').removeAttr('hidden');
 
@@ -324,6 +324,9 @@ function radioOrdersClick()
 
     document.getElementById("radioCodes").classList.remove("active");
     document.getElementById("radioChart").classList.remove("active");
+    document.getElementById("radioPickups").classList.remove("active");
+
+
 
     populateUserOrders();
 }
@@ -333,6 +336,8 @@ function radioCodesClick()
     // console.log('radioCodesClick()');
     $('#orders-items').attr('hidden', '');
     $('#chart-items').attr('hidden', '');
+    $('#pickups-items').attr('hidden', '');
+
 
     $('#codes-items').removeAttr('hidden');
 
@@ -342,6 +347,7 @@ function radioCodesClick()
 
     document.getElementById("radioOrders").classList.remove("active");
     document.getElementById("radioChart").classList.remove("active");
+    document.getElementById("radioPickups").classList.remove("active");
 
 
     fetch(address + '/adminGetAccessCodes')
@@ -358,6 +364,27 @@ function radioCodesClick()
     {
         $('#activeAccessCodes').val();
     });
+}
+
+function radioPickupsClick()
+{
+    // console.log('radioChartClick()');
+    // hide other divs, reveal chart div
+    $('#codes-items').attr('hidden', '');
+    $('#orders-items').attr('hidden', '');
+    $('#chart-items').attr('hidden', '');
+
+
+    $('#pickups-items').removeAttr('hidden');
+
+
+    // set radioChart active
+    document.getElementById("radioPickups").classList.add("active");
+
+    document.getElementById("radioOrders").classList.remove("active");
+    document.getElementById("radioCodes").classList.remove("active");
+    document.getElementById("radioChart").classList.remove("active");
+
 }
 
 function radioChartClick()
@@ -547,13 +574,9 @@ function radioChartClick()
         // document.getElementById("chartMapTotal").innerHTML = text;
         document.getElementById("chartTable").innerHTML = tableHTML;
 
-        chartTable
     });
-
-
-
-
 }
+
 
 function generateAccessCodes()
 {
