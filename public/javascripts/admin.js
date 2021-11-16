@@ -338,7 +338,6 @@ function radioCodesClick()
     $('#chart-items').attr('hidden', '');
     $('#pickups-items').attr('hidden', '');
 
-
     $('#codes-items').removeAttr('hidden');
 
 
@@ -366,33 +365,13 @@ function radioCodesClick()
     });
 }
 
-function radioPickupsClick()
-{
-    // console.log('radioChartClick()');
-    // hide other divs, reveal chart div
-    $('#codes-items').attr('hidden', '');
-    $('#orders-items').attr('hidden', '');
-    $('#chart-items').attr('hidden', '');
-
-
-    $('#pickups-items').removeAttr('hidden');
-
-
-    // set radioChart active
-    document.getElementById("radioPickups").classList.add("active");
-
-    document.getElementById("radioOrders").classList.remove("active");
-    document.getElementById("radioCodes").classList.remove("active");
-    document.getElementById("radioChart").classList.remove("active");
-
-}
-
 function radioChartClick()
 {
     // console.log('radioChartClick()');
     // hide other divs, reveal chart div
     $('#codes-items').attr('hidden', '');
     $('#orders-items').attr('hidden', '');
+    $('#pickups-items').attr('hidden', '');
 
     $('#chart-items').removeAttr('hidden');
 
@@ -402,6 +381,7 @@ function radioChartClick()
 
     document.getElementById("radioOrders").classList.remove("active");
     document.getElementById("radioCodes").classList.remove("active");
+    document.getElementById("radioPickups").classList.remove("active");
 
     // update chart
     fetch(address + '/adminGetUserOrders')
@@ -577,6 +557,26 @@ function radioChartClick()
     });
 }
 
+function radioPickupsClick()
+{
+    // console.log('radioChartClick()');
+    // hide other divs, reveal chart div
+    $('#codes-items').attr('hidden', '');
+    $('#orders-items').attr('hidden', '');
+    $('#chart-items').attr('hidden', '');
+
+
+    $('#pickups-items').removeAttr('hidden');
+
+
+    // set radioChart active
+    document.getElementById("radioPickups").classList.add("active");
+
+    document.getElementById("radioOrders").classList.remove("active");
+    document.getElementById("radioCodes").classList.remove("active");
+    document.getElementById("radioChart").classList.remove("active");
+
+}
 
 function generateAccessCodes()
 {
