@@ -30,7 +30,7 @@
                                 <input type="radio" name="options"  autocomplete="off" onclick="radioChartClick()"> Chart
                             </label>
 
-                            <label id="radioPickups" class="btn btn-secondary disabled">
+                            <label id="radioPickups" class="btn btn-secondary">
                                 <input type="radio" name="options"  autocomplete="off" onclick="radioPickupsClick()"> Pickups
                             </label>
 
@@ -146,55 +146,65 @@
                     
                     
                                         <div class="col-md-12 product-info">
-                                            <div class="product-specs d-flex flex-column  align-items-center">
-                                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
-    
-                                                    
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Date</th>
-                                                                <th scope="col">Time</th>
-                                                                <th scope="col">Order ID</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="chartTable" style="font-weight: normal;" >
-                                                            <tr>
-                                                                <td class="table" >November 16th</td>
-                                                                <td class="table" colspan="2" >4:15pm</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="table" colspan="2"></td>
-                                                                <td class="table" >X124DS</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="table" colspan="2"></td>
-                                                                <td class="table" >A72DS2</td>
-                                                            </tr>
+                                            <div class="product-specs d-flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
 
-                                                            <tr>
-                                                                <th class="table" colspan="2" >November 17th</th>
-                                                                <th class="table" >4:30pm</th>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="table" colspan="2"></td>
-                                                                <td class="table" >835F79</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="table" colspan="2"></td>
-                                                                <td class="table" >A72DS2</td>
-                                                            </tr>
-                                                        </tbody>
-                                                      </table>
-    
-                                                      <br>
-                                                      <p id='chartMapPaymentRequired'></p>
-                                                      <br>
-                                                      <p id='chartMapPaymentRecieved'></p>
-                                                      <br>
-                                                      <p id='chartMapTotal'></p>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Date / Time</th>
+                                                            <th scope="col">Name</th>
+                                                            <th scope="col">Order ID</th>
+                                                        </tr>
+                                                    </thead>
 
-                                                </div>
+                                                    <tbody id="pickupsTable" style="font-weight: normal;" >
+                                                        <!-- Date -->
+                                                        <tr>
+                                                            <th class="table w-50">November 17th</th>
+                                                            <th class="table w-25"></th>
+                                                            <th class="table w-25"></th>
+                                                        </tr>
+                                                        <!-- Time, Name, Order ID -->
+                                                        <tr>
+                                                            <td class="table w-50" >4:15pm</td>
+                                                            <td class="table w-25" >Flo Progressive</td>
+                                                            <td class="table w-25" >835F79</td>
+                                                        </tr>
+                                                        <!-- Time, Name, Order ID -->
+                                                        <tr>
+                                                            <td class="table w-50" >4:30pm</td>
+                                                            <td class="table w-25" >Jake Statefarm</td>
+                                                            <td class="table w-25" >X35F52</td>
+                                                        </tr>
+
+                                                        
+                                                        <!-- Date -->
+                                                        <tr>
+                                                            <th class="table w-50">November 18th</th>
+                                                            <th class="table w-25"></th>
+                                                            <th class="table w-25"></th>
+                                                        </tr>
+                                                        <!-- Time, Name, Order ID -->
+                                                        <tr>
+                                                            <td class="table w-50" >4:15pm</td>
+                                                            <td class="table w-25" >Flo Progressive</td>
+                                                            <td class="table w-25" >L7X3S3</td>
+                                                        </tr>
+                                                        <!-- Time, Name, Order ID -->
+                                                        <tr>
+                                                            <td class="table w-50" >4:30pm</td>
+                                                            <td class="table w-25" >Jake Statefarm</td>
+                                                            <td class="table w-25" >G58JFS</td>
+                                                        </tr>
+                                                        <!-- Time, Name, Order ID -->
+                                                        <tr>
+                                                            <td class="table w-50" >4:45pm</td>
+                                                            <td class="table w-25" >Justin Case</td>
+                                                            <td class="table w-25" >X35F52</td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
 
