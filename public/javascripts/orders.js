@@ -79,6 +79,15 @@ function populateUserOrders()
                 </span>`;
             }
 
+            if (status === "Ready for Pickup")
+            {
+                var dataAttributes = "data-order_id=" + order_id;
+                // status = '<a href="/orders">' + status + '</a>';
+                cancelOrderButton =
+                `<span class="value">
+                <button name="schedule-pickup-button" ${dataAttributes} class="btn btn-primary btn-sm rounded-pill" type="button" >Select Pickup Day</button>
+                </span>`;
+            }
 
             var cartText = "";
             for (let j = 1; j < cart.length; j++)
@@ -86,9 +95,6 @@ function populateUserOrders()
                 var cartElement = cart[j];
                 cartText += "(" + cartElement[1] + ") " + cartElement[2] + "<br>";
             }
-
-
-            
 
             let card = "";
 
