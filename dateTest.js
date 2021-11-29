@@ -1,16 +1,36 @@
-const event1 = new Date('July 1, 1999');
-const event2 = new Date();
-event2.setTime(event1.getTime());
+// const event2 = new Date('July 1, 1999');
+const event2 = new Date(2021, 11 - 1, 28, 16, 30);
 
-console.log('event1');
-console.log(event1);
+// console.log('event2');
+// console.log(event2);
+console.log(event2.toLocaleString());
+// console.log(event2.toLocaleDateString());
+// console.log(event2.toLocaleTimeString());
+console.log(event2.toString());
+// console.log(event2.toTimeString());
+// console.log(event2.toUTCString());
+// console.log(event2.valueOf());
+
+var dateIntger  = event2.getFullYear().toString() + (event2.getMonth() + 1).toString() + event2.getDate().toString();
+var timeHour    = event2.getHours().toString();
+var timeMinutes = event2.getMinutes().toString();
+
+var timeInteger = timeHour + timeMinutes;
+
+// console.log("dateIntger: " + dateIntger);
+// console.log("timeInteger:" + timeInteger);
+
+// console.log('event1');
+// console.log(event1);
 // expected output: Thu Jul 01 1999 00:00:00 GMT+0200 (CEST)
 
-console.log('event2');
-console.log(event2);
+// event2.setTime(event1.getTime());
+// console.log('event2');
+// console.log(event2);
 // expected output: Thu Jul 01 1999 00:00:00 GMT+0200 (CEST)
 // (note: your timezone may vary)
 
+console.log('\n\n');
 
 // Schedule Object
 // 

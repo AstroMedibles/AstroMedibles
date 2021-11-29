@@ -95,46 +95,39 @@
 
                                 <div class="product">
                                     <div class="row product-image d-flex justify-content-between align-items-start ">
-                    
-                    
                                         <div class="col-md-12 product-info">
-                                            <div class="product-specs d-flex flex-column  align-items-center">
-                                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
-    
-                                                    
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Item</th>
-                                                                <th scope="col">Payment Required</th>
-                                                                <th scope="col">Payment Recieved</th>
-                                                                <th scope="col">Total</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="chartTable" style="font-weight: normal;" >
-                                                            <tr>
-                                                                <td class="table"> ... </td>
-                                                                <td class="table-danger"  >0</td>
-                                                                <td class="table-primary" >0</td>
-                                                                <td>0</td>
-                                                            </tr>
-                                                        </tbody>
-                                                      </table>
-    
-                                                      <br>
-                                                      <p id='chartMapPaymentRequired'></p>
-                                                      <br>
-                                                      <p id='chartMapPaymentRecieved'></p>
-                                                      <br>
-                                                      <p id='chartMapTotal'></p>
+                                            <div class="d-flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
+                                                <h4>Item Demand</h4>
+                                                <br>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" style="font-weight: normal;">Item</th>
+                                                            <th scope="col" style="font-weight: normal;">Payment Required</th>
+                                                            <th scope="col" style="font-weight: normal;">Payment Recieved</th>
+                                                            <th scope="col" style="font-weight: normal;">Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="chartTable" style="font-weight: normal;" >
+                                                        <tr>
+                                                            <td class="table"> ... </td>
+                                                            <td class="table-danger"  >0</td>
+                                                            <td class="table-primary" >0</td>
+                                                            <td>0</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
 
-                                                </div>
+                                                <br>
+                                                <p id='chartMapPaymentRequired'></p>
+                                                <br>
+                                                <p id='chartMapPaymentRecieved'></p>
+                                                <br>
+                                                <p id='chartMapTotal'></p>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
-
                             </div>
 
                             <div id="pickups-items" class="items" hidden>
@@ -143,21 +136,20 @@
 
                                 <div class="product">
                                     <div class="row product-image d-flex justify-content-between align-items-start ">
-                    
-                    
                                         <div class="col-md-12 product-info">
-                                            <div class="product-specs d-flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
-
+                                            <div class="d-flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
+                                                <h4>Customer Pickups</h4>
+                                                <br>
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
-                                                            <th scope="col">Date / Time</th>
-                                                            <th scope="col">Name</th>
-                                                            <th scope="col">Order ID</th>
+                                                            <th scope="col" style="font-weight: normal;">Date</th>
+                                                            <th scope="col" style="font-weight: normal;">Name</th>
+                                                            <th scope="col" style="font-weight: normal;">Order ID</th>
                                                         </tr>
                                                     </thead>
 
-                                                    <tbody id="pickupsTable" style="font-weight: normal;" >
+                                                    <tbody id="tablePickups" style="font-weight: normal;" >
                                                         <!-- Date -->
                                                         <tr>
                                                             <th class="table w-50">November 17th</th>

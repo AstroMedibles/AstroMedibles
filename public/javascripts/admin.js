@@ -538,14 +538,13 @@ function radioChartClick()
                 quantityRecieved = chartMapPaymentRecieved.get(key).quantity;
             }
 
-            // text += `[${key}]  (${value.quantity}) ${value.name}<br>`;
             tableHTML +=
                     `
                     <tr>
-                        <th scope="row">${value.name}</th>
+                        <th scope="row" style="font-weight: normal;">${value.name}</th>
                         <td class="table-danger"  >${quantityRequired}</td>
                         <td class="table-primary" >${quantityRecieved}</td>
-                        <td>${value.quantity}</td>
+                        <td style="font-weight: bold;">${value.quantity}</td>
                     </tr>
                     `;
 
@@ -576,6 +575,83 @@ function radioPickupsClick()
     document.getElementById("radioCodes").classList.remove("active");
     document.getElementById("radioChart").classList.remove("active");
 
+    console.log('/adminGetUserPickups');
+
+    var tableHTML = '';
+
+    fetch(address + '/adminGetUserPickups')
+    .then(response => response.json())
+    .then(data =>  
+    {
+        var pickups  = Array.from(data['data']);
+        var lastYear = '';
+        var lastDate = '';
+        var lastTime = '';
+
+        for (let i = 0; i < pickups.length; i++)
+        {
+            console.log(pickups[i]);
+
+            var date = new Date(pickups[i].date);
+
+            var localeTimeStr = date.toLocaleTimeString().toString();
+            var time = localeTimeStr.substring(0, localeTimeStr.lastIndexOf(':')) + localeTimeStr.substring(localeTimeStr.lastIndexOf(':') + 3) 
+
+
+            let options = { weekday: 'long', month: 'long', day: 'numeric'};
+            var dateLocaleString = date.toLocaleString('en-US', options) + getOrdinalSuffix(date);
+            
+            // Sunday, November 14th
+            if (lastYear != date.getFullYear())
+            {
+                tableHTML +=
+                `
+                <tr>
+                    <th class="table w-50" style="font-weight: normal;">${date.getFullYear()}</th>
+                    <th class="table w-25"></th>
+                    <th class="table w-25"></th>
+                </tr>
+                `;
+                lastYear = date.getFullYear();
+            }
+
+            if (lastDate != dateLocaleString)
+            {
+                tableHTML +=
+                `
+                <!-- Date -->
+                <tr>
+                    <th class="table w-50">${dateLocaleString}</th>
+                    <th class="table w-25"></th>
+                    <th class="table w-25"></th>
+                </tr>
+                `;
+                lastDate = dateLocaleString;
+            }
+
+            var timeString = time;
+            if (lastTime != time)
+            {
+                lastTime = time;
+            }
+            else
+            {
+                timeString = '';
+            }
+
+            tableHTML +=
+            `
+            <!-- Time, Name, Order ID -->
+            <tr>
+                <td class="table w-50" >${timeString}</td>
+                <td class="table w-25" >${pickups[i].name}</td>
+                <td class="table w-25" >${pickups[i].order_id}</td>
+            </tr>
+            `
+        }
+        document.getElementById("tablePickups").innerHTML = tableHTML;
+    });
+
 }
 
 function generateAccessCodes()
@@ -603,6 +679,11 @@ function generateAccessCodes()
     {
         radioCodesClick();
     });
+}
+
+function getOrdinalSuffix(dt)
+{
+    return (dt.getDate() % 10 == 1 && dt.getDate() != 11 ? 'st' : (dt.getDate() % 10 == 2 && dt.getDate() != 12 ? 'nd' : (dt.getDate() % 10 == 3 && dt.getDate() != 13 ? 'rd' : 'th'))); 
 }
 
 function ready()

@@ -978,6 +978,65 @@ class DbService
         return response;
     }
 
+    async adminGetUserPickups()
+    {
+        const response = await new Promise((resolve, reject) => 
+        {
+            try
+            {
+                const sql = "SELECT * FROM " + process.env.TABLE_PICKUPS + " ORDER BY date ASC, time ASC;";
+                connection.query(sql, [], (error, results) =>
+                {
+                    if (error)
+                    {
+                        reject(new Error("dbService.js ERROR\n" + error));
+                    }
+                    if (results[0] === undefined) 
+                    {
+                        reject("Orders are undefined.");
+                    }
+
+                    var pickups = [];
+                    for (let i = 0; i < results.length; i++)
+                    {
+                        const pickupDateString = results[i].date.toString();
+                        const pickupTimeString = results[i].time.toString();
+
+                        var year        = parseInt(pickupDateString.substring(0,4));
+                        var monthIndex  = parseInt(pickupDateString.substring(4,6) - 1);
+                        var day         = parseInt(pickupDateString.substring(6,8));
+            
+                        var hours       = parseInt(pickupTimeString.substring(0,2));
+                        var minutes     = parseInt(pickupTimeString.substring(2,4));
+
+                        var pickupDate = new Date(year, monthIndex, day, hours, minutes);
+
+                        // console.log('\n');
+
+                        var pickupElement = 
+                        {
+                            id       : results[i].id,
+                            date     : pickupDate,
+                            order_id : results[i].order_id,
+                            name     : results[i].name
+                        };
+
+                        pickups.push(pickupElement);
+                    }
+
+                    console.log('pickups');
+                    console.log(pickups);
+                    resolve(pickups);
+                })
+            }
+            catch (error)
+            {
+                console.log(error);
+                reject();
+            }});
+        return response;
+    }
+
     async forgotPasswordGenerateCode(email)
     {
         const response = new Promise((resolve, reject) =>

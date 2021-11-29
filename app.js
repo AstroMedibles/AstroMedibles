@@ -508,6 +508,39 @@ app.get('/adminGetUserOrders', (request, response) =>
 	});
 });
 
+// read  
+app.get('/adminGetUserPickups', (request, response) => 
+{
+	console.log("/adminGetUserPickups");
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		console.log("admin(/) \tresult.then()"); 
+		if (accountAttributes.isAdmin === 1) 
+		{ 
+			console.log("/adminGetUserPickups ADMIN TRUE");
+			const db = dbService.getDbServiceInstance(); 
+			const result = db.adminGetUserPickups(); 
+			
+			result.then(data =>  
+			{ 
+				response.json({ data: data });
+			}) 
+			.catch(err => console.log(err));			
+		} 
+		else 
+		{ 
+			console.log("/adminGetUserPickups ADMIN FALSE");
+			response.end();
+		} 
+	})
+	.catch(() => 
+	{
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
 
 // read 
 app.get('/adminGetAccessCodes', (request, response) => 
