@@ -41,11 +41,24 @@
                     <div class="row content">
                         <div class="col-md-12">
 
-                            <div id="orders-items" class="items"  >
+                            <div id="orders-items-outer" class="items" >
+                                <div class="product">
+                                    <div class="row product-image">
+                                        <br>
+                                        <h4 style="text-align: center;">Customer Orders</h4>
+                                        
+                                        <p style="text-align: center;">Update the status of customer orders</p>
 
-                                <!-- ORDERS -->
-
+                                        <div id="orders-items" class="items">
+            
+                                            <!-- ORDERS -->
+            
+                                        </div>
+                                            
+                                    </div>
+                                </div>
                             </div>
+                            
 
 
                             <div id="codes-items" class="items" hidden >
@@ -55,13 +68,16 @@
 
                                 <div class="product">
                                     <div class="row product-image d-flex justify-content-between align-items-start ">  
-                    
+                                        
+                                        <h4 style="text-align: center;">Create or Get Access Codes</h4>
+                                        
                                         <div class="col-md-6 product-info ">
                                             <div class="product-specs d-flex flex-column  align-items-center">
+
                                                 <div style="padding: 0px 0px 15px 0px; text-align: center;">
                                                     <span>Description</span>
                                                     <br>
-                                                    <span class="value">A single Access Code is used for a user to register their account.
+                                                    <span class="value">Access Code is used for a user to register their account
                                                     </span>
                                                 </div>
                                                 <div style="padding: 0px 0px 15px 0px; text-align: center;">
@@ -79,12 +95,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                       
-                    
+
                                     </div>
                                 </div>
-
                             </div>
 
 
@@ -94,9 +107,12 @@
 
                                 <div class="product">
                                     <div class="row product-image d-flex justify-content-between align-items-start ">
+                                        <h4 style="text-align: center;">What items to bake?</h4>
+                                        <p style="text-align: center;">This table shows what items customers have ordered</p>
+
+                                        
                                         <div class="col-md-12 product-info">
                                             <div class="d-flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
-                                                <h4>Item Demand</h4>
                                                 <br>
                                                 <table class="table">
                                                     <thead>
@@ -135,274 +151,12 @@
 
                                 <div class="product">
                                     <div class="row product-image d-flex justify-content-between align-items-start ">
+                                        <h4 style="text-align: center;">Upcoming Customer Pickups</h4>
+                                        <p style="text-align: center;">Days and times customers have requested to pick up their order</p>
+
                                         <div class="col-md-12 product-info">
                                             <div class="d-flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
-
-                                                <div class="row">
-                                                    <div class="col d-flex flex-column  align-items-center">
-                                                        <h6>Pickup Days</h6>
-                                                        <br>
-                                                        <h6>Pickup Times</h6>
-
-
-                                                        <!-- <div class="product">
-                                                            <div class="row product-image d-flex justify-content-between align-items-start ">
-                                            
-                                                                <div class="col-md-4 product-info">
-                                                                    <div class="product-specs d-flex flex-column  align-items-center">
-                                                                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                                                            <span>Status</span>
-                                                                            <br>
-                                                                            <div class="dropdown" >
-                                                                                ${dropDownButton}
-                                                                                <div class="dropdown-menu" name="${order_id}">
-                                                                                ${status}
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                            
-                                                                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                                                            <span>Order ID</span>
-                                                                            <br>
-                                                                            <span class="value">${order_id}</span>
-                                                                        </div>
-                                                                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                                                            <span>Name</span>
-                                                                            <br>
-                                                                            <span class="value">${name}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                            
-                                                                <div class="col-md-4 product-info">
-                                                                    <div class="product-specs d-flex flex-column  align-items-center">
-                                                                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                                                            <span>Items</span>
-                                                                            <br>
-                                                                            <span class="value">${cartText}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                            
-                                            
-                                                                <div class="col-md-4 product-info ">
-                                                                    <div class="product-specs d-flex flex-column  align-items-center">
-                                                                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                                                            <span>Date:</span>
-                                                                            <br>
-                                                                            <span class="value">${date_created}</span>
-                                                                        </div>
-                                                                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                                                            <span>Total</span>
-                                                                            <br>
-                                                                            <span class="value">${total}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                            
-                                            
-                                                            </div>
-                                                        </div> -->
-
-
-
-
-                                                        <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
-                                                            
-                                                            <form>
-                                                                <fieldset class="form-group">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkDay1">
-                                                                        <label class="form-check-label" for="checkDay1">Sunday</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkDay2">
-                                                                        <label class="form-check-label" for="checkDay2">Monday</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkDay3">
-                                                                        <label class="form-check-label" for="checkDay3">Tuesday</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkDay4">
-                                                                        <label class="form-check-label" for="checkDay4">Wednesday</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkDay5">
-                                                                        <label class="form-check-label" for="checkDay5">Thursday</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkDay6">
-                                                                        <label class="form-check-label" for="checkDay6">Friday</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkDay7">
-                                                                        <label class="form-check-label" for="checkDay7">Saturday</label>
-                                                                    </div>
-
-                                                                </fieldset>
-                                                            </form>
-
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div class="col d-flex flex-column  align-items-center">
-                                                        <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
-                                                            <form>
-                                                                <fieldset class="form-group">
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime1">
-                                                                        <label class="form-check-label" for="checkTime1">1:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime2">
-                                                                        <label class="form-check-label" for="checkTime2">2:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime3">
-                                                                        <label class="form-check-label" for="checkTime3">3:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime4">
-                                                                        <label class="form-check-label" for="checkTime4">4:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime5">
-                                                                        <label class="form-check-label" for="checkTime5">5:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime6">
-                                                                        <label class="form-check-label" for="checkTime6">6:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime7">
-                                                                        <label class="form-check-label" for="checkTime7">7:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime8">
-                                                                        <label class="form-check-label" for="checkTime8">8:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime9">
-                                                                        <label class="form-check-label" for="checkTime9">9:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime10">
-                                                                        <label class="form-check-label" for="checkTime10">10:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime11">
-                                                                        <label class="form-check-label" for="checkTime11">11:00 AM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime12">
-                                                                        <label class="form-check-label" for="checkTime12">12:00 PM</label>
-                                                                    </div>
-
-                                                                </fieldset>
-                                                            </form>
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div class="col d-flex flex-column  align-items-center">
-                                                        <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
-                                                            <form>
-                                                                <fieldset class="form-group">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime13">
-                                                                        <label class="form-check-label" for="checkTime13">1:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime14">
-                                                                        <label class="form-check-label" for="checkTime14">2:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime15">
-                                                                        <label class="form-check-label" for="checkTime15">3:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime16">
-                                                                        <label class="form-check-label" for="checkTime16">4:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime17">
-                                                                        <label class="form-check-label" for="checkTime17">5:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime18">
-                                                                        <label class="form-check-label" for="checkTime18">6:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime19">
-                                                                        <label class="form-check-label" for="checkTime19">7:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime20">
-                                                                        <label class="form-check-label" for="checkTime20">8:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime21">
-                                                                        <label class="form-check-label" for="checkTime21">9:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime22">
-                                                                        <label class="form-check-label" for="checkTime22">10:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime23">
-                                                                        <label class="form-check-label" for="checkTime23">11:00 PM</label>
-                                                                    </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="" id="checkTime24">
-                                                                        <label class="form-check-label" for="checkTime24">12:00 AM</label>
-                                                                    </div>
-
-                                                                </fieldset>
-                                                            </form>
-                                                        </div>
-
-                                                    </div>
-                                                        
-                                                    <br>
-                                                    <button type="button" class="btn btn-primary rounded-pill w-50 disabled" onClick="updatePickup()"  >Update Pickups</button>
-
-                                                </div>
-                                                
-
                                                 <br>
-                                                <hr/>
-                                                <h6>Current Customer Pickups</h6>
                                                 <br>
                                                 <table class="table">
                                                     <thead>
@@ -461,6 +215,236 @@
 
                                                     </tbody>
                                                 </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="product">
+                                    <div class="row product-image d-flex justify-content-between align-items-start ">
+
+                                        <div class="col-md-12 product-info">
+                                            <div class="d-flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
+                                                <!-- <div class="row"> -->
+                                                    <!-- <div class="col d-flex flex-column  align-items-center"> -->
+
+                                                <h4>Customer Pickup Schedule</h4>
+                                                <p style="text-align: center;">Set the days and times customers can select, to pick up their order</p>
+
+                                                <div class="product" >
+                                                    <div class="row product-image d-flex align-items-start ">
+                                    
+                                                        <div class="col-md-4 product-info">
+                                                            <div class="product-specs d-flex flex-column  align-items-center">
+                                                                <div style="padding: 0px 0px 15px 0px; text-align: center; font-weight: normal;">
+                                                                    <h6>Set Pickup Days</h6>
+                                                                    <br>
+                                                                
+                                                                    <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                                                                        <form>
+                                                                            <fieldset class="form-group">
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkDay1">
+                                                                                    <label class="form-check-label" for="checkDay1">Sunday</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkDay2">
+                                                                                    <label class="form-check-label" for="checkDay2">Monday</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkDay3">
+                                                                                    <label class="form-check-label" for="checkDay3">Tuesday</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkDay4">
+                                                                                    <label class="form-check-label" for="checkDay4">Wednesday</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkDay5">
+                                                                                    <label class="form-check-label" for="checkDay5">Thursday</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkDay6">
+                                                                                    <label class="form-check-label" for="checkDay6">Friday</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkDay7">
+                                                                                    <label class="form-check-label" for="checkDay7">Saturday</label>
+                                                                                </div>
+            
+                                                                            </fieldset>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                    
+                                                        <div class="col-md-4 product-info">
+                                                            <div class="product-specs d-flex flex-column  align-items-center">
+                                                                <div style="padding: 0px 0px 15px 0px; text-align: center;  font-weight: normal;">
+                                                                    <h6>Set Pickup Times</h6>
+                                                                    <br>
+                                                                    <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                                                                        <form>
+                                                                            <fieldset class="form-group">
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime1">
+                                                                                    <label class="form-check-label" for="checkTime1">1:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime2">
+                                                                                    <label class="form-check-label" for="checkTime2">2:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime3">
+                                                                                    <label class="form-check-label" for="checkTime3">3:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime4">
+                                                                                    <label class="form-check-label" for="checkTime4">4:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime5">
+                                                                                    <label class="form-check-label" for="checkTime5">5:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime6">
+                                                                                    <label class="form-check-label" for="checkTime6">6:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime7">
+                                                                                    <label class="form-check-label" for="checkTime7">7:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime8">
+                                                                                    <label class="form-check-label" for="checkTime8">8:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime9">
+                                                                                    <label class="form-check-label" for="checkTime9">9:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime10">
+                                                                                    <label class="form-check-label" for="checkTime10">10:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime11">
+                                                                                    <label class="form-check-label" for="checkTime11">11:00 AM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime12">
+                                                                                    <label class="form-check-label" for="checkTime12">12:00 PM</label>
+                                                                                </div>
+            
+                                                                            </fieldset>
+                                                                        </form>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    
+                                                        <div class="col-md-4 product-info ">
+                                                            <div class="product-specs d-flex flex-column  align-items-center">
+                                                                <div style="padding: 0px 0px 15px 0px; text-align: center;  font-weight: normal;">
+                                                                    <h6>&nbsp;</h6>
+                                                                    <br>
+                                                                    <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                                                                        <form>
+                                                                            <fieldset class="form-group">
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime13">
+                                                                                    <label class="form-check-label" for="checkTime13">1:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime14">
+                                                                                    <label class="form-check-label" for="checkTime14">2:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime15">
+                                                                                    <label class="form-check-label" for="checkTime15">3:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime16">
+                                                                                    <label class="form-check-label" for="checkTime16">4:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime17">
+                                                                                    <label class="form-check-label" for="checkTime17">5:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime18">
+                                                                                    <label class="form-check-label" for="checkTime18">6:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime19">
+                                                                                    <label class="form-check-label" for="checkTime19">7:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime20">
+                                                                                    <label class="form-check-label" for="checkTime20">8:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime21">
+                                                                                    <label class="form-check-label" for="checkTime21">9:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime22">
+                                                                                    <label class="form-check-label" for="checkTime22">10:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime23">
+                                                                                    <label class="form-check-label" for="checkTime23">11:00 PM</label>
+                                                                                </div>
+            
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" value="" id="checkTime24">
+                                                                                    <label class="form-check-label" for="checkTime24">12:00 AM</label>
+                                                                                </div>
+            
+                                                                            </fieldset>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>  
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        
+                                                        <br>
+                                                        <button type="button" class="btn btn-primary rounded-pill w-50 disabled align-items-center" onClick="updatePickup()"  >Update Pickups</button>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
 

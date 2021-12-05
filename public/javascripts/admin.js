@@ -316,7 +316,7 @@ function radioOrdersClick()
     $('#chart-items').attr('hidden', '');
     $('#pickups-items').attr('hidden', '');
 
-    $('#orders-items').removeAttr('hidden');
+    $('#orders-items-outer').removeAttr('hidden');
 
 
     // set radioOrders active
@@ -334,7 +334,7 @@ function radioOrdersClick()
 function radioCodesClick()
 {
     // console.log('radioCodesClick()');
-    $('#orders-items').attr('hidden', '');
+    $('#orders-items-outer').attr('hidden', '');
     $('#chart-items').attr('hidden', '');
     $('#pickups-items').attr('hidden', '');
 
@@ -370,7 +370,7 @@ function radioChartClick()
     // console.log('radioChartClick()');
     // hide other divs, reveal chart div
     $('#codes-items').attr('hidden', '');
-    $('#orders-items').attr('hidden', '');
+    $('#orders-items-outer').attr('hidden', '');
     $('#pickups-items').attr('hidden', '');
 
     $('#chart-items').removeAttr('hidden');
@@ -561,7 +561,7 @@ function radioPickupsClick()
     // console.log('radioChartClick()');
     // hide other divs, reveal chart div
     $('#codes-items').attr('hidden', '');
-    $('#orders-items').attr('hidden', '');
+    $('#orders-items-outer').attr('hidden', '');
     $('#chart-items').attr('hidden', '');
 
 
