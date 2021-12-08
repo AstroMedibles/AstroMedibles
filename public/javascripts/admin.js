@@ -7,6 +7,15 @@ document.addEventListener('DOMContentLoaded', function ()
 // const address = 'https://www.astromedibles.com';
 const address = 'http://localhost:8080';
 
+var checkDay1 = document.getElementById('checkDay1');
+var checkDay2 = document.getElementById('checkDay2');
+var checkDay3 = document.getElementById('checkDay3');
+var checkDay4 = document.getElementById('checkDay4');
+var checkDay5 = document.getElementById('checkDay5');
+var checkDay6 = document.getElementById('checkDay6');
+var checkDay7 = document.getElementById('checkDay7');
+
+
 function loadCartTotal(data)
 {
     // console.log("function: loadCartTotal(data)");
@@ -652,6 +661,24 @@ function radioPickupsClick()
         document.getElementById("tablePickups").innerHTML = tableHTML;
     });
 
+    fetch(address + '/adminGetPickupsDays')
+    .then(response => response.json())
+    .then(data =>  
+    {
+        var checkData = Array.from(data['data']);
+        var checks = [checkDay1, checkDay2, checkDay3, checkDay4, checkDay5, checkDay6, checkDay7];
+
+        for (let i = 0; i < checkData.length; i++)
+        {
+            // console.log(checkData[i]);
+
+            if (checkData[i] == 1)
+            {
+                checks[i].parentNode.setAttribute("style","font-weight: bold");
+            }   
+        }
+    });
+
 }
 
 function generateAccessCodes()
@@ -711,7 +738,9 @@ function updatePickupSchedule(event)
         return;
     }
 
-
+    var checks = [checkDay1.checked, checkDay2.checked, checkDay3.checked, checkDay4.checked, checkDay5.checked, checkDay6.checked, checkDay7.checked];
+    console.log(checks);
+   
     // use itemId to remove "1" qty from cart
     fetch(address + '/adminSetPickupsDays',
         {
@@ -723,13 +752,27 @@ function updatePickupSchedule(event)
             },
             body: JSON.stringify
                 ({
-                    available: [1, 1, 1, 0, 0, 0, 1]
+                    available: checks
                 })
         })
         .then(response => response.json())
         .then((data) => 
         {
-            
+            checks = [checkDay1, checkDay2, checkDay3, checkDay4, checkDay5, checkDay6, checkDay7];
+            checks.forEach(element =>
+                {
+                    if (element.checked == true)
+                    {
+                        element.parentNode.setAttribute("style","font-weight: bold");
+                    }
+                    else
+                    {
+                        element.parentNode.setAttribute("style","font-weight: normal");
+                    }
+                    element.checked = false;
+                });
+
+
             console.log("updatePickupSchedule complete");
             // Update Summary
         }).catch((error => 

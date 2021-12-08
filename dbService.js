@@ -1037,6 +1037,39 @@ class DbService
         return response;
     }
 
+    async adminGetPickupsDays()
+    {
+        const response = await new Promise((resolve, reject) => 
+        {
+            try
+            {
+                const sql = "SELECT * FROM " + process.env.TABLE_PICKUPS_DAYS + ";";
+                connection.query(sql, [], (error, results) =>
+                {
+                    if (error)
+                    {
+                        reject(new Error("dbService.js ERROR\n" + error));
+                    }
+                    if (results[0] === undefined) 
+                    {
+                        reject("Access Codes are undefined.");
+                    }
+
+                    var days = [];
+                    for (let i = 0; i < results.length; i++)
+                    {
+                        days.push(results[i].available);
+                    }
+                    resolve(days);
+                });
+            }
+            catch (error)
+            {
+                reject(error);
+            }});
+        return response;
+    }
+
     async adminSetPickupsDays(available)
     {
         const response = new Promise((resolve, reject) =>

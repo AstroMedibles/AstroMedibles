@@ -363,8 +363,8 @@ app.get('/getMenuData', (request, response) =>
 		console.log("route(/) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	}); 
-}); 
- 
+});
+
 // render 
 app.get('/checkout', (request, response) => 
 { 
@@ -541,6 +541,42 @@ app.get('/adminGetUserPickups', (request, response) =>
 		response.redirect('/login'); 
 	});
 });
+
+
+// read  
+app.get('/adminGetPickupsDays', (request, response) => 
+{
+	console.log("/adminGetPickupsDays");
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		console.log("admin(/) \tresult.then()"); 
+		if (accountAttributes.isAdmin === 1) 
+		{ 
+			console.log("/adminGetPickupsDays ADMIN TRUE");
+			const db = dbService.getDbServiceInstance(); 
+			const result = db.adminGetPickupsDays(); 
+			
+			result.then(data =>  
+			{ 
+				response.json({ data: data });
+			}) 
+			.catch(err => console.log(err));			
+		} 
+		else 
+		{ 
+			console.log("/adminGetUserOrders ADMIN FALSE");
+			response.end();
+		} 
+	})
+	.catch(() => 
+	{
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
+
 
 // read 
 app.get('/adminGetAccessCodes', (request, response) => 

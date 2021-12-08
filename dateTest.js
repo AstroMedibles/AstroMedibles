@@ -31,6 +31,14 @@ var timeInteger = timeHour + timeMinutes;
 // (note: your timezone may vary)
 
 
+console.log("dateIntger: " + dateIntger);
+console.log("timeInteger:" + timeInteger);
+
+console.log("Day:" + event2.getDay());
+
+console.log("Day:" + new Date().getDay());
+
+
 if(Date.parse(event2)-Date.parse(new Date())<0)
 {
    console.log('DATE HAS PASSED');
