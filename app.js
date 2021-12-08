@@ -763,6 +763,42 @@ app.patch('/adminUpdateOrderStatus', (request, response) =>
 		response.redirect('/login'); 
 	});
 });
+
+
+app.patch('/adminSetPickupsDays', (request, response) =>
+{
+	console.log("\n"+ "route(/adminSetPickupsDays) "); 
+
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		console.log("adminSetPickupsDays(/) \tresult.then()"); 
+		if (accountAttributes.isAdmin === 1) 
+		{ 
+			const { available } = request.body; 
+			const db = dbService.getDbServiceInstance(); 
+			const result = db.adminSetPickupsDays(available); 
+		 
+			result.then((data) => 
+			{ 
+				console.log("\n" + "route(/adminSetPickupsDays) \t RESULTS:"); 
+				response.json({ data: data }); 
+			}).catch(err => console.log(err));
+		} 
+		else 
+		{ 
+			response.end(); 
+		} 
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
+
+
  
 // create 
 app.post('/userPlaceOrder', (request, response) =>  

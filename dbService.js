@@ -14,7 +14,7 @@ const connection = mysql.createPool(
         user: process.env.USER,
         password: process.env.PASSWORD,
         database: process.env.DATABASE,
-        multipleStatements: false,
+        multipleStatements: true,
         port: process.env.DB_PORT
     });
 
@@ -1034,6 +1034,52 @@ class DbService
                 console.log(error);
                 reject();
             }});
+        return response;
+    }
+
+    async adminSetPickupsDays(available)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            try
+            {
+                console.log('available:');
+                console.log(available);
+
+                const query1 = "UPDATE " + process.env.TABLE_PICKUPS_DAYS  + " SET `available` = ? WHERE (`id` = '1');";
+                const query2 = "UPDATE " + process.env.TABLE_PICKUPS_DAYS  + " SET `available` = ? WHERE (`id` = '2');";
+                const query3 = "UPDATE " + process.env.TABLE_PICKUPS_DAYS  + " SET `available` = ? WHERE (`id` = '3');";
+                const query4 = "UPDATE " + process.env.TABLE_PICKUPS_DAYS  + " SET `available` = ? WHERE (`id` = '4');";
+                const query5 = "UPDATE " + process.env.TABLE_PICKUPS_DAYS  + " SET `available` = ? WHERE (`id` = '5');";
+                const query6 = "UPDATE " + process.env.TABLE_PICKUPS_DAYS  + " SET `available` = ? WHERE (`id` = '6');";
+                const query7 = "UPDATE " + process.env.TABLE_PICKUPS_DAYS  + " SET `available` = ? WHERE (`id` = '7');";
+    
+                var query = query1 + query2 + query3 + query4 + query5 + query6 + query7;
+    
+                connection.query(query, [available[0], available[1], available[2], available[3], available[4], available[5], available[6]], (err, results) =>
+                {
+                    if (err)
+                    {
+                        reject(err.message);
+                    }
+                    else
+                    {
+                        // console.log(results[0]); // [{1: 1}]
+                        // console.log(results[1]); // [{2: 2}]
+                        console.log("\n");
+                        console.log("results.affectedRows:");
+                        console.log(results[0].affectedRows);
+                        console.log('New Schedule DAYS Update Complete');
+
+                        resolve(results.affectedRows);
+                    }
+                });
+            }
+            catch (error)
+            {
+                reject('ERROR adminSetPickupsDays(avalible) \n' + error);
+            }
+        });
         return response;
     }
 

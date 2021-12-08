@@ -1,5 +1,5 @@
 // const event2 = new Date('July 1, 1999');
-const event2 = new Date(2021, 11 - 1, 28, 16, 30);
+const event2 = new Date(2021, 12 - 1, 6, 1, 17);
 
 // console.log('event2');
 // console.log(event2);
@@ -29,6 +29,16 @@ var timeInteger = timeHour + timeMinutes;
 // console.log(event2);
 // expected output: Thu Jul 01 1999 00:00:00 GMT+0200 (CEST)
 // (note: your timezone may vary)
+
+
+if(Date.parse(event2)-Date.parse(new Date())<0)
+{
+   console.log('DATE HAS PASSED');
+}
+else
+{
+    console.log('DATE NOT PASSED');
+}
 
 console.log('\n\n');
 

@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function ()
     ready();
 });
 
-const address = 'https://www.astromedibles.com';
-// const address = 'http://localhost:8080';
+// const address = 'https://www.astromedibles.com';
+const address = 'http://localhost:8080';
 
 function loadCartTotal(data)
 {
@@ -685,6 +685,60 @@ function getOrdinalSuffix(dt)
 {
     return (dt.getDate() % 10 == 1 && dt.getDate() != 11 ? 'st' : (dt.getDate() % 10 == 2 && dt.getDate() != 12 ? 'nd' : (dt.getDate() % 10 == 3 && dt.getDate() != 13 ? 'rd' : 'th'))); 
 }
+
+function updatePickupSchedule(event)
+{
+    console.log("\n" + "updatePickupSchedule(event)");
+
+    // grab item attributes, id, name, qty
+    // var parentDiv = event.currentTarget.parentNode;
+    // var id = parseInt(parentDiv.getAttribute('data-itemid'));
+    // var name = parentDiv.getAttribute('data-itemname');
+    // var qty = parentDiv.getAttribute('data-itemqty');
+    // var price = parentDiv.getAttribute('data-itemprice');
+    // console.log("Name: " + name);
+    // console.log("ID: " + id);
+    // console.log("QTY: " + qty);
+
+    if (confirm('Update pickup schedule?'))
+    {
+        // 
+        // console.log('Update order pressed.');
+    } else
+    {
+        // 
+        // console.log('Cancel action pressed.');
+        return;
+    }
+
+
+    // use itemId to remove "1" qty from cart
+    fetch(address + '/adminSetPickupsDays',
+        {
+            credentials: "include",
+            method: 'PATCH',
+            headers:
+            {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify
+                ({
+                    available: [1, 1, 1, 0, 0, 0, 1]
+                })
+        })
+        .then(response => response.json())
+        .then((data) => 
+        {
+            
+            console.log("updatePickupSchedule complete");
+            // Update Summary
+        }).catch((error => 
+        {
+            console.log("updatePickupSchedule(event)  catch:" + error);
+        }));
+}
+
+
 
 function ready()
 {
