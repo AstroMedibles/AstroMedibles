@@ -9,7 +9,7 @@ dotenv.config();
 
 const connection = mysql.createPool(
     {
-        connectionLimit : 20, // <- Keep an eye on this
+        connectionLimit : 100, // <- Keep an eye on this
         host: process.env.HOST,
         user: process.env.USER,
         password: process.env.PASSWORD,
@@ -1070,6 +1070,39 @@ class DbService
         return response;
     }
 
+    async adminGetPickupsTimes()
+    {
+        const response = await new Promise((resolve, reject) => 
+        {
+            try
+            {
+                const sql = "SELECT * FROM " + process.env.TABLE_PICKUPS_TIMES + ";";
+                connection.query(sql, [], (error, results) =>
+                {
+                    if (error)
+                    {
+                        reject(new Error("dbService.js ERROR\n" + error));
+                    }
+                    if (results[0] === undefined) 
+                    {
+                        reject("Access Codes are undefined.");
+                    }
+
+                    var times = [];
+                    for (let i = 0; i < results.length; i++)
+                    {
+                        times.push(results[i].available);
+                    }
+                    resolve(times);
+                });
+            }
+            catch (error)
+            {
+                reject(error);
+            }});
+        return response;
+    }
+
     async adminSetPickupsDays(available)
     {
         const response = new Promise((resolve, reject) =>
@@ -1115,6 +1148,78 @@ class DbService
         });
         return response;
     }
+
+    async adminSetPickupsTimes(available)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            try
+            {
+                console.log('available:');
+                console.log(available);
+
+                const query1  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '1');";
+                const query2  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '2');";
+                const query3  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '3');";
+                const query4  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '4');";
+                const query5  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '5');";
+                const query6  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '6');";
+                
+                const query7  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '7');";
+                const query8  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '8');";
+                const query9  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '9');";
+                const query10 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '10');";
+                const query11 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '11');";
+                const query12 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '12');";
+
+                const query13 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '13');";
+                const query14 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '14');";
+                const query15 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '15');";
+                const query16 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '16');";
+                const query17 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '17');";
+                const query18 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '18');";
+
+                const query19 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '19');";
+                const query20 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '20');";
+                const query21 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '21');";
+                const query22 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '22');";
+                const query23 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '23');";
+                const query24 = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '24');";
+
+
+                var query =
+                query1  + query2  + query3  + query4  + query5  + query6  +
+                query7  + query8  + query9  + query10 + query11 + query12 +
+                query13 + query14 + query15 + query16 + query17 + query18 +
+                query19 + query20 + query21 + query22 + query23 + query24;
+    
+                connection.query(query, [available[0], available[1], available[2], available[3], available[4], available[5], available[6], available[7], available[8], available[9], available[10], available[11], available[12], available[13], available[14], available[15], available[16], available[17], available[18], available[19], available[20], available[21], available[22], available[23]], (err, results) =>
+                {
+                    if (err)
+                    {
+                        reject(err.message);
+                    }
+                    else
+                    {
+                        // console.log(results[0]); // [{1: 1}]
+                        // console.log(results[1]); // [{2: 2}]
+                        console.log("\n");
+                        console.log("results.affectedRows:");
+                        console.log(results[0].affectedRows);
+                        console.log('New Schedule TIMES Update Complete');
+
+                        resolve(results.affectedRows);
+                    }
+                });
+            }
+            catch (error)
+            {
+                reject('ERROR adminSetPickupsTimes(avalible) \n' + error);
+            }
+        });
+        return response;
+    }
+
 
     async forgotPasswordGenerateCode(email)
     {

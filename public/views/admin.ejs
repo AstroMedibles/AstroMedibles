@@ -148,12 +148,12 @@
                                 <!-- PICKUPS -->
 
                                 <div class="product">
-                                    <div class="row product-image d-flex justify-content-between align-items-start ">
+                                    <div class="row product-image flex justify-content-between align-items-start ">
                                         <h4 style="text-align: center;">Upcoming Customer Pickups</h4>
                                         <p style="text-align: center;">Days and times customers have requested to pick up their order</p>
 
                                         <div class="col-md-12 product-info">
-                                            <div class="d-flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
+                                            <div class="flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
                                                 <br>
                                                 <br>
                                                 <table class="table">
@@ -221,21 +221,21 @@
 
 
                                 <div class="product">
-                                    <div class="row product-image d-flex justify-content-between align-items-start ">
+                                    <div class="row product-image flex justify-content-between align-items-start ">
 
                                         <div class="col-md-12 product-info">
-                                            <div class="d-flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
+                                            <div class="flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
                                                 <!-- <div class="row"> -->
-                                                    <!-- <div class="col d-flex flex-column  align-items-center"> -->
+                                                    <!-- <div class="col flex flex-column  align-items-center"> -->
 
                                                 <h4>Customer Pickup Schedule</h4>
                                                 <p style="text-align: center;">Set the days and times customers can select, to pick up their order</p>
 
-                                                <div class="product" >
-                                                    <div class="row product-image d-flex align-items-start ">
+                                                <div class="product w-100" >
+                                                    <div class="row product-image flex align-items-start ">
                                     
-                                                        <div class="col-md-4 product-info">
-                                                            <div class="product-specs d-flex flex-column  align-items-center">
+                                                        <div class="col-md-4 product-info" >
+                                                            <div class="product-specs flex flex-column  align-items-center">
                                                                 <div style="padding: 0px 0px 15px 0px; text-align: center; font-weight: normal;">
                                                                     <h6>Set Pickup Days</h6>
                                                                     <br>
@@ -278,15 +278,18 @@
                                                                                     <label class="form-check-label" for="checkDay7">Saturday</label>
                                                                                 </div>
             
+                                                                        
                                                                             </fieldset>
                                                                         </form>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <br>
+                                                            <button type="button" class="btn btn-primary rounded-pill w-100 align-items-center" onClick="updateDaysSchedule()"   >Update Days</button>
                                                         </div>
                                     
-                                                        <div class="col-md-4 product-info">
-                                                            <div class="product-specs d-flex flex-column  align-items-center">
+                                                        <div class="col-md-4 product-info" >
+                                                            <div class="product-specs flex flex-column  align-items-center">
                                                                 <div style="padding: 0px 0px 15px 0px; text-align: center;  font-weight: normal;">
                                                                     <h6>Set Pickup Times</h6>
                                                                     <br>
@@ -362,8 +365,8 @@
                                                             </div>
                                                         </div>
                                                     
-                                                        <div class="col-md-4 product-info ">
-                                                            <div class="product-specs d-flex flex-column  align-items-center">
+                                                        <div class="col-md-4 product-info " >
+                                                            <div class="product-specs flex flex-column  align-items-center">
                                                                 <div style="padding: 0px 0px 15px 0px; text-align: center;  font-weight: normal;">
                                                                     <h6>&nbsp;</h6>
                                                                     <br>
@@ -430,16 +433,17 @@
                                                                                     <label class="form-check-label" for="checkTime24">12:00 AM</label>
                                                                                 </div>
             
+
                                                                             </fieldset>
                                                                         </form>
                                                                     </div>
                                                                 </div>  
                                                             </div>
-                                                            
+                                                            <br>
+                                                            <button type="button" class="btn btn-primary rounded-pill w-100 align-items-center" onClick="updateTimesSchedule()"  >Update Times</button>
+
                                                         </div>
-                                                        
-                                                        <br>
-                                                        <button type="button" class="btn btn-primary rounded-pill w-50 align-items-center" onClick="updatePickupSchedule()"  >Update Pickups</button>
+                                         
                                                     </div>
                                                 </div>
 

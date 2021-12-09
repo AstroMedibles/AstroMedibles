@@ -15,6 +15,31 @@ var checkDay5 = document.getElementById('checkDay5');
 var checkDay6 = document.getElementById('checkDay6');
 var checkDay7 = document.getElementById('checkDay7');
 
+var checkTime1  = document.getElementById('checkTime1');
+var checkTime2  = document.getElementById('checkTime2');
+var checkTime3  = document.getElementById('checkTime3');
+var checkTime4  = document.getElementById('checkTime4');
+var checkTime5  = document.getElementById('checkTime5');
+var checkTime6  = document.getElementById('checkTime6');
+var checkTime7  = document.getElementById('checkTime7');
+var checkTime8  = document.getElementById('checkTime8');
+var checkTime9  = document.getElementById('checkTime9');
+var checkTime10 = document.getElementById('checkTime10');
+var checkTime11 = document.getElementById('checkTime11');
+var checkTime12 = document.getElementById('checkTime12');
+var checkTime13 = document.getElementById('checkTime13');
+var checkTime14 = document.getElementById('checkTime14');
+var checkTime15 = document.getElementById('checkTime15');
+var checkTime16 = document.getElementById('checkTime16');
+var checkTime17 = document.getElementById('checkTime17');
+var checkTime18 = document.getElementById('checkTime18');
+var checkTime19 = document.getElementById('checkTime19');
+var checkTime20 = document.getElementById('checkTime20');
+var checkTime21 = document.getElementById('checkTime21');
+var checkTime22 = document.getElementById('checkTime22');
+var checkTime23 = document.getElementById('checkTime23');
+var checkTime24 = document.getElementById('checkTime24');
+
 
 function loadCartTotal(data)
 {
@@ -675,6 +700,36 @@ function radioPickupsClick()
             if (checkData[i] == 1)
             {
                 checks[i].parentNode.setAttribute("style","font-weight: bold");
+                checks[i].checked = true;
+
+            }   
+        }
+    });
+
+    fetch(address + '/adminGetPickupsTimes')
+    .then(response => response.json())
+    .then(data =>  
+    {
+        var checkData = Array.from(data['data']);
+        var checks = 
+        [   checkTime1,  checkTime2, checkTime3, checkTime4,
+            checkTime5,  checkTime6, checkTime7, checkTime8,
+            checkTime9,  checkTime8, checkTime9, checkTime10,
+            checkTime11, checkTime12, checkTime13, checkTime14,
+            checkTime15, checkTime16, checkTime17, checkTime18,
+            checkTime19, checkTime20, checkTime21, checkTime22,
+            checkTime23, checkTime24
+        ];
+        
+        for (let i = 0; i < checkData.length; i++)
+        {
+            // console.log(checkData[i]);
+
+            if (checkData[i] == 1)
+            {
+                checks[i].parentNode.setAttribute("style","font-weight: bold");
+                checks[i].checked = true;
+
             }   
         }
     });
@@ -713,21 +768,11 @@ function getOrdinalSuffix(dt)
     return (dt.getDate() % 10 == 1 && dt.getDate() != 11 ? 'st' : (dt.getDate() % 10 == 2 && dt.getDate() != 12 ? 'nd' : (dt.getDate() % 10 == 3 && dt.getDate() != 13 ? 'rd' : 'th'))); 
 }
 
-function updatePickupSchedule(event)
+function updateDaysSchedule(event)
 {
-    console.log("\n" + "updatePickupSchedule(event)");
+    console.log("\n" + "updateDaysSchedule(event)");
 
-    // grab item attributes, id, name, qty
-    // var parentDiv = event.currentTarget.parentNode;
-    // var id = parseInt(parentDiv.getAttribute('data-itemid'));
-    // var name = parentDiv.getAttribute('data-itemname');
-    // var qty = parentDiv.getAttribute('data-itemqty');
-    // var price = parentDiv.getAttribute('data-itemprice');
-    // console.log("Name: " + name);
-    // console.log("ID: " + id);
-    // console.log("QTY: " + qty);
-
-    if (confirm('Update pickup schedule?'))
+    if (confirm('Update Days Schedule?'))
     {
         // 
         // console.log('Update order pressed.');
@@ -741,47 +786,117 @@ function updatePickupSchedule(event)
     var checks = [checkDay1.checked, checkDay2.checked, checkDay3.checked, checkDay4.checked, checkDay5.checked, checkDay6.checked, checkDay7.checked];
     console.log(checks);
    
-    // use itemId to remove "1" qty from cart
     fetch(address + '/adminSetPickupsDays',
+    {
+        credentials: "include",
+        method: 'PATCH',
+        headers:
         {
-            credentials: "include",
-            method: 'PATCH',
-            headers:
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify
+            ({
+                available: checks
+            })
+    })
+    .then(response => response.json())
+    .then((data) => 
+    {
+        checks = [checkDay1, checkDay2, checkDay3, checkDay4, checkDay5, checkDay6, checkDay7];
+        checks.forEach(element =>
             {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify
-                ({
-                    available: checks
-                })
-        })
-        .then(response => response.json())
-        .then((data) => 
-        {
-            checks = [checkDay1, checkDay2, checkDay3, checkDay4, checkDay5, checkDay6, checkDay7];
-            checks.forEach(element =>
+                if (element.checked == true)
                 {
-                    if (element.checked == true)
-                    {
-                        element.parentNode.setAttribute("style","font-weight: bold");
-                    }
-                    else
-                    {
-                        element.parentNode.setAttribute("style","font-weight: normal");
-                    }
-                    element.checked = false;
-                });
+                    element.parentNode.setAttribute("style","font-weight: bold");
+                }
+                else
+                {
+                    element.parentNode.setAttribute("style","font-weight: normal");
+                }
+                // element.checked = false;
+            });
 
 
-            console.log("updatePickupSchedule complete");
-            // Update Summary
-        }).catch((error => 
-        {
-            console.log("updatePickupSchedule(event)  catch:" + error);
-        }));
+        console.log("updateDaysSchedule complete");
+        // Update Summary
+    }).catch((error => 
+    {
+        console.log("updateDaysSchedule(event)  catch:" + error);
+    }));
 }
 
+function updateTimesSchedule(event)
+{
+    console.log("\n" + "updateTimesSchedule(event)");
 
+    if (confirm('Update Times Schedule?'))
+    {
+        // console.log('Update order pressed.');
+    } else
+    {
+        // console.log('Cancel action pressed.');
+        return;
+    }
+
+    var checks = 
+    [   checkTime1.checked,  checkTime2.checked, checkTime3.checked, checkTime4.checked,
+        checkTime5.checked,  checkTime6.checked, checkTime7.checked, checkTime8.checked,
+        checkTime9.checked,  checkTime8.checked, checkTime9.checked, checkTime10.checked,
+        checkTime11.checked, checkTime12.checked, checkTime13.checked, checkTime14.checked,
+        checkTime15.checked, checkTime16.checked, checkTime17.checked, checkTime18.checked,
+        checkTime19.checked, checkTime20.checked, checkTime21.checked, checkTime22.checked,
+        checkTime23.checked, checkTime24.checked
+    ];
+    console.log(checks);
+   
+    fetch(address + '/adminSetPickupsTimes',
+    {
+        credentials: "include",
+        method: 'PATCH',
+        headers:
+        {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify
+            ({
+                available: checks
+            })
+    })
+    .then(response => response.json())
+    .then((data) => 
+    {
+        checks = 
+        [   checkTime1,  checkTime2, checkTime3, checkTime4,
+            checkTime5,  checkTime6, checkTime7, checkTime8,
+            checkTime9,  checkTime8, checkTime9, checkTime10,
+            checkTime11, checkTime12, checkTime13, checkTime14,
+            checkTime15, checkTime16, checkTime17, checkTime18,
+            checkTime19, checkTime20, checkTime21, checkTime22,
+            checkTime23, checkTime24
+        ];
+
+
+        checks.forEach(element =>
+            {
+                if (element.checked == true)
+                {
+                    element.parentNode.setAttribute("style","font-weight: bold");
+                }
+                else
+                {
+                    element.parentNode.setAttribute("style","font-weight: normal");
+                }
+                // element.checked = false;
+            });
+
+
+        console.log("updateTimesSchedule complete");
+        // Update Summary
+    }).catch((error => 
+    {
+        console.log("updateTimesSchedule(event)  catch:" + error);
+    }));
+}
 
 function ready()
 {

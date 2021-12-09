@@ -577,6 +577,39 @@ app.get('/adminGetPickupsDays', (request, response) =>
 	});
 });
 
+// read  
+app.get('/adminGetPickupsTimes', (request, response) => 
+{
+	console.log("/adminGetPickupsTimes");
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		console.log("admin(/) \tresult.then()"); 
+		if (accountAttributes.isAdmin === 1) 
+		{ 
+			console.log("/adminGetPickupsTimes ADMIN TRUE");
+			const db = dbService.getDbServiceInstance(); 
+			const result = db.adminGetPickupsTimes(); 
+			
+			result.then(data =>  
+			{ 
+				response.json({ data: data });
+			}) 
+			.catch(err => console.log(err));			
+		} 
+		else 
+		{ 
+			console.log("/adminGetPickupsTimes ADMIN FALSE");
+			response.end();
+		} 
+	})
+	.catch(() => 
+	{
+		console.log("route(/adminGetPickupsTimes) \tresult.catch()"); 
+		console.log("route(/adminGetPickupsTimes) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
 
 // read 
 app.get('/adminGetAccessCodes', (request, response) => 
@@ -828,13 +861,44 @@ app.patch('/adminSetPickupsDays', (request, response) =>
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
+		console.log("route(/adminSetPickupsDays) \tresult.catch()"); 
+		console.log("route(/adminSetPickupsDays) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
 });
 
+app.patch('/adminSetPickupsTimes', (request, response) =>
+{
+	console.log("\n"+ "route(/adminSetPickupsTimes) "); 
 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		console.log("adminSetPickupsTimes(/) \tresult.then()"); 
+		if (accountAttributes.isAdmin === 1) 
+		{ 
+			const { available } = request.body; 
+			const db = dbService.getDbServiceInstance(); 
+			const result = db.adminSetPickupsTimes(available); 
+		 
+			result.then((data) => 
+			{ 
+				console.log("\n" + "route(/adminSetPickupsTimes) \t RESULTS:"); 
+				response.json({ data: data }); 
+			}).catch(err => console.log(err));
+		} 
+		else 
+		{ 
+			response.end(); 
+		} 
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/adminSetPickupsTimes) \tresult.catch()"); 
+		console.log("route(/adminSetPickupsTimes) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
  
 // create 
 app.post('/userPlaceOrder', (request, response) =>  

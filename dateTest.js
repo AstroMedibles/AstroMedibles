@@ -58,3 +58,16 @@ console.log('\n\n');
         [Nov. 15th, 2:30pm, 5 Pickups]
     ]
 */
+
+// connection.query(query, [available[0], available[1], available[2], available[3], available[4], available[5], available[6]], (err, results) =>
+
+
+var string = '[';
+
+for (let index = 0; index < 24; index++)
+{
+    string += `available[${index}], `    
+}
+string += ']';
+
+console.log(string);
