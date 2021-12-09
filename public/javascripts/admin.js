@@ -712,13 +712,12 @@ function radioPickupsClick()
     {
         var checkData = Array.from(data['data']);
         var checks = 
-        [   checkTime1,  checkTime2, checkTime3, checkTime4,
-            checkTime5,  checkTime6, checkTime7, checkTime8,
-            checkTime9,  checkTime8, checkTime9, checkTime10,
-            checkTime11, checkTime12, checkTime13, checkTime14,
-            checkTime15, checkTime16, checkTime17, checkTime18,
-            checkTime19, checkTime20, checkTime21, checkTime22,
-            checkTime23, checkTime24
+        [   checkTime1,  checkTime2,  checkTime3,  checkTime4,
+            checkTime5,  checkTime6,  checkTime7,  checkTime8,
+            checkTime9,  checkTime10, checkTime11, checkTime12,
+            checkTime13, checkTime14, checkTime15, checkTime16,
+            checkTime17, checkTime18, checkTime19, checkTime20,
+            checkTime21, checkTime22, checkTime23, checkTime24
         ];
         
         for (let i = 0; i < checkData.length; i++)
@@ -839,13 +838,12 @@ function updateTimesSchedule(event)
     }
 
     var checks = 
-    [   checkTime1.checked,  checkTime2.checked, checkTime3.checked, checkTime4.checked,
-        checkTime5.checked,  checkTime6.checked, checkTime7.checked, checkTime8.checked,
-        checkTime9.checked,  checkTime8.checked, checkTime9.checked, checkTime10.checked,
-        checkTime11.checked, checkTime12.checked, checkTime13.checked, checkTime14.checked,
-        checkTime15.checked, checkTime16.checked, checkTime17.checked, checkTime18.checked,
-        checkTime19.checked, checkTime20.checked, checkTime21.checked, checkTime22.checked,
-        checkTime23.checked, checkTime24.checked
+    [   checkTime1.checked,  checkTime2.checked,  checkTime3.checked, checkTime4.checked,
+        checkTime5.checked,  checkTime6.checked,  checkTime7.checked, checkTime8.checked,
+        checkTime9.checked,  checkTime10.checked, checkTime11.checked,checkTime12.checked,
+        checkTime13.checked, checkTime14.checked, checkTime15.checked,checkTime16.checked,
+        checkTime17.checked, checkTime18.checked, checkTime19.checked,checkTime20.checked,
+        checkTime21.checked, checkTime22.checked, checkTime23.checked,checkTime24.checked
     ];
     console.log(checks);
    
