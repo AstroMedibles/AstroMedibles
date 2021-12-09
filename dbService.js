@@ -78,11 +78,11 @@ class DbService
                 resolve(results);
             })
 
-        } catch (error)
-        {
-            console.log(error);
-            reject();
-        }
+            } catch (error)
+            {
+                console.log(error);
+                reject();
+            }
         });
         return response;
     }
@@ -766,7 +766,7 @@ class DbService
                     {
                         reject(new Error("dbService.js ERROR\n" + error));
                     }
-                    if (results[0] === undefined) 
+                    if (typeof results === 'undefined') 
                     {
                         reject("Orders are undefined.");
                     }
@@ -908,7 +908,7 @@ class DbService
                     {
                         reject(new Error("dbService.js ERROR\n" + error));
                     }
-                    if (results[0] === undefined) 
+                    if (typeof results === 'undefined') 
                     {
                         reject("Orders are undefined.");
                     }
@@ -956,7 +956,7 @@ class DbService
                     {
                         reject(new Error("dbService.js ERROR\n" + error));
                     }
-                    if (results[0] === undefined) 
+                    if (typeof results === 'undefined') 
                     {
                         reject("Access Codes are undefined.");
                     }
@@ -991,7 +991,7 @@ class DbService
                     {
                         reject(new Error("dbService.js ERROR\n" + error));
                     }
-                    if (results[0] === undefined) 
+                    if (typeof results === 'undefined') 
                     {
                         reject("Orders are undefined.");
                     }
@@ -1050,7 +1050,7 @@ class DbService
                     {
                         reject(new Error("dbService.js ERROR\n" + error));
                     }
-                    if (results[0] === undefined) 
+                    if (typeof results === 'undefined') 
                     {
                         reject("Access Codes are undefined.");
                     }
@@ -1074,32 +1074,32 @@ class DbService
     {
         const response = await new Promise((resolve, reject) => 
         {
-            try
+
+            const sql = "SELECT * FROM " + process.env.TABLE_PICKUPS_TIMES + ";";
+            connection.query(sql, [], (error, results) =>
             {
-                const sql = "SELECT * FROM " + process.env.TABLE_PICKUPS_TIMES + ";";
-                connection.query(sql, [], (error, results) =>
+                try
                 {
                     if (error)
                     {
                         reject(new Error("dbService.js ERROR\n" + error));
                     }
-                    if (results[0] === undefined) 
-                    {
-                        reject("Access Codes are undefined.");
-                    }
 
+                    console.log(results);
+                    
                     var times = [];
                     for (let i = 0; i < results.length; i++)
                     {
                         times.push(results[i].available);
                     }
                     resolve(times);
-                });
-            }
-            catch (error)
-            {
-                reject(error);
-            }});
+                }
+                catch (error)
+                {
+                    reject(error);
+                }
+            });
+        });
         return response;
     }
 
