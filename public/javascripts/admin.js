@@ -208,11 +208,13 @@ function populateUserOrders()
                                 <br>
                                 <span class="value">${order_id}</span>
                             </div>
+
                             <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                <span>Name</span>
+                                <span>Total</span>
                                 <br>
-                                <span class="value">${name}</span>
+                                <span class="value">$${total}</span>
                             </div>
+                            
                         </div>
                     </div>
 
@@ -234,11 +236,14 @@ function populateUserOrders()
                                 <br>
                                 <span class="value">${date_created}</span>
                             </div>
+
+
                             <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                <span>Total</span>
+                                <span>Name</span>
                                 <br>
-                                <span class="value">${total}</span>
+                                <span class="value">${name}</span>
                             </div>
+
                         </div>
                     </div>
 

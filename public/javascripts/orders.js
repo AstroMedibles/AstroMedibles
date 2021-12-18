@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function ()
     ready();
 });
 
-const address = 'https://www.astromedibles.com';
-// const address = 'http://localhost:8080';
+// const address = 'https://www.astromedibles.com';
+const address = 'http://localhost:8080';
 
 function loadCartTotal(data)
 {
@@ -67,15 +67,17 @@ function populateUserOrders()
             date_created = date_created.toLocaleString('en-us', options);
             console.log(date_created);
 
-            var cancelOrderButton = "";
+            var interactDiv = "";
 
             if (status === "Payment Required")
             {
                 var dataAttributes = "data-order_id=" + order_id;
                 status = '<a href="https://account.venmo.com/pay?txn=pay&recipients=Astro-Medibles">' + status + '</a>';
-                cancelOrderButton =
-                `<span class="value">
-                <button name="cancel-order-button" ${dataAttributes} class="btn btn-warning btn-sm rounded-pill" type="button" >Cancel Order</button>
+                interactDiv =
+                `
+                <br>
+                <span class="value">
+                    <button name="cancel-order-button" ${dataAttributes} class="btn btn-warning btn-sm rounded-pill" type="button" >Cancel Order</button>
                 </span>`;
             }
 
@@ -83,10 +85,41 @@ function populateUserOrders()
             {
                 var dataAttributes = "data-order_id=" + order_id;
                 // status = '<a href="/orders">' + status + '</a>';
-                cancelOrderButton =
-                `<span class="value">
-                <button name="schedule-pickup-button" ${dataAttributes} class="btn btn-primary btn-sm rounded-pill" type="button" >Select Pickup Day</button>
-                </span>`;
+
+                dropDownText   = 'Sunday, Dec 19';
+
+                dropDownButton = 
+                `
+                <button id="selected-${order_id}" class="btn btn-success btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" >${dropDownText}</button>
+                `;
+
+                dropDownChoices = 
+                `
+                <button class="dropdown-item">Sunday, Dec 19</button>
+                <button class="dropdown-item">Monday, Dec 20</button>
+                <button class="dropdown-item disabled">Tuesday, Dec 21</button>
+                <button class="dropdown-item">Wednesday, Dec 22</button>
+                `;
+
+
+                interactDiv =
+                `
+                <span>Pick Up Time</span>
+                <br>
+                <div class="dropdown" >
+                    ${dropDownButton}
+                    <div class="dropdown-menu" name="${order_id}">
+                        ${dropDownChoices}
+                    </div>
+                </div>
+                <br>
+                <div class="dropdown" >
+                    ${dropDownButton}
+                    <div class="dropdown-menu" name="${order_id}">
+                        ${dropDownChoices}
+                    </div>
+                </div>
+                `;                
             }
 
             var cartText = "";
@@ -121,8 +154,9 @@ function populateUserOrders()
                             </div>
 
                             <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                <span>Total</span>
                                 <br>
-                                <span class="value">${cancelOrderButton}</span>
+                                <span class="value">$${total}</span>
                             </div>
                             
                         </div>
@@ -149,11 +183,11 @@ function populateUserOrders()
                                 <br>
                                 <span class="value">${date_created}</span>
                             </div>
-                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                <span>Total</span>
-                                <br>
-                                <span class="value">${total}</span>
-                            </div>
+
+                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                            <br>
+                            ${interactDiv}
+                        </div>
 
                         </div>
                     </div>
