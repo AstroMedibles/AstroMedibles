@@ -76,7 +76,7 @@ class DbService
                 // console.log(results[1]); // [{2: 2}]
                 // console.log("\n");
                 resolve(results);
-            })
+            });
 
             } catch (error)
             {
@@ -1037,7 +1037,7 @@ class DbService
         return response;
     }
 
-    async adminGetPickupsDays()
+    async getPickupAvailabilityDays()
     {
         const response = await new Promise((resolve, reject) => 
         {
@@ -1052,7 +1052,7 @@ class DbService
                     }
                     if (typeof results === 'undefined') 
                     {
-                        reject("Access Codes are undefined.");
+                        reject(new Error("dbService.js ERROR\n" + error));
                     }
 
                     var days = [];
@@ -1070,7 +1070,7 @@ class DbService
         return response;
     }
 
-    async adminGetPickupsTimes()
+    async getPickupAvailabilityTimes()
     {
         const response = await new Promise((resolve, reject) => 
         {
@@ -1084,8 +1084,6 @@ class DbService
                     {
                         reject(new Error("dbService.js ERROR\n" + error));
                     }
-
-                    console.log(results);
                     
                     var times = [];
                     for (let i = 0; i < results.length; i++)
@@ -1483,7 +1481,6 @@ class DbService
             }
         });
     }
-
 }
 
 module.exports = DbService;

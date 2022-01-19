@@ -614,7 +614,7 @@ function radioPickupsClick()
     document.getElementById("radioCodes").classList.remove("active");
     document.getElementById("radioChart").classList.remove("active");
 
-    console.log('/adminGetUserPickups');
+    // console.log('/adminGetUserPickups');
 
     var tableHTML = '';
 
@@ -691,7 +691,9 @@ function radioPickupsClick()
         document.getElementById("tablePickups").innerHTML = tableHTML;
     });
 
-    fetch(address + '/adminGetPickupsDays')
+    console.log('we made it');
+
+    fetch(address + '/getPickupAvailabilityDays')
     .then(response => response.json())
     .then(data =>  
     {
@@ -701,17 +703,16 @@ function radioPickupsClick()
         for (let i = 0; i < checkData.length; i++)
         {
             // console.log(checkData[i]);
-
             if (checkData[i] == 1)
             {
                 checks[i].parentNode.setAttribute("style","font-weight: bold");
                 checks[i].checked = true;
-
-            }   
+            }
         }
+
     });
 
-    fetch(address + '/adminGetPickupsTimes')
+    fetch(address + '/getPickupAvailabilityTimes')
     .then(response => response.json())
     .then(data =>  
     {
@@ -724,17 +725,15 @@ function radioPickupsClick()
             checkTime17, checkTime18, checkTime19, checkTime20,
             checkTime21, checkTime22, checkTime23, checkTime24
         ];
-        
         for (let i = 0; i < checkData.length; i++)
         {
             // console.log(checkData[i]);
-
             if (checkData[i] == 1)
             {
+                console.log(3000);
                 checks[i].parentNode.setAttribute("style","font-weight: bold");
                 checks[i].checked = true;
-
-            }   
+            }
         }
     });
 
@@ -806,6 +805,7 @@ function updateDaysSchedule(event)
     .then(response => response.json())
     .then((data) => 
     {
+        console.log(123456);
         checks = [checkDay1, checkDay2, checkDay3, checkDay4, checkDay5, checkDay6, checkDay7];
         checks.forEach(element =>
             {

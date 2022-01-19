@@ -340,7 +340,7 @@ app.post('/auth', function (request, response)
  
 }); 
  
-// render 
+// read 
 app.get('/getMenuData', (request, response) => 
 { 
 	console.log("\n" + "route(/getMenuData) "); 
@@ -359,8 +359,8 @@ app.get('/getMenuData', (request, response) =>
 	}) 
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
+		console.log("route(/getMenuData) \tresult.catch()"); 
+		console.log("route(/getMenuData) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	}); 
 });
@@ -544,69 +544,54 @@ app.get('/adminGetUserPickups', (request, response) =>
 
 
 // read  
-app.get('/adminGetPickupsDays', (request, response) => 
+app.get('/getPickupAvailabilityDays', (request, response) => 
 {
-	console.log("/adminGetPickupsDays");
+	console.log("/getPickupAvailabilityDays");
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{
-		console.log("admin(/) \tresult.then()"); 
-		if (accountAttributes.isAdmin === 1) 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.getPickupAvailabilityDays(); 
+		
+		result.then(data =>  
 		{ 
-			console.log("/adminGetPickupsDays ADMIN TRUE");
-			const db = dbService.getDbServiceInstance(); 
-			const result = db.adminGetPickupsDays(); 
-			
-			result.then(data =>  
-			{ 
-				response.json({ data: data });
-			}) 
-			.catch(err => console.log(err));			
-		} 
-		else 
-		{ 
-			console.log("/adminGetUserOrders ADMIN FALSE");
-			response.end();
-		} 
+			response.json({ data: data });
+		}) 
+		.catch(err => console.log(err));			
+
 	})
 	.catch(() => 
 	{
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
+		console.log("route(/getPickupAvailabilityDays) \tresult.catch(error)"); 
+		console.log(error) 
+		console.log("route(/getPickupAvailabilityDays) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
 });
 
 // read  
-app.get('/adminGetPickupsTimes', (request, response) => 
+app.get('/getPickupAvailabilityTimes', (request, response) => 
 {
-	console.log("/adminGetPickupsTimes");
+	console.log("/getPickupAvailabilityTimes");
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{
 		console.log("admin(/) \tresult.then()"); 
-		if (accountAttributes.isAdmin === 1) 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.getPickupAvailabilityTimes(); 
+		
+		result.then(data =>  
 		{ 
-			console.log("/adminGetPickupsTimes ADMIN TRUE");
-			const db = dbService.getDbServiceInstance(); 
-			const result = db.adminGetPickupsTimes(); 
-			
-			result.then(data =>  
-			{ 
-				response.json({ data: data });
-			}) 
-			.catch(err => console.log(err));			
-		} 
-		else 
-		{ 
-			console.log("/adminGetPickupsTimes ADMIN FALSE");
-			response.end();
-		} 
+			response.json({ data: data });
+		}) 
+		.catch(err => console.log(err));			
+
 	})
-	.catch(() => 
+	.catch((error) => 
 	{
-		console.log("route(/adminGetPickupsTimes) \tresult.catch()"); 
-		console.log("route(/adminGetPickupsTimes) \tif loggedIn === false"); 
+		console.log("route(/getPickupAvailabilityTimes) \tresult.catch(error)"); 
+		console.log(error)
+		console.log("route(/getPickupAvailabilityTimes) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
 });
@@ -841,7 +826,8 @@ app.patch('/adminSetPickupsDays', (request, response) =>
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{
-		console.log("adminSetPickupsDays(/) \tresult.then()"); 
+		console.log("adminSetPickupsDays(/) \tresult.then()");
+		console.log(accountAttributes);
 		if (accountAttributes.isAdmin === 1) 
 		{ 
 			const { available } = request.body; 
@@ -856,11 +842,13 @@ app.patch('/adminSetPickupsDays', (request, response) =>
 		} 
 		else 
 		{ 
+			console.log("\n" + "route(/adminSetPickupsDays) \t FAILED, NOT ADMIN:"); 
 			response.end(); 
 		} 
 	})
-	.catch(() => 
+	.catch((error) => 
 	{ 
+		console.log(error);
 		console.log("route(/adminSetPickupsDays) \tresult.catch()"); 
 		console.log("route(/adminSetPickupsDays) \tif loggedIn === false"); 
 		response.redirect('/login'); 
