@@ -35,7 +35,21 @@ function loadCartTotal(data)
 function populateUserOrders()
 {
     // get schedule info
-    fetch(address + '/getPickupAvailabilityDays')
+
+
+    fetch(address + '/ordersCustomerGetPickupDaysAndTimes',
+    {
+        credentials: "include",
+        method: 'GET',
+        headers:
+        {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(
+        {
+            customerDate : new Date()
+        })
+    })
     .then(response => response.json())
     .then(data1 =>  
     {

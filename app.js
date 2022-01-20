@@ -544,6 +544,33 @@ app.get('/adminGetUserPickups', (request, response) =>
 
 
 // read  
+app.get('/ordersCustomerGetPickupDaysAndTimes', (request, response) => 
+{
+	console.log("/ordersCustomerGetPickupDaysAndTimes");
+	const { customerDate } = request.body; 
+
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.ordersCustomerGetPickupDaysAndTimes(customerDate); 
+		
+		result.then(data =>  
+		{
+			response.json({ data: data });
+		})
+		.catch(err => console.log(err));
+	})
+	.catch(() => 
+	{
+		console.log("route(/ordersCustomerGetPickupDaysAndTimes) \tresult.catch(error)"); 
+		console.log(error) 
+		console.log("route(/ordersCustomerGetPickupDaysAndTimes) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
+
+// read  
 app.get('/getPickupAvailabilityDays', (request, response) => 
 {
 	console.log("/getPickupAvailabilityDays");
@@ -554,11 +581,10 @@ app.get('/getPickupAvailabilityDays', (request, response) =>
 		const result = db.getPickupAvailabilityDays(); 
 		
 		result.then(data =>  
-		{ 
+		{
 			response.json({ data: data });
-		}) 
-		.catch(err => console.log(err));			
-
+		})
+		.catch(err => console.log(err));
 	})
 	.catch(() => 
 	{

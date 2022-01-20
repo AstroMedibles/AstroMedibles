@@ -1101,6 +1101,49 @@ class DbService
         return response;
     }
 
+    /* 
+        params * recieves date from customer
+        returns days and times customer can select for order pickup
+    */
+    async ordersCustomerGetPickupDaysAndTimes(customerDate)
+    {
+        const response = await new Promise((resolve, reject) => 
+        {
+            try
+            {
+                const query1 = "SELECT * FROM " + process.env.TABLE_PICKUPS_DAYS + ";";
+                const query2 = "SELECT * FROM " + process.env.TABLE_PICKUPS_TIMES + ";";
+                const query3 = "SELECT * FROM " + process.env.TABLE_PICKUPS + ";";
+
+                connection.query(query1 + query2 + query3, [1, 2, 3], (err, results) =>
+                {
+                    if (err)
+                    {
+                        reject(new Error("getAllData ERROR\n" + err.message));
+                        return;
+                    }
+
+                    // 1 Check avalible days & times
+
+                    // 2 Check timeslot limit
+
+                    // return list of avalible
+
+                    console.log(results[0]); // [{1: 1}]
+                    console.log(results[1]); // [{2: 2}]
+                    console.log("\n");
+                    resolve(results);
+                });
+
+            } catch (error)
+            {
+                console.log(error);
+                reject();
+            }
+        });
+        return response;
+    }
+
     async adminSetPickupsDays(available)
     {
         const response = new Promise((resolve, reject) =>
