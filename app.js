@@ -542,9 +542,8 @@ app.get('/adminGetUserPickups', (request, response) =>
 	});
 });
 
-
 // read  
-app.get('/ordersCustomerGetPickupDaysAndTimes', (request, response) => 
+app.patch('/ordersCustomerGetPickupDaysAndTimes', (request, response) => 
 {
 	console.log("/ordersCustomerGetPickupDaysAndTimes");
 	const { customerDate } = request.body; 

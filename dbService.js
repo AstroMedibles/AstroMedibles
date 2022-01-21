@@ -1083,6 +1083,7 @@ class DbService
                     if (error)
                     {
                         reject(new Error("dbService.js ERROR\n" + error));
+                        return;
                     }
                     
                     var times = [];
@@ -1127,10 +1128,19 @@ class DbService
 
                     // 2 Check timeslot limit
 
-                    // return list of avalible
+                    // return 14 days list of avalible
+                    for (let index = 0; index < 15; index++)
+                    {
+                        var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + index);
 
+                        console.log(`${index}. suggestedDate: ${suggestedDate.toString()}`);
+                    }
+
+
+                    console.log(`customerDate: ${customerDate}`);
                     console.log(results[0]); // [{1: 1}]
                     console.log(results[1]); // [{2: 2}]
+                    console.log(results[2]); // [{2: 2}]
                     console.log("\n");
                     resolve(results);
                 });

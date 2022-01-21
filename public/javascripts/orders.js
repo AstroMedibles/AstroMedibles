@@ -40,7 +40,7 @@ function populateUserOrders()
     fetch(address + '/ordersCustomerGetPickupDaysAndTimes',
     {
         credentials: "include",
-        method: 'GET',
+        method: 'PATCH',
         headers:
         {
             'Content-type': 'application/json'
@@ -53,236 +53,217 @@ function populateUserOrders()
     .then(response => response.json())
     .then(data1 =>  
     {
-        fetch(address + '/getPickupAvailabilityTimes')
-        .then(response => response.json())
-        .then(data2 =>  
+        var checkData1 = Array.from(data1['data']);
+
+        console.log('Days Availability');
+        for (let i = 0; i < checkData1.length; i++)
         {
-            var checkData1 = Array.from(data1['data']);
-            var checkData2 = Array.from(data2['data']);
-    
-            console.log('Days Availability');
-            for (let i = 0; i < checkData1.length; i++)
+                console.log(checkData1[i]);
+        }
+
+
+        // get user order info
+        fetch(address + '/getUserOrders')
+        .then(response => response.json())
+        .then(data =>  
+        {
+            var orders = Array.from(data['data']);
+
+            for (let i = 0; i < orders.length; i++)
             {
-                 console.log(checkData1[i]);
-            }
-            console.log('Times Availability');
+                console.log(orders[i]);
 
-            for (let i = 0; i < checkData2.length; i++)
-            {
-                 console.log(checkData2[i]);
-            }
+                var userOrder = orders[i];
 
+                var status      = userOrder.status;
+                var order_id    = userOrder.order_id;
+                var name        = userOrder.name;
+                var cart        = JSON.parse(userOrder.cart).cart;
+                var total       = userOrder.total;
 
-            // get user order info
-            fetch(address + '/getUserOrders')
-            .then(response => response.json())
-            .then(data =>  
-            {
-                var orders = Array.from(data['data']);
-
-                for (let i = 0; i < orders.length; i++)
+                var date_created = new Date(userOrder.date_created);
+                var options =
                 {
-                    console.log(orders[i]);
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit"
 
-                    var userOrder = orders[i];
+                };
+                console.log("date_created");
+                console.log(date_created);
+                date_created = date_created.toLocaleString('en-us', options);
+                console.log(date_created);
 
-                    var status      = userOrder.status;
-                    var order_id    = userOrder.order_id;
-                    var name        = userOrder.name;
-                    var cart        = JSON.parse(userOrder.cart).cart;
-                    var total       = userOrder.total;
+                var interactDiv = "";
 
-                    var date_created = new Date(userOrder.date_created);
-                    var options =
-                    {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit"
-
-                    };
-                    console.log("date_created");
-                    console.log(date_created);
-                    date_created = date_created.toLocaleString('en-us', options);
-                    console.log(date_created);
-
-                    var interactDiv = "";
-
-                    if (status === "Payment Required")
-                    {
-                        var dataAttributes = "data-order_id=" + order_id;
-                        status = '<a href="https://account.venmo.com/pay?txn=pay&recipients=Astro-Medibles">' + status + '</a>';
-                        interactDiv =
-                        `
-                        <br>
-                        <span class="value">
-                            <button name="cancel-order-button" ${dataAttributes} class="btn btn-warning btn-sm rounded-pill" type="button" >Cancel Order</button>
-                        </span>`;
-                    }
-
-                    if (status === "Ready for Pickup")
-                    {
-                        var dataAttributes = "data-order_id=" + order_id;
-                        // status = '<a href="/orders">' + status + '</a>';
-
-                        // drop down days
-                        var dropDownDaysText   = 'Sunday, Dec 19';
-
-                        var dropDownDaysButton = 
-                        `
-                        <button id="selected-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownDaysText}</button>
-                        `;
-
-                        var dropDownDaysChoices = 
-                        `
-                        <button class="dropdown-item">Sunday, Dec 19</button>
-                        <button class="dropdown-item">Monday, Dec 20</button>
-                        <button class="dropdown-item disabled">Tuesday, Dec 21</button>
-                        <button class="dropdown-item">Wednesday, Dec 22</button>
-                        `;
-
-                        // drop down times
-                        var dropDownTimesText   = '2:00pm';
-
-                        var dropDownTimesButton = 
-                        `
-                        <button id="selected-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownTimesText}</button>
-                        `;
-
-                        var dropDownTimesChoices = 
-                        `
-                        <button class="dropdown-item">1:00pm</button>
-                        <button class="dropdown-item">2:00pm</button>
-                        <button class="dropdown-item disabled">3:00pm</button>
-                        <button class="dropdown-item">4:00pm</button>
-                        `;
-
-                        // add schedule pickup div to order
-
-                        interactDiv =
-                        `
-                        <span>Pick Up Time</span>
-                        <br>
-                        <div class="dropdown" >
-                            ${dropDownDaysButton}
-                            <div class="dropdown-menu" name="${order_id}">
-                                ${dropDownDaysChoices}
-                            </div>
-                        </div>
-                        <br>
-                        <div class="dropdown" >
-                            ${dropDownTimesButton}
-                            <div class="dropdown-menu" name="${order_id}">
-                                ${dropDownTimesChoices}
-                            </div>
-                        </div>
-                        `;
-                    }
-
-                    var cartText = "";
-                    for (let j = 1; j < cart.length; j++)
-                    {
-                        var cartElement = cart[j];
-                        cartText += "(" + cartElement[1] + ") " + cartElement[2] + "<br>";
-                    }
-
-                    let card = "";
-
-                    // create element in shopping cart
-                    card +=
+                if (status === "Payment Required")
+                {
+                    var dataAttributes = "data-order_id=" + order_id;
+                    status = '<a href="https://account.venmo.com/pay?txn=pay&recipients=Astro-Medibles">' + status + '</a>';
+                    interactDiv =
                     `
-                    <div class="product">
-                        <div class="row product-image justify-content-center align-items-start">
+                    <br>
+                    <span class="value">
+                        <button name="cancel-order-button" ${dataAttributes} class="btn btn-warning btn-sm rounded-pill" type="button" >Cancel Order</button>
+                    </span>`;
+                }
 
-                            <div class="col-md-4 product-info">
-                                <div class="product-specs d-flex flex-column  align-items-center">
-                                        
-                                    <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                        <span>Status</span>
-                                        <br>
-                                        <span class="value">${status}</span>
-                                    </div>
+                if (status === "Ready for Pickup")
+                {
+                    var dataAttributes = "data-order_id=" + order_id;
+                    // status = '<a href="/orders">' + status + '</a>';
 
+                    // drop down days
+                    var dropDownDaysText   = 'Sunday, Dec 19';
 
-                                    <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                        <span>Order ID</span>
-                                        <br>
-                                        <span class="value">${order_id}</span>
-                                    </div>
+                    var dropDownDaysButton = 
+                    `
+                    <button id="selected-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownDaysText}</button>
+                    `;
 
-                                    <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                        <span>Total</span>
-                                        <br>
-                                        <span class="value">$${total}</span>
-                                    </div>
-                                    
-                                </div>
-                            </div>
+                    var dropDownDaysChoices = 
+                    `
+                    <button class="dropdown-item">Sunday, Dec 19</button>
+                    <button class="dropdown-item">Monday, Dec 20</button>
+                    <button class="dropdown-item disabled">Tuesday, Dec 21</button>
+                    <button class="dropdown-item">Wednesday, Dec 22</button>
+                    `;
 
-                            <div class="col-md-4 product-info">
-                                <div class="product-specs d-flex flex-column  align-items-center">
-                                    
-                                    <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                        <span>Items</span>
-                                        <br>
-                                        <span class="value">${cartText}</span>
-                                    </div>
+                    // drop down times
+                    var dropDownTimesText   = '2:00pm';
 
-                                </div>
-                            </div>
+                    var dropDownTimesButton = 
+                    `
+                    <button id="selected-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownTimesText}</button>
+                    `;
 
+                    var dropDownTimesChoices = 
+                    `
+                    <button class="dropdown-item">1:00pm</button>
+                    <button class="dropdown-item">2:00pm</button>
+                    <button class="dropdown-item disabled">3:00pm</button>
+                    <button class="dropdown-item">4:00pm</button>
+                    `;
 
-                            <div class="col-md-4 product-info ">
-                                <div class="product-specs d-flex flex-column  align-items-center">
+                    // add schedule pickup div to order
 
-                                    <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                        <span>Date:</span>
-                                        <br>
-                                        <span class="value">${date_created}</span>
-                                    </div>
-
-                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                    <br>
-                                    ${interactDiv}
-                                </div>
-
-                                </div>
-                            </div>
-
+                    interactDiv =
+                    `
+                    <span>Pick Up Time</span>
+                    <br>
+                    <div class="dropdown" >
+                        ${dropDownDaysButton}
+                        <div class="dropdown-menu" name="${order_id}">
+                            ${dropDownDaysChoices}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="dropdown" >
+                        ${dropDownTimesButton}
+                        <div class="dropdown-menu" name="${order_id}">
+                            ${dropDownTimesChoices}
                         </div>
                     </div>
                     `;
-
-
-                    // create card
-                    var myform = $('#cart-items');
-                    myform.append(card);
                 }
 
-                        var cancelOrderButtons = document.getElementsByName('cancel-order-button');
-                        for (var i = 0; i < cancelOrderButtons.length; i++)
-                        {
-                            console.log("button found!");
-                            var button = cancelOrderButtons[i];
-                            button.addEventListener('click', buttonCancelOrder);
-                            console.log("button " + i + " online!");
-                        }
-                    });
+                var cartText = "";
+                for (let j = 1; j < cart.length; j++)
+                {
+                    var cartElement = cart[j];
+                    cartText += "(" + cartElement[1] + ") " + cartElement[2] + "<br>";
+                }
 
-                    var s = new Date().toLocaleString();
+                let card = "";
 
-                console.log("DATE: " + s);
+                // create element in shopping cart
+                card +=
+                `
+                <div class="product">
+                    <div class="row product-image justify-content-center align-items-start">
+
+                        <div class="col-md-4 product-info">
+                            <div class="product-specs d-flex flex-column  align-items-center">
+                                    
+                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                    <span>Status</span>
+                                    <br>
+                                    <span class="value">${status}</span>
+                                </div>
 
 
+                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                    <span>Order ID</span>
+                                    <br>
+                                    <span class="value">${order_id}</span>
+                                </div>
+
+                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                    <span>Total</span>
+                                    <br>
+                                    <span class="value">$${total}</span>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 product-info">
+                            <div class="product-specs d-flex flex-column  align-items-center">
+                                
+                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                    <span>Items</span>
+                                    <br>
+                                    <span class="value">${cartText}</span>
+                                </div>
+
+                            </div>
+                        </div>
 
 
+                        <div class="col-md-4 product-info ">
+                            <div class="product-specs d-flex flex-column  align-items-center">
+
+                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                    <span>Date:</span>
+                                    <br>
+                                    <span class="value">${date_created}</span>
+                                </div>
+
+                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                <br>
+                                ${interactDiv}
+                            </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                `;
 
 
+                // create card
+                var myform = $('#cart-items');
+                myform.append(card);
+            }
+
+                    var cancelOrderButtons = document.getElementsByName('cancel-order-button');
+                    for (var i = 0; i < cancelOrderButtons.length; i++)
+                    {
+                        console.log("button found!");
+                        var button = cancelOrderButtons[i];
+                        button.addEventListener('click', buttonCancelOrder);
+                        console.log("button " + i + " online!");
+                    }
+                });
+
+                var s = new Date().toLocaleString();
+
+            console.log("DATE: " + s);
 
         });
-
-    });
 
 
 

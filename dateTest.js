@@ -1,5 +1,5 @@
 // const event2 = new Date('July 1, 1999');
-const event2 = new Date(2021, 12 - 1, 6, 1, 17);
+const event2 = new Date();
 
 // console.log('event2');
 // console.log(event2);
@@ -48,26 +48,14 @@ else
     console.log('DATE NOT PASSED');
 }
 
-console.log('\n\n');
 
-// Schedule Object
-// 
-/*
-    [
-        [Nov. 15th, 2:00pm, 3 Pickups]
-        [Nov. 15th, 2:30pm, 5 Pickups]
-    ]
-*/
-
-// connection.query(query, [available[0], available[1], available[2], available[3], available[4], available[5], available[6]], (err, results) =>
-
-
-var string = '[';
-
-for (let index = 0; index < 24; index++)
+for (let index = 0; index < 15; index++)
 {
-    string += `available[${index}], `    
-}
-string += ']';
+    var suggestedDate = new Date(event2.getFullYear(), event2.getMonth(), event2.getDate() + index);
 
-console.log(string);
+    console.log(`${index}. suggestedDate: ${suggestedDate.toString()}`);
+
+}
+
+
+console.log('\n\n');
