@@ -53,12 +53,12 @@ function populateUserOrders()
     .then(response => response.json())
     .then(data1 =>  
     {
-        var checkData1 = Array.from(data1['data']);
+        var results = Array.from(data1['data']);
 
         console.log('Days Availability');
-        for (let i = 0; i < checkData1.length; i++)
+        for (let i = 0; i < results.length; i++)
         {
-                console.log(checkData1[i]);
+                console.log(results[i]);
         }
 
 

@@ -1124,12 +1124,23 @@ class DbService
                         return;
                     }
 
+                    var pickupDays = results[0];
+
                     // 1 Check avalible days & times
+                    for (let i = 0; i < pickupDays.length; i++)
+                    {
+                            console.log(pickupDays[i]);
+                    }
 
                     // 2 Check timeslot limit
+                    var pickupTimes = results[1];
+                    for (let i = 0; i < pickupTimes.length; i++)
+                    {
+                            console.log(pickupTimes[i]);
+                    }
 
                     // return 14 days list of avalible
-                    for (let index = 0; index < 15; index++)
+                    for (let index = 1; index < 15; index++)
                     {
                         var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + index);
 

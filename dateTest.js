@@ -53,7 +53,7 @@ for (let index = 0; index < 15; index++)
 {
     var suggestedDate = new Date(event2.getFullYear(), event2.getMonth(), event2.getDate() + index);
 
-    console.log(`${index}. suggestedDate: ${suggestedDate.toString()}`);
+    console.log(`${index}. ${suggestedDate.toString().substring(0, 16)}`);
 
 }
 
