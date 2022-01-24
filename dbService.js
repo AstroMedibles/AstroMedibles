@@ -1108,6 +1108,8 @@ class DbService
     */
     async ordersCustomerGetPickupDaysAndTimes(customerDate)
     {
+        console.log("/ ordersCustomerGetPickupDaysAndTimes(customerDate)");
+        customerDate = new Date(customerDate);
         const response = await new Promise((resolve, reject) => 
         {
             try
@@ -1123,6 +1125,11 @@ class DbService
                         reject(new Error("getAllData ERROR\n" + err.message));
                         return;
                     }
+
+                    // var resultDaysChoices = [[suggestedDay,  AvalibleYesOrNo], ...];
+                    // var resultTimeChoices = [[suggestedTime, AvalibleYesOrNo], ...];
+
+                    // return [avalible dates, avalible times]
 
                     var pickupDays = results[0];
 
@@ -1140,17 +1147,18 @@ class DbService
                     }
 
                     // return 14 days list of avalible
+                    console.log(`customerDate: ${customerDate}`);
+
                     for (let index = 1; index < 15; index++)
                     {
                         var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + index);
 
-                        console.log(`${index}. suggestedDate: ${suggestedDate.toString()}`);
+                        console.log(`${index}. suggestedDate: ${suggestedDate.toString().substring(0, 16)}`);
                     }
 
 
-                    console.log(`customerDate: ${customerDate}`);
-                    console.log(results[0]); // [{1: 1}]
-                    console.log(results[1]); // [{2: 2}]
+                    // console.log(results[0]); // [{1: 1}]
+                    // console.log(results[1]); // [{2: 2}]
                     console.log(results[2]); // [{2: 2}]
                     console.log("\n");
                     resolve(results);
