@@ -1,4 +1,5 @@
 // const event2 = new Date('July 1, 1999');
+// new Date(year, monthIndex, day, hours, minutes, seconds, milliseconds)
 const event2 = new Date();
 
 // console.log('event2');
@@ -53,9 +54,17 @@ for (let index = 0; index < 15; index++)
 {
     var suggestedDate = new Date(event2.getFullYear(), event2.getMonth(), event2.getDate() + index);
 
-    console.log(`${index}. ${suggestedDate.toString().substring(0, 16)}`);
+    console.log(`${index}. ${suggestedDate.toString().substring(0, 16)} day[${suggestedDate.getDay()}]`);
 
 }
 
+
+for (let index = 0; index < 24; index++)
+{
+    var suggestedTime = new Date(0, 0, 0, index);
+
+    console.log(`${index}. ${suggestedTime.toString().substring(0, 16)} hours[${suggestedTime.getHours()}]`);
+
+}
 
 console.log('\n\n');

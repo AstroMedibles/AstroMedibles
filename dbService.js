@@ -1129,39 +1129,62 @@ class DbService
                     // var resultDaysChoices = [[suggestedDay,  AvalibleYesOrNo], ...];
                     // var resultTimeChoices = [[suggestedTime, AvalibleYesOrNo], ...];
 
-                    // return [avalible dates, avalible times]
-
+                    // return [resultDaysChoices dates, resultTimeChoices]
+                    var resultDaysChoices = [];
+                    var resultTimeChoices = [];
                     var pickupDays = results[0];
 
-                    // 1 Check avalible days & times
-                    for (let i = 0; i < pickupDays.length; i++)
-                    {
-                            console.log(pickupDays[i]);
-                    }
 
-                    // 2 Check timeslot limit
-                    var pickupTimes = results[1];
-                    for (let i = 0; i < pickupTimes.length; i++)
-                    {
-                            console.log(pickupTimes[i]);
-                    }
-
-                    // return 14 days list of avalible
+                    // 1. create possible days
                     console.log(`customerDate: ${customerDate}`);
 
+                    // 2. filter days, remove unavailable days
                     for (let index = 1; index < 15; index++)
                     {
                         var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + index);
 
-                        console.log(`${index}. suggestedDate: ${suggestedDate.toString().substring(0, 16)}`);
+                        console.log(`${index}. ${suggestedDate.toString().substring(0, 16)} day[${suggestedDate.getDay()}]`);
+    
+
+                        // 2. a) mark unavailable days
+                        
+                        console.log(pickupDays[i].day);
+                        var AvalibleYesOrNo = false; 
+
+
+                        // if suggested date's day, is available
+
+                        if (pickupDays[suggestedDate.getDay()].available == 1)
+                        {
+                            AvalibleYesOrNo = true;
+                        }
+
+                        resultDaysChoices.push([suggestedDate, AvalibleYesOrNo]);
                     }
+
+
+                    // 2. b) mark unavailable times
+                    var pickupTimes = results[1];
+                    for (let i = 0; i < pickupTimes.length; i++)
+                    {
+                            console.log(pickupTimes[i]);
+
+
+                            // if suggested time, is available
+
+                            if (pickupDays[suggestedDate.getDay()].available == 1)
+                            {
+                                AvalibleYesOrNo = true;
+                            }
+                    }
+
 
 
                     // console.log(results[0]); // [{1: 1}]
                     // console.log(results[1]); // [{2: 2}]
                     console.log(results[2]); // [{2: 2}]
-                    console.log("\n");
-                    resolve(results);
+                    console.log("\n" + [resultDaysChoices, resultTimeChoices]);
+                    return [resultDaysChoices, resultTimeChoices];
                 });
 
             } catch (error)
