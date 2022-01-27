@@ -36,7 +36,7 @@ function populateUserOrders()
 {
     // get schedule info
 
-
+    console.log('Attempting Connection...');
     fetch(address + '/ordersCustomerGetPickupDaysAndTimes',
     {
         credentials: "include",
@@ -53,9 +53,10 @@ function populateUserOrders()
     .then(response => response.json())
     .then(data1 =>  
     {
+        console.log('Connection success!');
         var results = Array.from(data1['data']);
 
-        console.log('Days Availability');
+        console.log('/ordersCustomerGetPickupDaysAndTimes');
         for (let i = 0; i < results.length; i++)
         {
                 console.log(results[i]);

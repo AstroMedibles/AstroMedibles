@@ -557,6 +557,7 @@ app.patch('/ordersCustomerGetPickupDaysAndTimes', (request, response) =>
 		result.then(data =>  
 		{
 			response.json({ data: data });
+			console.log('AVALIBILITY SUCCESS');
 		})
 		.catch(err => console.log(err));
 	})

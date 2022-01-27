@@ -62,8 +62,8 @@ for (let index = 0; index < 15; index++)
 for (let index = 0; index < 24; index++)
 {
     var suggestedTime = new Date(0, 0, 0, index);
-
-    console.log(`${index}. ${suggestedTime.toString().substring(0, 16)} hours[${suggestedTime.getHours()}]`);
+    var localeString = suggestedTime.toLocaleString();
+    console.log(`${index}. ${localeString.substring(localeString.indexOf(' ') + 1)}`);
 
 }
 

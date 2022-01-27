@@ -1130,7 +1130,7 @@ class DbService
                     // var resultTimeChoices = [[suggestedTime, AvalibleYesOrNo], ...];
 
                     // return [resultDaysChoices dates, resultTimeChoices]
-                    var resultDaysChoices = [];
+                    var resultDayChoices = [];
                     var resultTimeChoices = [];
                     var pickupDays = results[0];
 
@@ -1148,7 +1148,7 @@ class DbService
 
                         // 2. a) mark unavailable days
                         
-                        console.log(pickupDays[i].day);
+                        // console.log(pickupDays[index].day);
                         var AvalibleYesOrNo = false; 
 
 
@@ -1159,23 +1159,31 @@ class DbService
                             AvalibleYesOrNo = true;
                         }
 
-                        resultDaysChoices.push([suggestedDate, AvalibleYesOrNo]);
+                        resultDayChoices.push([suggestedDate, AvalibleYesOrNo]);
                     }
-
 
                     // 2. b) mark unavailable times
                     var pickupTimes = results[1];
                     for (let i = 0; i < pickupTimes.length; i++)
                     {
-                            console.log(pickupTimes[i]);
+
+                        AvalibleYesOrNo = false;
+                        console.log(pickupTimes[i]);
 
 
-                            // if suggested time, is available
+                        // if suggested time, is available
 
-                            if (pickupDays[suggestedDate.getDay()].available == 1)
-                            {
-                                AvalibleYesOrNo = true;
-                            }
+                        if (pickupTimes[i].available == 1)
+                        {
+                            AvalibleYesOrNo = true;
+                        }
+
+                        var suggestedTime = new Date(0, 0, 0, i);
+                        var localeString = suggestedTime.toLocaleString();
+                        suggestedTime = `${i}. ${localeString.substring(localeString.indexOf(' ') + 1)}`;
+                        console.log(`suggestedTime: ${suggestedTime}`);
+
+                        resultTimeChoices.push([suggestedTime, AvalibleYesOrNo]);
                     }
 
 
@@ -1183,8 +1191,8 @@ class DbService
                     // console.log(results[0]); // [{1: 1}]
                     // console.log(results[1]); // [{2: 2}]
                     console.log(results[2]); // [{2: 2}]
-                    console.log("\n" + [resultDaysChoices, resultTimeChoices]);
-                    return [resultDaysChoices, resultTimeChoices];
+                    console.log("\n" + [resultDayChoices, resultTimeChoices]);
+                    return [resultDayChoices, resultTimeChoices];
                 });
 
             } catch (error)
