@@ -1196,8 +1196,8 @@ class DbService
 
                         var suggestedTime = new Date(0, 0, 0, i);
                         var localeString = suggestedTime.toLocaleString();
-                        suggestedTime = `${localeString.substring(localeString.indexOf(' ') + 1)}`;
-                        // console.log(`suggestedTime: ${suggestedTime}`);
+                        suggestedTime = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
+                        console.log(`suggestedTime: ${suggestedTime}`);
 
                         resultTimeChoices.push([suggestedTime, AvalibleYesOrNo]);
                     }

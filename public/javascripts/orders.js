@@ -119,7 +119,7 @@ function populateUserOrders()
 
                     var dropDownDaysButton = 
                     `
-                    <button id="selected-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownDaysText}</button>
+                    <button id="selected-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; ">${dropDownDaysText}</button>
                     `;
 
                     // var dropDownDaysChoices = 
@@ -136,7 +136,7 @@ function populateUserOrders()
                         const element = dropDownDayResults[index];
 
                         if (element[1] == true)
-                            dropDownDaysChoices += `<button class="dropdown-item">${element[0]}</button>`;
+                            dropDownDaysChoices += `<button class="dropdown-item" dropDownCustomerUpdateOrderStatus(event)>${element[0]}</button>`;
                         else
                             dropDownDaysChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
 
@@ -160,7 +160,7 @@ function populateUserOrders()
                         const element = dropDownTimeResults[index];
                         // if [1] == true, avalible
                         if (element[1] == true)
-                            dropDownTimesChoices += `<button class="dropdown-item">${element[0]}</button>`;
+                            dropDownTimesChoices += `<button class="dropdown-item" dropDownCustomerUpdateOrderStatus(event)>${element[0]}</button>`;
                         else
                             dropDownTimesChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
 
@@ -294,9 +294,94 @@ function populateUserOrders()
             console.log("DATE: " + s);
 
         });
+}
+
+function dropDownCustomerUpdateOrderStatus(event)
+{
+    // console.log('start dropDownUpdateOrderStatus(event)');
+
+    event = event.currentTarget;
+    var parentDiv = event.parentNode;
+    var orderId = $(parentDiv).attr("name");
+    // console.log(orderId);
+
+    var status = $(event).attr("name");
+    // console.log(status);
+
+    var dropDownSubElementID = $(`#selected-${orderId}`); 
+    // console.log(dropDownSubElementID);
 
 
 
+    if (confirm('Are you sure you want to update this order?'))
+    {
+        // 
+        // console.log('Update order pressed.');
+    } else
+    {
+        // 
+        // console.log('Cancel action pressed.');
+        return;
+    }
+
+    // $(dropDownSubElementID).text(status);
+
+
+    // fetch(address + '/adminUpdateOrderStatus',
+    // {
+    //     credentials: "include",
+    //     method: 'PATCH',
+    //     headers:
+    //     {
+    //         'Content-type': 'application/json'
+    //     },
+    //     body: JSON.stringify(
+    //         {
+    //             orderId: orderId,
+    //             status: status
+    //         })
+    // })
+    // .then(response => response.json())
+    // .then((data) => 
+    // {
+        // Update Status to new option
+        $(dropDownSubElementID).text(status);
+
+        // disable used option
+        $(event).addClass("disabled");
+        $(event).on(('onClick'), null);
+
+        // console.log('Status check: ' + status);
+
+        status = status.toLowerCase();
+        // console.log("status.includes('complete')");
+        // console.log(status.includes('complete'));
+
+        // if (status === 'preparing order')
+        // {
+        //     // console.log(1);
+        //     dropDownSubElementID.removeClass("btn-danger");
+        //     dropDownSubElementID.addClass("btn-primary");
+        // } else if (status === 'ready for pickup')
+        // {
+        //     // console.log(2);
+        //     dropDownSubElementID.removeClass("btn-danger");
+        //     dropDownSubElementID.removeClass("btn-primary");
+        //     dropDownSubElementID.addClass("btn-warning");
+        // } else if (status === 'complete')
+        // {
+        //     // console.log(3);
+        //     dropDownSubElementID.removeClass("btn-danger");
+        //     dropDownSubElementID.removeClass("btn-primary");
+        //     dropDownSubElementID.removeClass("btn-warning");
+        //     dropDownSubElementID.addClass("btn-success");
+        // }
+
+        // console.log("dropDownUpdateOrderStatus(event) complete");
+    // }).catch((error => 
+    // {
+        // console.log("dropDownUpdateOrderStatus(event)  catch:" + error);
+    // }));
 }
 
 function buttonCancelOrder(event)
