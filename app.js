@@ -278,7 +278,7 @@ app.post('/auth', function (request, response)
 
 			// if (loggedIn === true) 
 			// { 
-				console.log("route(/auth) \tif loggedIn === true"); 
+				// console.log("route(/auth) \tif loggedIn === true"); 
 				let options = 
 				{ 
 					maxAge: 1000 * 60 * 20160, // Would expire after two weeks (20160 minutes)
@@ -556,8 +556,9 @@ app.patch('/ordersCustomerGetPickupDaysAndTimes', (request, response) =>
 		
 		result.then(data =>  
 		{
+			// console.log('AVALIBILITY: SENDING RESPONSE');
 			response.json({ data: data });
-			console.log('AVALIBILITY SUCCESS');
+			// console.log('AVALIBILITY: RESPONSE SUCCESS');
 		})
 		.catch(err => console.log(err));
 	})
@@ -1120,9 +1121,9 @@ function checkIfLoggedIn(request)
  
 		result.then((results) => // valid login 
 		{ 
-			console.log("loggedIn === true");
+			// console.log("loggedIn === true");
 			// console.log(2222);
-			console.log(results);
+			// console.log(results);
 			resolve(results);
 		})
 		.catch(() =>  // invalid login 

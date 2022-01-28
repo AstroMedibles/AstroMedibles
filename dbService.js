@@ -20,24 +20,24 @@ const connection = mysql.createPool(
 
 connection.on('acquire', function (connection)
 {
-    console.log('Connection %d acquired', connection.threadId);
+    // console.log('Connection %d acquired', connection.threadId);
 });
 
 connection.on('connection', function (connection)
 {
     // connection.query('SET SESSION auto_increment_increment=1')
-    console.log('Connection %d event', connection.threadId);
+    // console.log('Connection %d event', connection.threadId);
 });
 
 connection.on('enqueue', function ()
 {
-    console.log('connection enqueue');
-    console.log('Waiting for available connection slot.');
+    // console.log('connection enqueue');
+    // console.log('Waiting for available connection slot.');
 });
 
 connection.on('release', function (connection)
 {
-    console.log('Connection %d released', connection.threadId);
+    // console.log('Connection %d released', connection.threadId);
 });
 
 console.log("\n" + "Server Started:");
@@ -106,14 +106,14 @@ class DbService
                     {
                         var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
 
-                        console.log('OriginalText: ' + password);
-                        console.log('decryptedText: ' + decryptedText);
+                        // console.log('OriginalText: ' + password);
+                        // console.log('decryptedText: ' + decryptedText);
 
                         if (password == decryptedText)
                         {
-                            console.log('Login success!');
-                            console.log("results[0]");
-                            console.log(results[0]);
+                            // console.log('Login success!');
+                            // console.log("results[0]");
+                            // console.log(results[0]);
                             resolve(results[0]);
                             return;
                         }
@@ -181,12 +181,12 @@ class DbService
                     {
                         var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
 
-                        console.log('OriginalText: ' + password);
-                        console.log('decryptedText: ' + decryptedText);
+                        // console.log('OriginalText: ' + password);
+                        // console.log('decryptedText: ' + decryptedText);
 
                         if (password == decryptedText)
                         {
-                            console.log('Login success!');
+                            // console.log('Login success!');
                             resolve(results);
                             return;
                         }
@@ -792,8 +792,8 @@ class DbService
                         userOrders.push(order);
                     }
 
-                    console.log('userOrders');
-                    console.log(userOrders);
+                    // console.log('userOrders');
+                    // console.log(userOrders);
                     resolve(userOrders);
                 })
             }
@@ -1138,13 +1138,12 @@ class DbService
                     // 1. create possible days
                     console.log(`customerDate: ${customerDate}`);
 
+                    var numberOfDays = 7;
+
                     // 2. filter days, remove unavailable days
-                    for (let index = 1; index < 15; index++)
+                    for (let index = 1; index < numberOfDays + 1; index++)
                     {
                         var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + index);
-
-                        console.log(`${index}. ${suggestedDate.toString().substring(0, 16)} day[${suggestedDate.getDay()}]`);
-    
 
                         // 2. a) mark unavailable days
                         
@@ -1159,6 +1158,23 @@ class DbService
                             AvalibleYesOrNo = true;
                         }
 
+                        var dayText = suggestedDate.toString().substring(0, 3);
+                        console.log(`dayText ${dayText}`);
+
+                        if (dayText == 'Mon') dayText = 'Monday,'; 
+                        else if (dayText == 'Tue') dayText = 'Tuesday,'; 
+                        else if (dayText == 'Wed') dayText = 'Wednesday,'; 
+                        else if (dayText == 'Thu') dayText = 'Thursday,'; 
+                        else if (dayText == 'Fri') dayText = 'Friday,'; 
+                        else if (dayText == 'Sat') dayText = 'Saturday,'; 
+                        else if (dayText == 'Sun') dayText = 'Sunday,'; 
+
+                        // suggestedDate = `${dayText}`;
+                        suggestedDate = `${dayText} ${suggestedDate.toString().substring(4, 10)}`;
+                        // console.log(`${index}. ${suggestedDate.toString().substring(0, 16)} day[${suggestedDate.getDay()}]`);
+
+
+
                         resultDayChoices.push([suggestedDate, AvalibleYesOrNo]);
                     }
 
@@ -1168,7 +1184,7 @@ class DbService
                     {
 
                         AvalibleYesOrNo = false;
-                        console.log(pickupTimes[i]);
+                        // console.log(pickupTimes[i]);
 
 
                         // if suggested time, is available
@@ -1180,8 +1196,8 @@ class DbService
 
                         var suggestedTime = new Date(0, 0, 0, i);
                         var localeString = suggestedTime.toLocaleString();
-                        suggestedTime = `${i}. ${localeString.substring(localeString.indexOf(' ') + 1)}`;
-                        console.log(`suggestedTime: ${suggestedTime}`);
+                        suggestedTime = `${localeString.substring(localeString.indexOf(' ') + 1)}`;
+                        // console.log(`suggestedTime: ${suggestedTime}`);
 
                         resultTimeChoices.push([suggestedTime, AvalibleYesOrNo]);
                     }
@@ -1190,9 +1206,10 @@ class DbService
 
                     // console.log(results[0]); // [{1: 1}]
                     // console.log(results[1]); // [{2: 2}]
-                    console.log(results[2]); // [{2: 2}]
-                    console.log("\n" + [resultDayChoices, resultTimeChoices]);
-                    return [resultDayChoices, resultTimeChoices];
+                    // console.log(results[2]); // [{2: 2}]
+                    console.log(resultDayChoices);
+                    console.log(resultTimeChoices);
+                    resolve([resultDayChoices, resultTimeChoices]);
                 });
 
             } catch (error)
@@ -1388,19 +1405,19 @@ class DbService
                     {
                         var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
 
-                        console.log('OriginalText: ' + password);
-                        console.log('decryptedText: ' + decryptedText);
+                        // console.log('OriginalText: ' + password);
+                        // console.log('decryptedText: ' + decryptedText);
 
                         if (password == decryptedText)
                         {
-                            console.log('Login success!');
-                            console.log("results[0]");
-                            console.log(results[0]);
+                            // console.log('Login success!');
+                            // console.log("results[0]");
+                            // console.log(results[0]);
                             const id = results[0].id;
 
-                            console.log(id);
-                            console.log(name);
-                            console.log(newEmail);
+                            // console.log(id);
+                            // console.log(name);
+                            // console.log(newEmail);
                             const query = "UPDATE " + process.env.TABLE_NAMES + " SET name = ?, email = ? WHERE id = ?;";
                             connection.query(query, [name, newEmail, id], (err, results2) =>
                             {

@@ -55,12 +55,10 @@ function populateUserOrders()
     {
         console.log('Connection success!');
         var results = Array.from(data1['data']);
+        var dropDownDayResults  = results[0];
+        var dropDownTimeResults = results[1];
 
-        console.log('/ordersCustomerGetPickupDaysAndTimes');
-        for (let i = 0; i < results.length; i++)
-        {
-                console.log(results[i]);
-        }
+        // console.log('/ordersCustomerGetPickupDaysAndTimes');
 
 
         // get user order info
@@ -117,36 +115,67 @@ function populateUserOrders()
                     // status = '<a href="/orders">' + status + '</a>';
 
                     // drop down days
-                    var dropDownDaysText   = 'Sunday, Dec 19';
+                    var dropDownDaysText   = dropDownDayResults[0][0]; // 'Sunday, Dec 19'
 
                     var dropDownDaysButton = 
                     `
                     <button id="selected-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownDaysText}</button>
                     `;
 
-                    var dropDownDaysChoices = 
-                    `
-                    <button class="dropdown-item">Sunday, Dec 19</button>
-                    <button class="dropdown-item">Monday, Dec 20</button>
-                    <button class="dropdown-item disabled">Tuesday, Dec 21</button>
-                    <button class="dropdown-item">Wednesday, Dec 22</button>
-                    `;
+                    // var dropDownDaysChoices = 
+                    // `
+                    // <button class="dropdown-item">Sunday, Dec 19</button>
+                    // <button class="dropdown-item">Monday, Dec 20</button>
+                    // <button class="dropdown-item disabled">Tuesday, Dec 21</button>
+                    // <button class="dropdown-item">Wednesday, Dec 22</button>
+                    // `;
+                    var dropDownDaysChoices = '';
+
+                    for (var index = 0; index < dropDownDayResults.length; index++)
+                    {
+                        const element = dropDownDayResults[index];
+
+                        if (element[1] == true)
+                            dropDownDaysChoices += `<button class="dropdown-item">${element[0]}</button>`;
+                        else
+                            dropDownDaysChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
+
+                    }
+                    
+
 
                     // drop down times
-                    var dropDownTimesText   = '2:00pm';
+                    var dropDownTimesText   = dropDownTimeResults[0][0]; // '2:00pm'; 
 
                     var dropDownTimesButton = 
                     `
                     <button id="selected-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownTimesText}</button>
                     `;
 
-                    var dropDownTimesChoices = 
-                    `
-                    <button class="dropdown-item">1:00pm</button>
-                    <button class="dropdown-item">2:00pm</button>
-                    <button class="dropdown-item disabled">3:00pm</button>
-                    <button class="dropdown-item">4:00pm</button>
-                    `;
+
+                    var dropDownTimesChoices = '';
+
+                    for (var index = 0; index < dropDownTimeResults.length; index++)
+                    {
+                        const element = dropDownTimeResults[index];
+                        // if [1] == true, avalible
+                        if (element[1] == true)
+                            dropDownTimesChoices += `<button class="dropdown-item">${element[0]}</button>`;
+                        else
+                            dropDownTimesChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
+
+                        
+                        // if [1] == false, disabled
+                    }
+
+
+                    // var dropDownTimesChoices = 
+                    // `
+                    // <button class="dropdown-item">1:00pm</button>
+                    // <button class="dropdown-item">2:00pm</button>
+                    // <button class="dropdown-item disabled">3:00pm</button>
+                    // <button class="dropdown-item">4:00pm</button>
+                    // `;
 
                     // add schedule pickup div to order
 
