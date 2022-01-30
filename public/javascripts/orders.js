@@ -70,7 +70,7 @@ function populateUserOrders()
 
             for (let i = 0; i < orders.length; i++)
             {
-                console.log(orders[i]);
+                // console.log(orders[i]);
 
                 var userOrder = orders[i];
 
@@ -90,16 +90,17 @@ function populateUserOrders()
                     day: "2-digit"
 
                 };
-                console.log("date_created");
-                console.log(date_created);
+                // console.log("date_created");
+                // console.log(date_created);
                 date_created = date_created.toLocaleString('en-us', options);
-                console.log(date_created);
+                // console.log(date_created);
 
                 var interactDiv = "";
+                var dataAttributes = `data-order_id="${order_id}" data-status="${status}"`;
+
 
                 if (status === "Payment Required")
                 {
-                    var dataAttributes = "data-order_id=" + order_id;
                     status = '<a href="https://account.venmo.com/pay?txn=pay&recipients=Astro-Medibles">' + status + '</a>';
                     interactDiv =
                     `
@@ -111,7 +112,6 @@ function populateUserOrders()
 
                 if (status === "Ready for Pickup")
                 {
-                    var dataAttributes = "data-order_id=" + order_id;
                     // status = '<a href="/orders">' + status + '</a>';
 
                     // drop down days
@@ -119,7 +119,7 @@ function populateUserOrders()
 
                     var dropDownDaysButton = 
                     `
-                    <button id="selected-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; ">${dropDownDaysText}</button>
+                    <button id="selected-${order_id}" ${dataAttributes} class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; ">${dropDownDaysText}</button>
                     `;
 
                     // var dropDownDaysChoices = 
@@ -136,7 +136,7 @@ function populateUserOrders()
                         const element = dropDownDayResults[index];
 
                         if (element[1] == true)
-                            dropDownDaysChoices += `<button class="dropdown-item" dropDownCustomerUpdateOrderStatus(event)>${element[0]}</button>`;
+                            dropDownDaysChoices += `<button class="dropdown-item" data-choice="${element[0]}"  onClick="dropDownCustomerUpdateOrderStatusDay(event)" >${element[0]}</button>`;
                         else
                             dropDownDaysChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
 
@@ -160,9 +160,9 @@ function populateUserOrders()
                         const element = dropDownTimeResults[index];
                         // if [1] == true, avalible
                         if (element[1] == true)
-                            dropDownTimesChoices += `<button class="dropdown-item" dropDownCustomerUpdateOrderStatus(event)>${element[0]}</button>`;
-                        else
-                            dropDownTimesChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
+                            dropDownTimesChoices += `<button class="dropdown-item" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element[0]}</button>`;
+                        // else
+                            // dropDownTimesChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
 
                         
                         // if [1] == false, disabled
@@ -185,14 +185,14 @@ function populateUserOrders()
                     <br>
                     <div class="dropdown" >
                         ${dropDownDaysButton}
-                        <div class="dropdown-menu" name="${order_id}">
+                        <div class="dropdown-menu" name="${order_id}" ${dataAttributes} >
                             ${dropDownDaysChoices}
                         </div>
                     </div>
                     <br>
                     <div class="dropdown" >
                         ${dropDownTimesButton}
-                        <div class="dropdown-menu" name="${order_id}">
+                        <div class="dropdown-menu" name="${order_id}" ${dataAttributes} >
                             ${dropDownTimesChoices}
                         </div>
                     </div>
@@ -282,38 +282,39 @@ function populateUserOrders()
                     var cancelOrderButtons = document.getElementsByName('cancel-order-button');
                     for (var i = 0; i < cancelOrderButtons.length; i++)
                     {
-                        console.log("button found!");
+                        // console.log("button found!");
                         var button = cancelOrderButtons[i];
                         button.addEventListener('click', buttonCancelOrder);
-                        console.log("button " + i + " online!");
+                        // console.log("button " + i + " online!");
                     }
                 });
 
                 var s = new Date().toLocaleString();
 
-            console.log("DATE: " + s);
+            // console.log("DATE: " + s);
 
         });
 }
 
-function dropDownCustomerUpdateOrderStatus(event)
+function dropDownCustomerUpdateOrderStatusDay(event)
 {
-    // console.log('start dropDownUpdateOrderStatus(event)');
+    console.log('start dropDownCustomerUpdateOrderStatusDay(event)');
 
     event = event.currentTarget;
+
     var parentDiv = event.parentNode;
     var orderId = $(parentDiv).attr("name");
-    // console.log(orderId);
+    console.log(`orderId : ${orderId}`);
 
-    var status = $(event).attr("name");
-    // console.log(status);
+    var newChoice = $(event).attr("data-choice");
+    console.log(`newChoice : ${newChoice}`);
 
     var dropDownSubElementID = $(`#selected-${orderId}`); 
-    // console.log(dropDownSubElementID);
+    console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
 
 
 
-    if (confirm('Are you sure you want to update this order?'))
+    if (confirm('Confirm scheduled pickup?'))
     {
         // 
         // console.log('Update order pressed.');
@@ -345,7 +346,7 @@ function dropDownCustomerUpdateOrderStatus(event)
     // .then((data) => 
     // {
         // Update Status to new option
-        $(dropDownSubElementID).text(status);
+        $(dropDownSubElementID).text(newChoice);
 
         // disable used option
         $(event).addClass("disabled");
@@ -353,7 +354,6 @@ function dropDownCustomerUpdateOrderStatus(event)
 
         // console.log('Status check: ' + status);
 
-        status = status.toLowerCase();
         // console.log("status.includes('complete')");
         // console.log(status.includes('complete'));
 
@@ -384,6 +384,12 @@ function dropDownCustomerUpdateOrderStatus(event)
     // }));
 }
 
+function dropDownCustomerUpdateOrderStatusTime(event)
+{
+    return 0;
+}
+
+
 function buttonCancelOrder(event)
 {
     if (confirm('Are you sure you want to cancel this order?')) {
@@ -396,7 +402,7 @@ function buttonCancelOrder(event)
       }
 
 
-    console.log("\n" + "buttonCancelOrder(event)");
+    // console.log("\n" + "buttonCancelOrder(event)");
     var button = event.target;
     var order_id = button.dataset.order_id;
 
@@ -422,7 +428,7 @@ function buttonCancelOrder(event)
 
             var parentDiv = button.parentNode.parentNode.parentNode.parentNode.parentNode;
             parentDiv.remove();
-            console.log("cancelOrder(event) complete");
+            // console.log("cancelOrder(event) complete");
         }).catch((error => 
         {
             console.log("cancelOrder(event)  catch:" + error);
