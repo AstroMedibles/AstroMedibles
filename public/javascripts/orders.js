@@ -115,7 +115,7 @@ function populateUserOrders()
                     // status = '<a href="/orders">' + status + '</a>';
 
                     // drop down days
-                    var dropDownDaysText   = dropDownDayResults[0][0]; // 'Sunday, Dec 19'
+                    var dropDownDaysText   = 'Select day'; // 'Sunday, Dec 19'
 
                     var dropDownDaysButton = 
                     `
@@ -145,7 +145,7 @@ function populateUserOrders()
 
 
                     // drop down times
-                    var dropDownTimesText   = dropDownTimeResults[0][0]; // '2:00pm'; 
+                    var dropDownTimesText   = 'Select time'; // '2:00pm'; 
 
                     var dropDownTimesButton = 
                     `
@@ -312,19 +312,6 @@ function dropDownCustomerUpdateOrderStatusDay(event)
     var dropDownSubElementID = $(`#selected-${orderId}`); 
     console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
 
-
-
-    if (confirm('Confirm scheduled pickup?'))
-    {
-        // 
-        // console.log('Update order pressed.');
-    } else
-    {
-        // 
-        // console.log('Cancel action pressed.');
-        return;
-    }
-
     // $(dropDownSubElementID).text(status);
 
 
@@ -349,13 +336,8 @@ function dropDownCustomerUpdateOrderStatusDay(event)
         $(dropDownSubElementID).text(newChoice);
 
         // disable used option
-        $(event).addClass("disabled");
-        $(event).on(('onClick'), null);
-
-        // console.log('Status check: ' + status);
-
-        // console.log("status.includes('complete')");
-        // console.log(status.includes('complete'));
+        // $(event).addClass("disabled");
+        // $(event).on(('onClick'), null);
 
         // if (status === 'preparing order')
         // {
@@ -386,7 +368,32 @@ function dropDownCustomerUpdateOrderStatusDay(event)
 
 function dropDownCustomerUpdateOrderStatusTime(event)
 {
-    return 0;
+    console.log('start dropDownCustomerUpdateOrderStatusTime(event)');
+
+    event = event.currentTarget;
+
+    var parentDiv = event.parentNode;
+    var orderId = $(parentDiv).attr("name");
+    console.log(`orderId : ${orderId}`);
+
+    var newChoice = $(event).attr("data-choice");
+    console.log(`newChoice : ${newChoice}`);
+
+    var dropDownSubElementID = $(`#selected-${orderId}`); 
+    console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
+
+
+
+    if (confirm('Confirm scheduled pickup?'))
+    {
+        // 
+        // console.log('Update order pressed.');
+    } else
+    {
+        // 
+        // console.log('Cancel action pressed.');
+        return;
+    }
 }
 
 
