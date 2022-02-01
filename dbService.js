@@ -641,7 +641,7 @@ class DbService
                 </p>
                 `;
                 
-                db.sendEmail(userData.email, subject, html);
+                // db.sendEmail(userData.email, subject, html);
             });
 
 
@@ -725,7 +725,7 @@ class DbService
                                 </p>
                                 `;
                                 
-                                db.sendEmail(email, subject, html);
+                                // db.sendEmail(email, subject, html);
                                 
                                 console.log('Account Created!');
                                 resolve([result.insertId, result.affectedRows]);
@@ -785,10 +785,13 @@ class DbService
                             cart : results[i].cart,
                             total : results[i].total,
                             date_created : results[i].date_created,
+                            pickup_scheduled : results[i].pickup_scheduled,
+                            pickup_day : results[i].pickup_day,
+                            pickup_time : results[i].pickup_time
                         };
 
-                        // console.log('order');
-                        // console.log(order);
+                        console.log('order');
+                        console.log(order);
                         userOrders.push(order);
                     }
 
@@ -885,7 +888,7 @@ class DbService
                         </p>
                         `;
                         
-                        db.sendEmail(userEmail, subject, html);
+                        // db.sendEmail(userEmail, subject, html);
     
                         resolve(result.affectedRows);
                     }
@@ -1375,7 +1378,7 @@ class DbService
                     `;
                     
                     const db = DbService.getDbServiceInstance();
-                    db.sendEmail(email, subject, html);
+                    // db.sendEmail(email, subject, html);
 
                     resolve(result.affectedRows);
                 }
@@ -1496,7 +1499,7 @@ class DbService
                     </p>
                     `;
                     const db = DbService.getDbServiceInstance();
-                    db.sendEmail(email, subject, html);
+                    // db.sendEmail(email, subject, html);
                     resolve(result.affectedRows);
                 }
             })
@@ -1526,7 +1529,7 @@ class DbService
                 
                 // Send email
                 const db = DbService.getDbServiceInstance();
-                db.sendEmail(toEmail, subject, html);
+                // db.sendEmail(toEmail, subject, html);
                 resolve(true);
 
             } catch (error)
@@ -1559,7 +1562,7 @@ class DbService
                 
                 // Send email
                 const db = DbService.getDbServiceInstance();
-                db.sendEmail(toEmail, subject, html);
+                // db.sendEmail(toEmail, subject, html);
                 resolve(true);
 
             } catch (error)

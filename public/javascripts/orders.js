@@ -34,7 +34,7 @@ function loadCartTotal(data)
 
 function populateUserOrders()
 {
-    // get schedule info
+    // get pickup schedule info
 
     console.log('Attempting Connection...');
     fetch(address + '/ordersCustomerGetPickupDaysAndTimes',
