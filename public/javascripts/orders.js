@@ -149,7 +149,7 @@ function populateUserOrders()
 
                     var dropDownTimesButton = 
                     `
-                    <button id="selected-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownTimesText}</button>
+                    <button id="selected-time-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle disabled" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownTimesText}</button>
                     `;
 
 
@@ -160,7 +160,7 @@ function populateUserOrders()
                         const element = dropDownTimeResults[index];
                         // if [1] == true, avalible
                         if (element[1] == true)
-                            dropDownTimesChoices += `<button class="dropdown-item" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element[0]}</button>`;
+                            dropDownTimesChoices += `<button class="dropdown-item" data-choice="${element[0]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element[0]}</button>`;
                         // else
                             // dropDownTimesChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
 
@@ -261,7 +261,7 @@ function populateUserOrders()
                                     <span class="value">${date_created}</span>
                                 </div>
 
-                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                            <div class="w-75" style="padding: 0px 0px 15px 0px; text-align: center;">
                                 <br>
                                 ${interactDiv}
                             </div>
@@ -334,6 +334,9 @@ function dropDownCustomerUpdateOrderStatusDay(event)
     // {
         // Update Status to new option
         $(dropDownSubElementID).text(newChoice);
+        // enable time drop down
+        $(`#selected-time-${orderId}`).removeClass("disabled");
+
 
         // disable used option
         // $(event).addClass("disabled");
@@ -379,7 +382,7 @@ function dropDownCustomerUpdateOrderStatusTime(event)
     var newChoice = $(event).attr("data-choice");
     console.log(`newChoice : ${newChoice}`);
 
-    var dropDownSubElementID = $(`#selected-${orderId}`); 
+    var dropDownSubElementID = $(`#selected-time-${orderId}`); 
     console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
 
 
@@ -394,6 +397,9 @@ function dropDownCustomerUpdateOrderStatusTime(event)
         // console.log('Cancel action pressed.');
         return;
     }
+
+     // Update Status to new option
+     $(dropDownSubElementID).text(newChoice);
 }
 
 
