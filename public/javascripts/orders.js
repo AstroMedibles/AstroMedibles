@@ -74,11 +74,24 @@ function populateUserOrders()
 
                 var userOrder = orders[i];
 
-                var status      = userOrder.status;
-                var order_id    = userOrder.order_id;
-                var name        = userOrder.name;
-                var cart        = JSON.parse(userOrder.cart).cart;
-                var total       = userOrder.total;
+                var status           = userOrder.status;
+                var order_id         = userOrder.order_id;
+                var name             = userOrder.name;
+                var cart             = JSON.parse(userOrder.cart).cart;
+                var total            = userOrder.total;
+                var pickup_scheduled = userOrder.pickup_scheduled;
+                var pickup_day       = userOrder.pickup_day;
+                var pickup_time      = userOrder.pickup_time;
+
+                console.log
+                (`
+                order_id: ${order_id}
+
+                pickup_scheduled: ${pickup_scheduled}
+                pickup_day:  ${pickup_day}
+                pickup_time: ${pickup_time}
+                `);
+
 
                 var date_created = new Date(userOrder.date_created);
                 var options =
