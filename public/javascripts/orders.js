@@ -137,12 +137,20 @@ function populateUserOrders()
                     // if an order already has a pickup scheduled, display that
                     if (pickup_scheduled === 1)
                     {
-                        dropDownDaysText  = pickup_day;
-                        dropDownTimesText = pickup_time;
+
+                        var date = new Date(pickup_day);
+                        var localeTimeStr = date.toLocaleTimeString().toString();
+                        var time = localeTimeStr.substring(0, localeTimeStr.lastIndexOf(':')) + localeTimeStr.substring(localeTimeStr.lastIndexOf(':') + 3) 
+                        var options = { weekday: 'long', month: 'long', day: 'numeric'};
+                        var dateLocaleString = date.toLocaleString('en-US', options) + getOrdinalSuffix(date);
+                        
+
+                        dropDownDaysText  = dateLocaleString;
+                        dropDownTimesText = time;
 
                         dropDownDaysButton = 
                         `
-                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-primary btn-sm rounded-pill dropdown-toggle disabled" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; ">${dropDownDaysText}</button>
+                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-primary rounded-pill dropdown-toggle disabled" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; font-size: 80%;">${dropDownDaysText}</button>
                         `;
 
 
@@ -152,7 +160,7 @@ function populateUserOrders()
                     {
                         dropDownDaysButton = 
                         `
-                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; ">${dropDownDaysText}</button>
+                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-primary rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; font-size: 80%;">${dropDownDaysText}</button>
                         `;
 
 
@@ -274,7 +282,7 @@ function populateUserOrders()
                                     <span class="value">${date_created}</span>
                                 </div>
 
-                            <div class="w-75" style="padding: 0px 0px 15px 0px; text-align: center;">
+                            <div class="w-100" style="padding: 0px 0px 15px 0px; text-align: center;">
                                 <br>
                                 ${interactDiv}
                             </div>
@@ -474,4 +482,9 @@ function ready()
         });
 
     populateUserOrders();
+}
+
+function getOrdinalSuffix(dt)
+{
+    return (dt.getDate() % 10 == 1 && dt.getDate() != 11 ? 'st' : (dt.getDate() % 10 == 2 && dt.getDate() != 12 ? 'nd' : (dt.getDate() % 10 == 3 && dt.getDate() != 13 ? 'rd' : 'th'))); 
 }

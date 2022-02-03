@@ -627,7 +627,7 @@ function radioPickupsClick()
         var lastDate = '';
         var lastTime = '';
 
-        for (let i = 0; i < pickups.length; i++)
+        for (var i = 0; i < pickups.length; i++)
         {
             console.log(pickups[i]);
 
@@ -637,7 +637,7 @@ function radioPickupsClick()
             var time = localeTimeStr.substring(0, localeTimeStr.lastIndexOf(':')) + localeTimeStr.substring(localeTimeStr.lastIndexOf(':') + 3) 
 
 
-            let options = { weekday: 'long', month: 'long', day: 'numeric'};
+            var options = { weekday: 'long', month: 'long', day: 'numeric'};
             var dateLocaleString = date.toLocaleString('en-US', options) + getOrdinalSuffix(date);
             
             // Sunday, November 14th
