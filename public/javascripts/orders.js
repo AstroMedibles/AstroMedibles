@@ -125,70 +125,70 @@ function populateUserOrders()
 
                 if (status === "Ready for Pickup")
                 {
-                    // status = '<a href="/orders">' + status + '</a>';
-
                     // drop down days
-                    var dropDownDaysText   = 'Select day'; // 'Sunday, Dec 19'
+                    var dropDownDaysText    = 'Select day';  // 'Sunday, Dec 19'
+                    var dropDownTimesText   = 'Select time'; // '2:00pm'
 
-                    var dropDownDaysButton = 
-                    `
-                    <button id="selected-${order_id}" ${dataAttributes} class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; ">${dropDownDaysText}</button>
-                    `;
-
-                    // var dropDownDaysChoices = 
-                    // `
-                    // <button class="dropdown-item">Sunday, Dec 19</button>
-                    // <button class="dropdown-item">Monday, Dec 20</button>
-                    // <button class="dropdown-item disabled">Tuesday, Dec 21</button>
-                    // <button class="dropdown-item">Wednesday, Dec 22</button>
-                    // `;
+                    var dropDownDaysButton;
                     var dropDownDaysChoices = '';
+                    var dropDownTimesChoices = '';
 
-                    for (var index = 0; index < dropDownDayResults.length; index++)
+
+                    // if an order already has a pickup scheduled, display that
+                    if (pickup_scheduled === 1)
                     {
-                        const element = dropDownDayResults[index];
+                        dropDownDaysText  = pickup_day;
+                        dropDownTimesText = pickup_time;
 
-                        if (element[1] == true)
-                            dropDownDaysChoices += `<button class="dropdown-item" data-choice="${element[0]}"  onClick="dropDownCustomerUpdateOrderStatusDay(event)" >${element[0]}</button>`;
-                        else
-                            dropDownDaysChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
+                        dropDownDaysButton = 
+                        `
+                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-primary btn-sm rounded-pill dropdown-toggle disabled" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; ">${dropDownDaysText}</button>
+                        `;
+
+
+                    }
+                    // if the order does not have a pickup scheduled
+                    else
+                    {
+                        dropDownDaysButton = 
+                        `
+                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-primary btn-sm rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; ">${dropDownDaysText}</button>
+                        `;
+
+
+                        // add drop down choices
+                        for (var index = 0; index < dropDownDayResults.length; index++)
+                        {
+                            const element = dropDownDayResults[index];
+    
+                            if (element[1] == true)
+                                dropDownDaysChoices += `<button class="dropdown-item" data-choice="${element[0]}"  onClick="dropDownCustomerUpdateOrderStatusDay(event)" >${element[0]}</button>`;
+                            else
+                                dropDownDaysChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
+    
+                        }
+
+                        // add drop down choices
+                        for (var index = 0; index < dropDownTimeResults.length; index++)
+                        {
+                            const element = dropDownTimeResults[index];
+                            // if [1] == true, avalible
+                            if (element[1] == true)
+                                dropDownTimesChoices += `<button class="dropdown-item" data-choice="${element[0]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element[0]}</button>`;
+                            // else
+                                // dropDownTimesChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
+                            // if [1] == false, disabled
+                        }
+
 
                     }
                     
-
-
                     // drop down times
-                    var dropDownTimesText   = 'Select time'; // '2:00pm'; 
-
                     var dropDownTimesButton = 
                     `
                     <button id="selected-time-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle disabled" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownTimesText}</button>
                     `;
 
-
-                    var dropDownTimesChoices = '';
-
-                    for (var index = 0; index < dropDownTimeResults.length; index++)
-                    {
-                        const element = dropDownTimeResults[index];
-                        // if [1] == true, avalible
-                        if (element[1] == true)
-                            dropDownTimesChoices += `<button class="dropdown-item" data-choice="${element[0]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element[0]}</button>`;
-                        // else
-                            // dropDownTimesChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
-
-                        
-                        // if [1] == false, disabled
-                    }
-
-
-                    // var dropDownTimesChoices = 
-                    // `
-                    // <button class="dropdown-item">1:00pm</button>
-                    // <button class="dropdown-item">2:00pm</button>
-                    // <button class="dropdown-item disabled">3:00pm</button>
-                    // <button class="dropdown-item">4:00pm</button>
-                    // `;
 
                     // add schedule pickup div to order
 
@@ -269,7 +269,7 @@ function populateUserOrders()
                             <div class="product-specs d-flex flex-column  align-items-center">
 
                                 <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                    <span>Date:</span>
+                                    <span>Date Created:</span>
                                     <br>
                                     <span class="value">${date_created}</span>
                                 </div>
