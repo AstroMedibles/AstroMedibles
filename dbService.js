@@ -778,16 +778,14 @@ class DbService
                     {
                         var order = 
                         {
-                            status : results[i].status,
-                            order_id : results[i].order_id,
-                            name : results[i].name,
-                            status : results[i].status,
-                            cart : results[i].cart,
-                            total : results[i].total,
-                            date_created : results[i].date_created,
-                            pickup_scheduled : results[i].pickup_scheduled,
-                            pickup_day : results[i].pickup_day,
-                            pickup_time : results[i].pickup_time
+                            status           : results[i].status,
+                            order_id         : results[i].order_id,
+                            name             : results[i].name,
+                            status           : results[i].status,
+                            cart             : results[i].cart,
+                            total            : results[i].total,
+                            date_created     : results[i].date_created,
+                            pickup_scheduled : results[i].pickup_scheduled
                         };
 
                         console.log('order');

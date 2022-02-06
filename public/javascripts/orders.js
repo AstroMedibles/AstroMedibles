@@ -80,16 +80,12 @@ function populateUserOrders()
                 var cart             = JSON.parse(userOrder.cart).cart;
                 var total            = userOrder.total;
                 var pickup_scheduled = userOrder.pickup_scheduled;
-                var pickup_day       = userOrder.pickup_day;
-                var pickup_time      = userOrder.pickup_time;
 
                 console.log
                 (`
                 order_id: ${order_id}
 
                 pickup_scheduled: ${pickup_scheduled}
-                pickup_day:  ${pickup_day}
-                pickup_time: ${pickup_time}
                 `);
 
 
@@ -135,10 +131,10 @@ function populateUserOrders()
 
 
                     // if an order already has a pickup scheduled, display that
-                    if (pickup_scheduled === 1)
+                    if (pickup_scheduled.length > 1)
                     {
 
-                        var date = new Date(pickup_day);
+                        var date = new Date(pickup_scheduled);
                         var localeTimeStr = date.toLocaleTimeString().toString();
                         var time = localeTimeStr.substring(0, localeTimeStr.lastIndexOf(':')) + localeTimeStr.substring(localeTimeStr.lastIndexOf(':') + 3) 
                         var options = { weekday: 'long', month: 'short', day: 'numeric'};
