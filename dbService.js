@@ -1161,24 +1161,15 @@ class DbService
                             AvalibleYesOrNo = true;
                         }
 
-                        var dayText = suggestedDate.toString().substring(0, 3);
-                        console.log(`dayText ${dayText}`);
-
-                        if (dayText == 'Mon') dayText = 'Monday,'; 
-                        else if (dayText == 'Tue') dayText = 'Tuesday,'; 
-                        else if (dayText == 'Wed') dayText = 'Wednesday,'; 
-                        else if (dayText == 'Thu') dayText = 'Thursday,'; 
-                        else if (dayText == 'Fri') dayText = 'Friday,'; 
-                        else if (dayText == 'Sat') dayText = 'Saturday,'; 
-                        else if (dayText == 'Sun') dayText = 'Sunday,'; 
-
-                        // suggestedDate = `${dayText}`;
-                        suggestedDate = `${dayText} ${suggestedDate.toString().substring(4, 10)}`;
-                        // console.log(`${index}. ${suggestedDate.toString().substring(0, 16)} day[${suggestedDate.getDay()}]`);
-
-
-
-                        resultDayChoices.push([suggestedDate, AvalibleYesOrNo]);
+                        var date = new Date(suggestedDate);
+                        var localeTimeStr = date.toLocaleTimeString().toString();
+                        var time = localeTimeStr.substring(0, localeTimeStr.lastIndexOf(':')) + localeTimeStr.substring(localeTimeStr.lastIndexOf(':') + 3) 
+                        var options = { weekday: 'long', month: 'short', day: 'numeric'};
+                        // getOrdinalSuffix
+                        var daySuffix = (suggestedDate.getDate() % 10 == 1 && suggestedDate.getDate() != 11 ? 'st' : (suggestedDate.getDate() % 10 == 2 && suggestedDate.getDate() != 12 ? 'nd' : (suggestedDate.getDate() % 10 == 3 && suggestedDate.getDate() != 13 ? 'rd' : 'th'))); 
+                        var dateLocaleString = date.toLocaleString('en-US', options) + daySuffix;
+                        
+                        resultDayChoices.push([dateLocaleString, AvalibleYesOrNo]);
                     }
 
                     // 2. b) mark unavailable times

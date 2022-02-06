@@ -115,7 +115,7 @@ function populateUserOrders()
             {
                 dropDownButton = 
                 `
-                <button  id="selected-${order_id}" class="btn btn-danger btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" ">${statusText}</button>
+                <button  id="selected-${order_id}" class="btn btn-danger btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
                 `;
 
                 status = 
@@ -129,7 +129,7 @@ function populateUserOrders()
             {
                 dropDownButton = 
                 `
-                <button  id="selected-${order_id}" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" ">${statusText}</button>
+                <button  id="selected-${order_id}" class="btn btn-primary btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
                 `;
 
                 status = 
@@ -143,7 +143,7 @@ function populateUserOrders()
             {
                 dropDownButton = 
                 `
-                <button  id="selected-${order_id}" class="btn btn-warning btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" ">${statusText}</button>
+                <button  id="selected-${order_id}" class="btn btn-warning btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
                 `;
                 status = 
                 `
@@ -156,7 +156,7 @@ function populateUserOrders()
             {
                 dropDownButton = 
                 `
-                <button  id="selected-${order_id}" class="btn btn-success btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" ">${statusText}</button>
+                <button  id="selected-${order_id}" class="btn btn-success btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
                 `;
                 status = 
                 `
@@ -192,12 +192,12 @@ function populateUserOrders()
 
                     <div class="col-md-4 product-info">
                         <div class="product-specs d-flex flex-column  align-items-center">
-                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                            <div class="w-100" style="padding: 0px 0px 15px 0px; text-align: center;">
                                 <span>Status</span>
                                 <br>
-                                <div class="dropdown" >
+                                <div class="dropdown w-100" >
                                     ${dropDownButton}
-                                    <div class="dropdown-menu" name="${order_id}">
+                                    <div class="dropdown-menu w-100" name="${order_id}">
                                     ${status}
                                     </div>
                                 </div>

@@ -119,7 +119,7 @@ function populateUserOrders()
                     `
                     <br>
                     <span class="value">
-                        <button name="cancel-order-button" ${dataAttributes} class="btn btn-warning btn-sm rounded-pill" type="button" >Cancel Order</button>
+                        <button name="cancel-order-button" ${dataAttributes} class="btn btn-warning btn-sm rounded-pill w-100" type="button" style="max-width: 225px;" >Cancel Order</button>
                     </span>`;
                 }
 
@@ -141,7 +141,7 @@ function populateUserOrders()
                         var date = new Date(pickup_day);
                         var localeTimeStr = date.toLocaleTimeString().toString();
                         var time = localeTimeStr.substring(0, localeTimeStr.lastIndexOf(':')) + localeTimeStr.substring(localeTimeStr.lastIndexOf(':') + 3) 
-                        var options = { weekday: 'long', month: 'long', day: 'numeric'};
+                        var options = { weekday: 'long', month: 'short', day: 'numeric'};
                         var dateLocaleString = date.toLocaleString('en-US', options) + getOrdinalSuffix(date);
                         
 
@@ -150,7 +150,7 @@ function populateUserOrders()
 
                         dropDownDaysButton = 
                         `
-                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-primary rounded-pill dropdown-toggle disabled" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; font-size: 80%;">${dropDownDaysText}</button>
+                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-sm btn-primary rounded-pill dropdown-toggle disabled w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${dropDownDaysText}</button>
                         `;
 
 
@@ -160,7 +160,7 @@ function populateUserOrders()
                     {
                         dropDownDaysButton = 
                         `
-                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-primary rounded-pill dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%; font-size: 80%;">${dropDownDaysText}</button>
+                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-sm btn-primary rounded-pill dropdown-toggle w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${dropDownDaysText}</button>
                         `;
 
 
@@ -194,7 +194,7 @@ function populateUserOrders()
                     // drop down times
                     var dropDownTimesButton = 
                     `
-                    <button id="selected-time-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle disabled" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="width: 100%;">${dropDownTimesText}</button>
+                    <button id="selected-time-${order_id}" class="btn btn-primary btn-sm rounded-pill dropdown-toggle disabled w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${dropDownTimesText}</button>
                     `;
 
 
@@ -233,7 +233,7 @@ function populateUserOrders()
                 card +=
                 `
                 <div class="product">
-                    <div class="row product-image justify-content-center align-items-start">
+                    <div class="row product-image justify-content-center align-items-start" style="padding: 0px;">
 
                         <div class="col-md-4 product-info">
                             <div class="product-specs d-flex flex-column  align-items-center">
@@ -408,7 +408,7 @@ function dropDownCustomerUpdateOrderStatusTime(event)
 
 
 
-    if (confirm('Confirm scheduled pickup?'))
+    if (confirm('Confirm scheduled pickup? \nThis action cannot be undone.'))
     {
         // 
         // console.log('Update order pressed.');
@@ -426,7 +426,7 @@ function dropDownCustomerUpdateOrderStatusTime(event)
 
 function buttonCancelOrder(event)
 {
-    if (confirm('Are you sure you want to cancel this order?')) {
+    if (confirm('Are you sure you want to cancel this order? \nThis action cannot be undone.')) {
         // 
         console.trace('Cancel order pressed.');
       } else {
