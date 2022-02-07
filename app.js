@@ -846,6 +846,37 @@ app.patch('/adminUpdateOrderStatus', (request, response) =>
 });
 
 
+app.patch('/userUpdateScheduledPickup', (request, response) =>
+{
+	console.log("\n"+ "route(/userUpdateScheduledPickup) "); 
+
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		console.log("userUpdateScheduledPickup(/) \tresult.then()");
+		console.log(accountAttributes);
+
+		const { orderId, dateScheduledPickup } = request.body; 
+		const db = dbService.getDbServiceInstance();
+		const result = db.userUpdateScheduledPickup(orderId, dateScheduledPickup); 
+		
+		result.then((data) => 
+		{ 
+			console.log("\n" + "route(/userUpdateScheduledPickup) \t RESULTS:"); 
+			response.json({ data: data }); 
+		}).catch(err => console.log(err));
+
+	})
+	.catch((error) => 
+	{ 
+		console.log(error);
+		console.log("route(/userUpdateScheduledPickup) \tresult.catch()"); 
+		console.log("route(/userUpdateScheduledPickup) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
+
+
 app.patch('/adminSetPickupsDays', (request, response) =>
 {
 	console.log("\n"+ "route(/adminSetPickupsDays) "); 

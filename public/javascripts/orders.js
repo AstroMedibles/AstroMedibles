@@ -81,6 +81,10 @@ function populateUserOrders()
                 var total            = userOrder.total;
                 var pickup_scheduled = userOrder.pickup_scheduled;
 
+                // if null, make it empty string
+                try { pickup_scheduled.length; } 
+                catch (error) { pickup_scheduled = ''; }
+
                 console.log
                 (`
                 order_id: ${order_id}
@@ -160,25 +164,25 @@ function populateUserOrders()
                         `;
 
 
-                        // add drop down choices
+                        // add drop day down choices
                         for (var index = 0; index < dropDownDayResults.length; index++)
                         {
                             const element = dropDownDayResults[index];
     
                             if (element[1] == true)
-                                dropDownDaysChoices += `<button class="dropdown-item" data-choice="${element[0]}"  onClick="dropDownCustomerUpdateOrderStatusDay(event)" >${element[0]}</button>`;
+                                dropDownDaysChoices += `<button class="dropdown-item" data-choice="${element[0]}" data-date="${element[2]}"  onClick="dropDownCustomerUpdateOrderStatusDay(event)" >${element[0]}</button>`;
                             else
                                 dropDownDaysChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
     
                         }
 
-                        // add drop down choices
+                        // add drop time down choices
                         for (var index = 0; index < dropDownTimeResults.length; index++)
                         {
                             const element = dropDownTimeResults[index];
                             // if [1] == true, avalible
                             if (element[1] == true)
-                                dropDownTimesChoices += `<button class="dropdown-item" data-choice="${element[0]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element[0]}</button>`;
+                                dropDownTimesChoices += `<button class="dropdown-item" data-choice="${element[0]}" data-time="${element[2]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element[0]}</button>`;
                             // else
                                 // dropDownTimesChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
                             // if [1] == false, disabled
@@ -306,10 +310,6 @@ function populateUserOrders()
                     }
                 });
 
-                var s = new Date().toLocaleString();
-
-            // console.log("DATE: " + s);
-
         });
 }
 
@@ -324,6 +324,7 @@ function dropDownCustomerUpdateOrderStatusDay(event)
     console.log(`orderId : ${orderId}`);
 
     var newChoice = $(event).attr("data-choice");
+    var newDate = $(event).attr("data-date");
     console.log(`newChoice : ${newChoice}`);
 
     var dropDownSubElementID = $(`#selected-${orderId}`); 
@@ -332,58 +333,19 @@ function dropDownCustomerUpdateOrderStatusDay(event)
     // $(dropDownSubElementID).text(status);
 
 
-    // fetch(address + '/adminUpdateOrderStatus',
-    // {
-    //     credentials: "include",
-    //     method: 'PATCH',
-    //     headers:
-    //     {
-    //         'Content-type': 'application/json'
-    //     },
-    //     body: JSON.stringify(
-    //         {
-    //             orderId: orderId,
-    //             status: status
-    //         })
-    // })
-    // .then(response => response.json())
-    // .then((data) => 
-    // {
-        // Update Status to new option
-        $(dropDownSubElementID).text(newChoice);
-        // enable time drop down
-        $(`#selected-time-${orderId}`).removeClass("disabled");
+    // Update Status to new option
+    $(dropDownSubElementID).text(newChoice);
+    $(dropDownSubElementID).attr('data-date', newDate);
+
+    // enable time drop down
+    $(`#selected-time-${orderId}`).removeClass("disabled");
 
 
-        // disable used option
-        // $(event).addClass("disabled");
-        // $(event).on(('onClick'), null);
+    // disable used option
+    // $(event).addClass("disabled");
+    // $(event).on(('onClick'), null);
 
-        // if (status === 'preparing order')
-        // {
-        //     // console.log(1);
-        //     dropDownSubElementID.removeClass("btn-danger");
-        //     dropDownSubElementID.addClass("btn-primary");
-        // } else if (status === 'ready for pickup')
-        // {
-        //     // console.log(2);
-        //     dropDownSubElementID.removeClass("btn-danger");
-        //     dropDownSubElementID.removeClass("btn-primary");
-        //     dropDownSubElementID.addClass("btn-warning");
-        // } else if (status === 'complete')
-        // {
-        //     // console.log(3);
-        //     dropDownSubElementID.removeClass("btn-danger");
-        //     dropDownSubElementID.removeClass("btn-primary");
-        //     dropDownSubElementID.removeClass("btn-warning");
-        //     dropDownSubElementID.addClass("btn-success");
-        // }
-
-        // console.log("dropDownUpdateOrderStatus(event) complete");
-    // }).catch((error => 
-    // {
-        // console.log("dropDownUpdateOrderStatus(event)  catch:" + error);
-    // }));
+    // console.log("dropDownUpdateOrderStatus(event) complete");
 }
 
 function dropDownCustomerUpdateOrderStatusTime(event)
@@ -399,6 +361,18 @@ function dropDownCustomerUpdateOrderStatusTime(event)
     var newChoice = $(event).attr("data-choice");
     console.log(`newChoice : ${newChoice}`);
 
+    var date = new Date($(`#selected-${orderId}`).attr("data-date"));
+    console.log(`date : ${date}`);
+
+
+    var time = new Date($(event).attr("data-time"));
+    console.log(`time : ${time}`);
+
+    date.setHours(time.getHours());
+
+    console.log(`dateTIME : ${date}`);
+
+
     var dropDownSubElementID = $(`#selected-time-${orderId}`); 
     console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
 
@@ -408,6 +382,44 @@ function dropDownCustomerUpdateOrderStatusTime(event)
     {
         // 
         // console.log('Update order pressed.');
+
+        var dateScheduledPickup = date;
+
+
+        fetch(address + '/userUpdateScheduledPickup',
+        {
+            credentials: "include",
+            method: 'PATCH',
+            headers:
+            {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(
+                {
+                    orderId: orderId,
+                    dateScheduledPickup: dateScheduledPickup
+                })
+        })
+        .then(response => response.json())
+        .then((data) => 
+        {
+
+            // Update Status to new option
+            $(dropDownSubElementID).text(newChoice);
+
+            // disable drop down day
+            $(`#selected-${orderId}`).addClass("disabled");
+            $(`#selected-${orderId}`).on(('onClick'), null);
+            // disable drop down time
+            $(`#selected-time-${orderId}`).addClass("disabled");
+            $(`#selected-time-${orderId}`).on(('onClick'), null);
+
+
+        }).catch((error => 
+        {
+            console.log("dropDownUpdateOrderStatus(event)  catch:" + error);
+        }));
+
     } else
     {
         // 
@@ -415,8 +427,6 @@ function dropDownCustomerUpdateOrderStatusTime(event)
         return;
     }
 
-     // Update Status to new option
-     $(dropDownSubElementID).text(newChoice);
 }
 
 

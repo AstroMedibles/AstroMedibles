@@ -1167,7 +1167,7 @@ class DbService
                         var daySuffix = (suggestedDate.getDate() % 10 == 1 && suggestedDate.getDate() != 11 ? 'st' : (suggestedDate.getDate() % 10 == 2 && suggestedDate.getDate() != 12 ? 'nd' : (suggestedDate.getDate() % 10 == 3 && suggestedDate.getDate() != 13 ? 'rd' : 'th'))); 
                         var dateLocaleString = date.toLocaleString('en-US', options) + daySuffix;
                         
-                        resultDayChoices.push([dateLocaleString, AvalibleYesOrNo]);
+                        resultDayChoices.push([dateLocaleString, AvalibleYesOrNo, date]);
                     }
 
                     // 2. b) mark unavailable times
@@ -1188,10 +1188,10 @@ class DbService
 
                         var suggestedTime = new Date(0, 0, 0, i);
                         var localeString = suggestedTime.toLocaleString();
-                        suggestedTime = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
-                        console.log(`suggestedTime: ${suggestedTime}`);
+                        localeString = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
+                        console.log(`suggestedTime: ${localeString}`);
 
-                        resultTimeChoices.push([suggestedTime, AvalibleYesOrNo]);
+                        resultTimeChoices.push([localeString, AvalibleYesOrNo, suggestedTime]);
                     }
 
 
@@ -1209,6 +1209,45 @@ class DbService
                 console.log(error);
                 reject();
             }
+        });
+        return response;
+    }
+
+    async userUpdateScheduledPickup(orderId, dateScheduledPickup)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            // var status = "Payment Required";
+            // console.log(order_id);
+            // const db = DbService.getDbServiceInstance();
+
+            const query = "UPDATE " + process.env.TABLE_ORDERS + " SET pickup_scheduled = ? WHERE order_id = ?;";
+            connection.query(query, [dateScheduledPickup, orderId], (err, result) =>
+            {
+                if (err)
+                {
+                    reject(err.message);
+                }
+                else
+                {
+
+                    console.log(`Order ${orderId} : dateScheduledPickup (${dateScheduledPickup}) has been updated!`);
+                    var subject = `Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}`;
+                    var html = 
+                    `
+                    <h3>Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}</h3>
+                    <p>
+                    Order id: ${orderId} dateScheduledPickup has been updated!
+                    <br>
+                    This is an automated message.
+                    </p>
+                    `;
+                    
+                    // db.sendEmail(userEmail, subject, html);
+
+                    resolve(result.affectedRows);
+                }
+            })
         });
         return response;
     }
