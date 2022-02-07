@@ -911,7 +911,7 @@ class DbService
                     }
                     if (typeof results === 'undefined') 
                     {
-                        reject("Orders are undefined.");
+                        reject(".TABLE_ORDERS results are undefined.");
                     }
 
                     var userOrders = [];
@@ -919,13 +919,14 @@ class DbService
                     {
                         var order = 
                         {
-                            status : results[i].status,
-                            order_id : results[i].order_id,
-                            name : results[i].name,
-                            status : results[i].status,
-                            cart : results[i].cart,
-                            total : results[i].total,
-                            date_created : results[i].date_created,
+                            status           : results[i].status,
+                            order_id         : results[i].order_id,
+                            name             : results[i].name,
+                            status           : results[i].status,
+                            cart             : results[i].cart,
+                            total            : results[i].total,
+                            date_created     : results[i].date_created,
+                            pickup_scheduled : results[i].pickup_scheduled
                         };
 
                         // console.log('order');
@@ -985,7 +986,7 @@ class DbService
         {
             try
             {
-                const sql = "SELECT * FROM " + process.env.TABLE_PICKUPS + " ORDER BY date ASC, time ASC;";
+                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status = 'Ready for Pickup'  ORDER BY pickup_scheduled ASC;";
                 connection.query(sql, [], (error, results) =>
                 {
                     if (error)
@@ -998,31 +999,28 @@ class DbService
                     }
 
                     var pickups = [];
-                    for (let i = 0; i < results.length; i++)
+                    for (var i = 0; i < results.length; i++)
                     {
-                        const pickupDateString = results[i].date.toString();
-                        const pickupTimeString = results[i].time.toString();
-
-                        var year        = parseInt(pickupDateString.substring(0,4));
-                        var monthIndex  = parseInt(pickupDateString.substring(4,6) - 1);
-                        var day         = parseInt(pickupDateString.substring(6,8));
-            
-                        var hours       = parseInt(pickupTimeString.substring(0,2));
-                        var minutes     = parseInt(pickupTimeString.substring(2,4));
-
-                        var pickupDate = new Date(year, monthIndex, day, hours, minutes);
-
-                        // console.log('\n');
-
-                        var pickupElement = 
-                        {
-                            id       : results[i].id,
-                            date     : pickupDate,
-                            order_id : results[i].order_id,
-                            name     : results[i].name
-                        };
-
-                        pickups.push(pickupElement);
+                        try 
+                        { 
+                            console.log(results[i]);
+                            if (results[i].pickup_scheduled.length > 2)
+                            {
+                                var pickupDate = new Date(results[i].pickup_scheduled);
+                                var pickupElement = 
+                                {
+                                    id       : results[i].id,
+                                    date     : pickupDate,
+                                    order_id : results[i].order_id,
+                                    name     : results[i].name
+                                };
+                                pickups.push(pickupElement);
+                            }
+                        } 
+                        catch (error)
+                        { 
+                            // skip no pickup_scheduled order
+                        }
                     }
 
                     console.log('pickups');

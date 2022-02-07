@@ -82,8 +82,7 @@ function populateUserOrders()
                 var pickup_scheduled = userOrder.pickup_scheduled;
 
                 // if null, make it empty string
-                try { pickup_scheduled.length; } 
-                catch (error) { pickup_scheduled = ''; }
+                try { pickup_scheduled.length; } catch (error) { pickup_scheduled = ''; }
 
                 console.log
                 (`

@@ -626,11 +626,12 @@ function radioPickupsClick()
         var lastYear = '';
         var lastDate = '';
         var lastTime = '';
+        var b = 1;
 
         for (var i = 0; i < pickups.length; i++)
         {
+            b = 1;
             console.log(pickups[i]);
-
             var date = new Date(pickups[i].date);
 
             var localeTimeStr = date.toLocaleTimeString().toString();
@@ -646,7 +647,7 @@ function radioPickupsClick()
                 tableHTML +=
                 `
                 <tr>
-                    <th class="table w-50" style="font-weight: normal;">${date.getFullYear()}</th>
+                    <th class="table w-50">${date.getFullYear()}</th>
                     <th class="table w-25"></th>
                     <th class="table w-25"></th>
                 </tr>
@@ -654,6 +655,7 @@ function radioPickupsClick()
                 lastYear = date.getFullYear();
             }
 
+            console.log(`${lastDate} - ${dateLocaleString}`);
             if (lastDate != dateLocaleString)
             {
                 tableHTML +=
@@ -666,17 +668,23 @@ function radioPickupsClick()
                 </tr>
                 `;
                 lastDate = dateLocaleString;
+                b = 0;
             }
 
             var timeString = time;
-            if (lastTime != time)
+            if (b == 1 || lastDate == dateLocaleString)
             {
-                lastTime = time;
+                if (lastTime != time)
+                {
+                    lastTime = time;
+                    lastDate = dateLocaleString;
+                }
+                else
+                {
+                    timeString = '';
+                }
             }
-            else
-            {
-                timeString = '';
-            }
+            
 
             tableHTML +=
             `
