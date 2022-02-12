@@ -863,8 +863,8 @@ app.patch('/userUpdateScheduledPickup', (request, response) =>
 		result.then((data) => 
 		{ 
 			console.log("\n" + "route(/userUpdateScheduledPickup) \t RESULTS:"); 
-			response.json({ data: data }); 
-		}).catch(err => console.log(err));
+			response.json(true); 
+		}).catch(err => response.json(false));
 
 	})
 	.catch((error) => 

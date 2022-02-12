@@ -1135,7 +1135,7 @@ class DbService
 
 
                     // 1. create possible days
-                    console.log(`customerDate: ${customerDate}`);
+                    // console.log(`customerDate: ${customerDate}`);
 
                     var numberOfDays = 7;
 
@@ -1187,7 +1187,7 @@ class DbService
                         var suggestedTime = new Date(0, 0, 0, i);
                         var localeString = suggestedTime.toLocaleString();
                         localeString = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
-                        console.log(`suggestedTime: ${localeString}`);
+                        // console.log(`suggestedTime: ${localeString}`);
 
                         resultTimeChoices.push([localeString, AvalibleYesOrNo, suggestedTime]);
                     }
@@ -1197,8 +1197,8 @@ class DbService
                     // console.log(results[0]); // [{1: 1}]
                     // console.log(results[1]); // [{2: 2}]
                     // console.log(results[2]); // [{2: 2}]
-                    console.log(resultDayChoices);
-                    console.log(resultTimeChoices);
+                    // console.log(resultDayChoices);
+                    // console.log(resultTimeChoices);
                     resolve([resultDayChoices, resultTimeChoices]);
                 });
 
@@ -1213,14 +1213,26 @@ class DbService
 
     async userUpdateScheduledPickup(orderId, dateScheduledPickup)
     {
+        const TIME_SLOT_LIMIT = 10;
         const response = new Promise((resolve, reject) =>
         {
             // var status = "Payment Required";
             // console.log(order_id);
             // const db = DbService.getDbServiceInstance();
 
-            const query = "UPDATE " + process.env.TABLE_ORDERS + " SET pickup_scheduled = ? WHERE order_id = ?;";
-            connection.query(query, [dateScheduledPickup, orderId], (err, result) =>
+            // console.log(`PassOrFail: ${PassOrFail}`);
+            // if (PassOrFail == false)
+            //     return;
+
+
+            // If time slot is full, reject
+            const query1 = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE pickup_scheduled = ?; ";
+            
+            // update timeslot with new order
+            const query2 = "UPDATE " + process.env.TABLE_ORDERS + " SET pickup_scheduled = ? WHERE order_id = ?;";
+            const query  = query1 + query2; 
+            // query
+            connection.query(query, [dateScheduledPickup, dateScheduledPickup, orderId], (err, result) =>
             {
                 if (err)
                 {
@@ -1228,6 +1240,24 @@ class DbService
                 }
                 else
                 {
+                    console.log(`result[0].length: ${result[0].length}`);
+                    if (result[0].length >= TIME_SLOT_LIMIT)
+                    {
+                        console.log('Time Slot FULL, rejected');
+                        reject('Time Slot Limit');
+                        return;
+                    }
+                    else
+                    {
+                        console.log('Time Slot avalible, accepted');
+
+                    }
+
+                    console.log('anyways ...');
+
+
+
+
 
                     console.log(`Order ${orderId} : dateScheduledPickup (${dateScheduledPickup}) has been updated!`);
                     var subject = `Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}`;
@@ -1245,7 +1275,7 @@ class DbService
 
                     resolve(result.affectedRows);
                 }
-            })
+            });
         });
         return response;
     }

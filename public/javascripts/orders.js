@@ -179,7 +179,7 @@ function populateUserOrders()
                         for (var index = 0; index < dropDownTimeResults.length; index++)
                         {
                             const element = dropDownTimeResults[index];
-                            // if [1] == true, avalible
+                            // if [1] == true, available
                             if (element[1] == true)
                                 dropDownTimesChoices += `<button class="dropdown-item" data-choice="${element[0]}" data-time="${element[2]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element[0]}</button>`;
                             // else
@@ -403,15 +403,24 @@ function dropDownCustomerUpdateOrderStatusTime(event)
         .then((data) => 
         {
 
-            // Update Status to new option
-            $(dropDownSubElementID).text(newChoice);
+            if (data == true)
+            {
+                // Update Status to new option
+                $(dropDownSubElementID).text(newChoice);
 
-            // disable drop down day
-            $(`#selected-${orderId}`).addClass("disabled");
-            $(`#selected-${orderId}`).on(('onClick'), null);
-            // disable drop down time
-            $(`#selected-time-${orderId}`).addClass("disabled");
-            $(`#selected-time-${orderId}`).on(('onClick'), null);
+                // disable drop down day
+                $(`#selected-${orderId}`).addClass("disabled");
+                $(`#selected-${orderId}`).on(('onClick'), null);
+                // disable drop down time
+                $(`#selected-time-${orderId}`).addClass("disabled");
+                $(`#selected-time-${orderId}`).on(('onClick'), null);
+            }
+            else
+            {
+                alert('Time slot not available, try another');
+            }
+
+
 
 
         }).catch((error => 
