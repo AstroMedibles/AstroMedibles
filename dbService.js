@@ -1165,6 +1165,16 @@ class DbService
                         var daySuffix = (suggestedDate.getDate() % 10 == 1 && suggestedDate.getDate() != 11 ? 'st' : (suggestedDate.getDate() % 10 == 2 && suggestedDate.getDate() != 12 ? 'nd' : (suggestedDate.getDate() % 10 == 3 && suggestedDate.getDate() != 13 ? 'rd' : 'th'))); 
                         var dateLocaleString = date.toLocaleString('en-US', options) + daySuffix;
                         
+
+
+                        // query date, make sure its not at TIME_SLOT_LIMIT capacity
+                        // if yes, do not push
+                        // if no, push
+
+
+
+
+
                         resultDayChoices.push([dateLocaleString, AvalibleYesOrNo, date]);
                     }
 
@@ -1216,64 +1226,57 @@ class DbService
         const TIME_SLOT_LIMIT = 10;
         const response = new Promise((resolve, reject) =>
         {
-            // var status = "Payment Required";
-            // console.log(order_id);
             // const db = DbService.getDbServiceInstance();
-
-            // console.log(`PassOrFail: ${PassOrFail}`);
-            // if (PassOrFail == false)
-            //     return;
-
 
             // If time slot is full, reject
             const query1 = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE pickup_scheduled = ?; ";
             
-            // update timeslot with new order
-            const query2 = "UPDATE " + process.env.TABLE_ORDERS + " SET pickup_scheduled = ? WHERE order_id = ?;";
-            const query  = query1 + query2; 
             // query
-            connection.query(query, [dateScheduledPickup, dateScheduledPickup, orderId], (err, result) =>
+            connection.query(query1, [dateScheduledPickup], (error1, result1) =>
             {
-                if (err)
+                if (error1)
                 {
-                    reject(err.message);
+                    reject(error1.message);
                 }
                 else
                 {
-                    console.log(`result[0].length: ${result[0].length}`);
-                    if (result[0].length >= TIME_SLOT_LIMIT)
+                    console.log(`result1.length: ${result1.length}`);
+                    if (result1.length >= TIME_SLOT_LIMIT)
                     {
                         console.log('Time Slot FULL, rejected');
                         reject('Time Slot Limit');
-                        return;
+
                     }
                     else
                     {
                         console.log('Time Slot avalible, accepted');
 
+                        // update timeslot with new order
+                        const query2 = "UPDATE " + process.env.TABLE_ORDERS + " SET pickup_scheduled = ? WHERE order_id = ?;";
+                        connection.query(query2, [dateScheduledPickup, orderId], (error2, result2) =>
+                        {
+                            if (error2)
+                            {
+                                reject(error2.message);
+                            }
+                            else
+                            {
+                                console.log(`Order ${orderId} : dateScheduledPickup (${dateScheduledPickup}) has been updated!`);
+                                var subject = `Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}`;
+                                var html = 
+                                `
+                                <h3>Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}</h3>
+                                <p>
+                                Order id: ${orderId} dateScheduledPickup has been updated!
+                                <br>
+                                This is an automated message.
+                                </p>
+                                `;
+                                // db.sendEmail(userEmail, subject, html);
+                                resolve(result2.affectedRows);
+                            }
+                        });
                     }
-
-                    console.log('anyways ...');
-
-
-
-
-
-                    console.log(`Order ${orderId} : dateScheduledPickup (${dateScheduledPickup}) has been updated!`);
-                    var subject = `Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}`;
-                    var html = 
-                    `
-                    <h3>Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}</h3>
-                    <p>
-                    Order id: ${orderId} dateScheduledPickup has been updated!
-                    <br>
-                    This is an automated message.
-                    </p>
-                    `;
-                    
-                    // db.sendEmail(userEmail, subject, html);
-
-                    resolve(result.affectedRows);
                 }
             });
         });

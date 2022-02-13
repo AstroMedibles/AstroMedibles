@@ -402,7 +402,7 @@ function dropDownCustomerUpdateOrderStatusTime(event)
         .then(response => response.json())
         .then((data) => 
         {
-
+            console.log(`data: ${data}`);
             if (data == true)
             {
                 // Update Status to new option
@@ -417,7 +417,11 @@ function dropDownCustomerUpdateOrderStatusTime(event)
             }
             else
             {
-                alert('Time slot not available, try another');
+                // disable drop down day
+                $(event).addClass("disabled");
+                $(event).on(('onClick'), null);
+
+                alert(`(${newChoice}) Time slot is not available anymore, try again`);
             }
 
 
