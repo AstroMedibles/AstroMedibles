@@ -37,6 +37,14 @@ function populateUserOrders()
     // get pickup schedule info
 
     console.log('Attempting Connection...');
+
+    var newDate = new Date();
+    newDate.setSeconds(0);
+    newDate.setMilliseconds(0);
+
+
+    newDate = newDate.toISOString();
+    console.log('newDate: ' + newDate);
     fetch(address + '/ordersCustomerGetPickupDaysAndTimes',
     {
         credentials: "include",
@@ -47,7 +55,7 @@ function populateUserOrders()
         },
         body: JSON.stringify(
         {
-            customerDate : new Date()
+            customerDate : newDate
         })
     })
     .then(response => response.json())

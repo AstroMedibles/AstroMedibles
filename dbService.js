@@ -1107,7 +1107,7 @@ class DbService
     */
     async ordersCustomerGetPickupDaysAndTimes(customerDate)
     {
-        console.log("/ ordersCustomerGetPickupDaysAndTimes(customerDate)");
+        console.log("/ordersCustomerGetPickupDaysAndTimes(customerDate)");
         customerDate = new Date(customerDate);
         const response = await new Promise((resolve, reject) => 
         {
@@ -1115,13 +1115,11 @@ class DbService
             {
                 const query1 = "SELECT * FROM " + process.env.TABLE_PICKUPS_DAYS + ";";
                 const query2 = "SELECT * FROM " + process.env.TABLE_PICKUPS_TIMES + ";";
-                const query3 = "SELECT * FROM " + process.env.TABLE_PICKUPS + ";";
-
-                connection.query(query1 + query2 + query3, [1, 2, 3], (err, results) =>
+                connection.query(query1 + query2, [], (err, results) =>
                 {
                     if (err)
                     {
-                        reject(new Error("getAllData ERROR\n" + err.message));
+                        reject(new Error("/ordersCustomerGetPickupDaysAndTimes(customerDate) ERROR\n" + err.message));
                         return;
                     }
 
@@ -1158,22 +1156,13 @@ class DbService
                         }
 
                         var date = new Date(suggestedDate);
+
                         var localeTimeStr = date.toLocaleTimeString().toString();
                         var time = localeTimeStr.substring(0, localeTimeStr.lastIndexOf(':')) + localeTimeStr.substring(localeTimeStr.lastIndexOf(':') + 3) 
                         var options = { weekday: 'long', month: 'short', day: 'numeric'};
                         // getOrdinalSuffix
                         var daySuffix = (suggestedDate.getDate() % 10 == 1 && suggestedDate.getDate() != 11 ? 'st' : (suggestedDate.getDate() % 10 == 2 && suggestedDate.getDate() != 12 ? 'nd' : (suggestedDate.getDate() % 10 == 3 && suggestedDate.getDate() != 13 ? 'rd' : 'th'))); 
                         var dateLocaleString = date.toLocaleString('en-US', options) + daySuffix;
-                        
-
-
-                        // query date, make sure its not at TIME_SLOT_LIMIT capacity
-                        // if yes, do not push
-                        // if no, push
-
-
-
-
 
                         resultDayChoices.push([dateLocaleString, AvalibleYesOrNo, date]);
                     }
@@ -1203,6 +1192,51 @@ class DbService
                     }
 
 
+                    // remove dates that have hit the scheduled customer limit
+                    for (var i = 0; i < resultDayChoices.length; i++)
+                    {
+                        for (var j = 0; j < resultTimeChoices.length; j++)
+                        {
+
+                            var date = new Date(resultDayChoices[i][2]);
+                            date.setHours(resultTimeChoices[j][2].getHours());
+                            date.setMinutes(resultTimeChoices[j][2].getMinutes());
+                            // query date, make sure its not at TIME_SLOT_LIMIT capacity
+                            // if yes, do not push
+                            // if no, push
+                            const query = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE pickup_scheduled = ?;";
+                            // console.log(`connection.query( ${date.toISOString()} )`);
+                            connection.query(query, [date.toISOString()], (error2, results2) =>
+                            {
+                                if (error2)
+                                {
+                                    console.log(error2.message);
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        if (results2.length >= parseInt(process.env.TABLE_PICKUPS_LIMIT))
+                                        {
+                                            console.log(`if ( results2.length: (${results2.length}) >= TABLE_PICKUPS_LIMIT: (${parseInt(process.env.TABLE_PICKUPS_LIMIT)}) )`);
+                                            console.log('resultTimeChoices OLD:');
+                                            console.log(resultTimeChoices);
+                                            resultTimeChoices.splice(j, 1);
+                                            console.log('resultTimeChoices NEW:');
+                                            console.log(resultTimeChoices);
+                                            j -= 1;
+                                        }
+                                    } 
+                                    catch (error3)
+                                    {
+                                        console.log(error3);
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+
 
                     // console.log(results[0]); // [{1: 1}]
                     // console.log(results[1]); // [{2: 2}]
@@ -1223,7 +1257,6 @@ class DbService
 
     async userUpdateScheduledPickup(orderId, dateScheduledPickup)
     {
-        const TIME_SLOT_LIMIT = 10;
         const response = new Promise((resolve, reject) =>
         {
             // const db = DbService.getDbServiceInstance();
@@ -1241,7 +1274,7 @@ class DbService
                 else
                 {
                     console.log(`result1.length: ${result1.length}`);
-                    if (result1.length >= TIME_SLOT_LIMIT)
+                    if (result1.length >= parseInt(process.env.TABLE_PICKUPS_LIMIT))
                     {
                         console.log('Time Slot FULL, rejected');
                         reject('Time Slot Limit');

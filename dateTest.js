@@ -1,9 +1,8 @@
 // const event2 = new Date('July 1, 1999');
 // new Date(year, monthIndex, day, hours, minutes, seconds, milliseconds)
 const dbDateString = '2022-02-18T02:24';
-// dbDateString
 
-const event2 = new Date(dbDateString);
+var event2 = new Date(new Date().toISOString());
 
 console.log('event2');
 console.log(event2);
