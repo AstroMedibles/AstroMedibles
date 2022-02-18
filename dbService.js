@@ -1192,58 +1192,78 @@ class DbService
                     }
 
 
-                    // remove dates that have hit the scheduled customer limit
-                    for (var i = 0; i < resultDayChoices.length; i++)
-                    {
-                        for (var j = 0; j < resultTimeChoices.length; j++)
-                        {
+                    // check all pickup scheduled times sorted by descending
 
-                            var date = new Date(resultDayChoices[i][2]);
-                            date.setHours(resultTimeChoices[j][2].getHours());
-                            date.setMinutes(resultTimeChoices[j][2].getMinutes());
-                            // query date, make sure its not at TIME_SLOT_LIMIT capacity
-                            // if yes, do not push
-                            // if no, push
-                            const query = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE pickup_scheduled = ?;";
-                            // console.log(`connection.query( ${date.toISOString()} )`);
-                            connection.query(query, [date.toISOString()], (error2, results2) =>
+
+                    const query = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status = 'Ready for Pickup' ORDER BY pickup_scheduled DESC;";
+                    // console.log(`connection.query( ${date.toISOString()} )`);
+                    // console.log('Checking Scheduled Date of ' + date.toISOString());
+                    connection.query(query, [], (error2, results2) =>
+                    {
+                        if (error2)
+                        {
+                            console.log(error2.message);
+                        }
+                        else
+                        {
+                            try
                             {
-                                if (error2)
+                                // console.log( date.toISOString() + '  Scheduled so far: ' + results2.length);
+                                // console.log('process.env.TABLE_PICKUPS_LIMIT: ' + process.env.TABLE_PICKUPS_LIMIT);
+
+                                var lastDate = '';
+                                var counter = 0;
+                                var overCapacityDates = [];
+                                var skipDate = '';
+                                for (var i = 0; i < results2.length; i++)
                                 {
-                                    console.log(error2.message);
-                                }
-                                else
-                                {
-                                    try
+                                    var newDate = new Date(results2[i].pickup_scheduled);
+
+                                    // if pickup date is in the past, skip. Or if date equals an already marked overcapacity date, skip.
+                                    if (Date.parse(newDate) - Date.parse(new Date()) < 0 || newDate.toISOString() == skipDate)
                                     {
-                                        if (results2.length >= parseInt(process.env.TABLE_PICKUPS_LIMIT))
+                                        console.log('DATE HAS PASSED');
+                                    }
+                                    // date is in the future
+                                    else
+                                    {
+                                        console.log('DATE NOT PASSED');
+                                        // if pickup date has hit capacity, add it to the overCapacity list
+                                        if (newDate.toISOString() == lastDate)
                                         {
-                                            console.log(`if ( results2.length: (${results2.length}) >= TABLE_PICKUPS_LIMIT: (${parseInt(process.env.TABLE_PICKUPS_LIMIT)}) )`);
-                                            console.log('resultTimeChoices OLD:');
-                                            console.log(resultTimeChoices);
-                                            resultTimeChoices.splice(j, 1);
-                                            console.log('resultTimeChoices NEW:');
-                                            console.log(resultTimeChoices);
-                                            j -= 1;
+                                            counter += 1;
+                                            if (counter => process.env.TABLE_PICKUPS_LIMIT)
+                                            {
+                                                overCapacityDates.push(newDate);
+                                                skipDate = newDate.toISOString();
+                                            }
                                         }
-                                    } 
-                                    catch (error3)
-                                    {
-                                        console.log(error3);
+                                        else
+                                        {
+                                            counter = 0;
+                                        }
+                                        lastDate = newDate.toISOString();
                                     }
                                 }
-                            });
+                            } 
+                            catch (error3)
+                            {
+                                console.log(error3);
+                            }
                         }
-                    }
 
 
+                        console.log('overCapacityDates');
+                        console.log(overCapacityDates);
 
-                    // console.log(results[0]); // [{1: 1}]
-                    // console.log(results[1]); // [{2: 2}]
-                    // console.log(results[2]); // [{2: 2}]
-                    // console.log(resultDayChoices);
-                    // console.log(resultTimeChoices);
-                    resolve([resultDayChoices, resultTimeChoices]);
+                        // console.log(results[0]); // [{1: 1}]
+                        // console.log(results[1]); // [{2: 2}]
+                        // console.log(results[2]); // [{2: 2}]
+                        // console.log(resultDayChoices);
+                        // console.log(resultTimeChoices);
+                        resolve([resultDayChoices, resultTimeChoices, overCapacityDates]);
+
+                    });
                 });
 
             } catch (error)

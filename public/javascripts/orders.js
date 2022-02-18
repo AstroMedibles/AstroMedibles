@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function ()
 
 // const address = 'https://www.astromedibles.com';
 const address = 'http://localhost:8080';
+var overCapacityDates = [];
 
 function loadCartTotal(data)
 {
@@ -65,7 +66,7 @@ function populateUserOrders()
         var results = Array.from(data1['data']);
         var dropDownDayResults  = results[0];
         var dropDownTimeResults = results[1];
-
+        overCapacityDates       = results[2];
         // console.log('/ordersCustomerGetPickupDaysAndTimes');
 
 
@@ -346,6 +347,13 @@ function dropDownCustomerUpdateOrderStatusDay(event)
 
     // enable time drop down
     $(`#selected-time-${orderId}`).removeClass("disabled");
+
+
+    for (var i = 0; i < overCapacityDates.length; i++)
+    {
+        // if day equals day that is over capacity, disable time at capacity
+        if ()
+    }
 
 
     // disable used option
