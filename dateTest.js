@@ -37,9 +37,17 @@ var timeInteger = timeHour + timeMinutes;
 console.log("dateIntger: " + dateIntger);
 console.log("timeInteger:" + timeInteger);
 
-console.log("Day:" + event2.getDay());
+console.log("Day:" + event2.getDate());
 
-console.log("Day:" + new Date().getDay());
+console.log("Day:" + new Date().getDate());
+
+console.log(`Event 2: ${event2.toISOString()}`);
+console.log(event2.toLocaleString());
+
+event2.setHours(23);
+
+console.log(`Event 2: ${event2.toISOString()}`);
+console.log(event2.toLocaleString());
 
 
 if(Date.parse(event2)-Date.parse(new Date())<0)

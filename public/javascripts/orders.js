@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function ()
 
 // const address = 'https://www.astromedibles.com';
 const address = 'http://localhost:8080';
-var overCapacityDates = [];
 
 function loadCartTotal(data)
 {
@@ -64,10 +63,11 @@ function populateUserOrders()
     {
         console.log('Connection success!');
         var results = Array.from(data1['data']);
-        var dropDownDayResults  = results[0];
-        var dropDownTimeResults = results[1];
-        overCapacityDates       = results[2];
-        // console.log('/ordersCustomerGetPickupDaysAndTimes');
+        // var dropDownDayResults   = results[0];
+        // var dropDownTimeResults  = results[1];
+        var avalibleDaysandTimes = results;
+        console.log('\navalibleDaysandTimes:');
+        console.log(avalibleDaysandTimes);
 
 
         // get user order info
@@ -77,11 +77,11 @@ function populateUserOrders()
         {
             var orders = Array.from(data['data']);
 
-            for (let i = 0; i < orders.length; i++)
+            for (var index = 0; index < orders.length; index++)
             {
                 // console.log(orders[i]);
 
-                var userOrder = orders[i];
+                var userOrder = orders[index];
 
                 var status           = userOrder.status;
                 var order_id         = userOrder.order_id;
@@ -172,28 +172,46 @@ function populateUserOrders()
                         `;
 
 
-                        // add drop day down choices
-                        for (var index = 0; index < dropDownDayResults.length; index++)
+                        // add day drop down choices
+                        for (var i = 0; i < avalibleDaysandTimes.length; i++)
                         {
-                            const element = dropDownDayResults[index];
-    
-                            if (element[1] == true)
-                                dropDownDaysChoices += `<button class="dropdown-item" data-choice="${element[0]}" data-date="${element[2]}"  onClick="dropDownCustomerUpdateOrderStatusDay(event)" >${element[0]}</button>`;
-                            else
-                                dropDownDaysChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
-    
+                            const element = avalibleDaysandTimes[i][0][0];
+                            console.log('\nelement:');
+                            console.log(element);
+
+                            console.log('\nelement[2]:');
+                            console.log(element[2]);
+
+                            var dateObj = new Date(element[2]);
+                            console.log('\ndateObj:');
+                            console.log(dateObj);
+                            // create day locale string
+                            var localeTimeStr = dateObj.toLocaleTimeString().toString();
+                            var options = { weekday: 'long', month: 'short', day: 'numeric'};
+                            // getOrdinalSuffix
+                            var daySuffix = (dateObj.getDate() % 10 == 1 && dateObj.getDate() != 11 ? 'st' : (dateObj.getDate() % 10 == 2 && dateObj.getDate() != 12 ? 'nd' : (dateObj.getDate() % 10 == 3 && dateObj.getDate() != 13 ? 'rd' : 'th'))); 
+                            var dateLocaleString = dateObj.toLocaleString('en-US', options) + daySuffix;
+                            console.log('\ndateLocaleString:');
+                            console.log(dateLocaleString);
+
+                            dropDownDaysChoices += `<button class="dropdown-item" data-choice="${dateLocaleString}" data-date="${element[2]}"  onClick="dropDownCustomerUpdateOrderStatusDay(event)" >${dateLocaleString}</button>`;
                         }
 
-                        // add drop time down choices
-                        for (var index = 0; index < dropDownTimeResults.length; index++)
+                        // add time drop down choices
+                        for (var i = 0; i < avalibleDaysandTimes.length; i++)
                         {
-                            const element = dropDownTimeResults[index];
-                            // if [1] == true, available
-                            if (element[1] == true)
-                                dropDownTimesChoices += `<button class="dropdown-item" data-choice="${element[0]}" data-time="${element[2]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element[0]}</button>`;
-                            // else
-                                // dropDownTimesChoices += `<button class="dropdown-item disabled">${element[0]}</button>`;
-                            // if [1] == false, disabled
+                            const day = avalibleDaysandTimes[i];
+
+                            for (var j = 0; j < day.length; j++)
+                            {
+                                var element2 = day[j][0];
+
+                                if (element2[1] == true)
+                                    dropDownTimesChoices += `<button class="dropdown-item" data-choice="${element2[0]}" data-time="${element2[2]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element2[0]}</button>`;
+                                else
+                                    dropDownTimesChoices += `<button class="dropdown-item disabled">${element2[0]}</button>`;
+                            }
+
                         }
 
 
@@ -347,14 +365,6 @@ function dropDownCustomerUpdateOrderStatusDay(event)
 
     // enable time drop down
     $(`#selected-time-${orderId}`).removeClass("disabled");
-
-
-    for (var i = 0; i < overCapacityDates.length; i++)
-    {
-        // if day equals day that is over capacity, disable time at capacity
-        if ()
-    }
-
 
     // disable used option
     // $(event).addClass("disabled");

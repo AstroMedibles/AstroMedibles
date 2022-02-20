@@ -1109,6 +1109,15 @@ class DbService
     {
         console.log("/ordersCustomerGetPickupDaysAndTimes(customerDate)");
         customerDate = new Date(customerDate);
+        var avalibleDaysandTimes = [];
+        /* avalibleDaysandTimes = ...
+        * [ 
+        *   day 1 [ [YYYY-MM-DD T Hh:Min:Sec.00Z, AvalibleYesOrNo], ... ],
+        *   day 2 [ [YYYY-MM-DD T Hh:Min:Sec.00Z, AvalibleYesOrNo], ... ],
+        *   day 3 [ [YYYY-MM-DD T Hh:Min:Sec.00Z, AvalibleYesOrNo], ... ]
+        * ]
+
+        */
         const response = await new Promise((resolve, reject) => 
         {
             try
@@ -1123,78 +1132,49 @@ class DbService
                         return;
                     }
 
-                    // var resultDaysChoices = [[suggestedDay,  AvalibleYesOrNo], ...];
-                    // var resultTimeChoices = [[suggestedTime, AvalibleYesOrNo], ...];
-
-                    // return [resultDaysChoices dates, resultTimeChoices]
-                    var resultDayChoices = [];
+                    // old, ignore
+                    var resultDayChoices  = [];
                     var resultTimeChoices = [];
-                    var pickupDays = results[0];
+                    var pickupDays        = results[0];
+                    var pickupTimes       = results[1];
 
 
                     // 1. create possible days
-                    // console.log(`customerDate: ${customerDate}`);
-
                     var numberOfDays = 7;
-
-                    // 2. filter days, remove unavailable days
-                    for (let index = 1; index < numberOfDays + 1; index++)
+                    for (var i = 1; i < numberOfDays + 1; i++)
                     {
-                        var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + index);
+                        // create possible day
+                        var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + i);
 
-                        // 2. a) mark unavailable days
-                        
-                        // console.log(pickupDays[index].day);
-                        var AvalibleYesOrNo = false; 
-
-
-                        // if suggested date's day, is available
-
-                        if (pickupDays[suggestedDate.getDay()].available == 1)
+                        // if suggested day is not available on admin options, skip
+                        if (pickupDays[suggestedDate.getDay()].available == 0)
                         {
-                            AvalibleYesOrNo = true;
+                            continue;
                         }
 
-                        var date = new Date(suggestedDate);
+                        var avalibleSubElement = [];
 
-                        var localeTimeStr = date.toLocaleTimeString().toString();
-                        var time = localeTimeStr.substring(0, localeTimeStr.lastIndexOf(':')) + localeTimeStr.substring(localeTimeStr.lastIndexOf(':') + 3) 
-                        var options = { weekday: 'long', month: 'short', day: 'numeric'};
-                        // getOrdinalSuffix
-                        var daySuffix = (suggestedDate.getDate() % 10 == 1 && suggestedDate.getDate() != 11 ? 'st' : (suggestedDate.getDate() % 10 == 2 && suggestedDate.getDate() != 12 ? 'nd' : (suggestedDate.getDate() % 10 == 3 && suggestedDate.getDate() != 13 ? 'rd' : 'th'))); 
-                        var dateLocaleString = date.toLocaleString('en-US', options) + daySuffix;
-
-                        resultDayChoices.push([dateLocaleString, AvalibleYesOrNo, date]);
-                    }
-
-                    // 2. b) mark unavailable times
-                    var pickupTimes = results[1];
-                    for (let i = 0; i < pickupTimes.length; i++)
-                    {
-
-                        AvalibleYesOrNo = false;
-                        // console.log(pickupTimes[i]);
-
-
-                        // if suggested time, is available
-
-                        if (pickupTimes[i].available == 1)
+                        for (var j = 0; j < pickupTimes.length; j++)
                         {
-                            AvalibleYesOrNo = true;
+    
+                            // if suggested time is not available on admin options, skip
+                            if (pickupTimes[j].available == 0)
+                            {
+                                continue;
+                            }
+    
+                            suggestedDate.setHours(pickupTimes[j].time);
+
+                            var localeString = new Date(0, 0, 0, j).toLocaleString();
+                            localeString = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
+                            // console.log(`suggestedTime: ${localeString}`);
+                            var AvalibleYesOrNo = true;
+                            avalibleSubElement.push([localeString, AvalibleYesOrNo, suggestedDate.toISOString()]);
                         }
-
-                        var suggestedTime = new Date(0, 0, 0, i);
-                        var localeString = suggestedTime.toLocaleString();
-                        localeString = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
-                        // console.log(`suggestedTime: ${localeString}`);
-
-                        resultTimeChoices.push([localeString, AvalibleYesOrNo, suggestedTime]);
+                        avalibleDaysandTimes.push(avalibleSubElement); 
                     }
-
 
                     // check all pickup scheduled times sorted by descending
-
-
                     const query = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status = 'Ready for Pickup' ORDER BY pickup_scheduled DESC;";
                     // console.log(`connection.query( ${date.toISOString()} )`);
                     // console.log('Checking Scheduled Date of ' + date.toISOString());
@@ -1206,35 +1186,36 @@ class DbService
                         }
                         else
                         {
-                            try
-                            {
-                                // console.log( date.toISOString() + '  Scheduled so far: ' + results2.length);
-                                // console.log('process.env.TABLE_PICKUPS_LIMIT: ' + process.env.TABLE_PICKUPS_LIMIT);
 
-                                var lastDate = '';
-                                var counter = 0;
-                                var overCapacityDates = [];
-                                var skipDate = '';
-                                for (var i = 0; i < results2.length; i++)
+                            // console.log( date.toISOString() + '  Scheduled so far: ' + results2.length);
+                            // console.log('process.env.TABLE_PICKUPS_LIMIT: ' + process.env.TABLE_PICKUPS_LIMIT);
+
+                            var lastDate = '';
+                            var counter = 0;
+                            var overCapacityDates = [];
+                            var skipDate = '';
+                            for (var i = 0; i < results2.length; i++)
+                            {
+                                try
                                 {
                                     var newDate = new Date(results2[i].pickup_scheduled);
 
                                     // if pickup date is in the past, skip. Or if date equals an already marked overcapacity date, skip.
                                     if (Date.parse(newDate) - Date.parse(new Date()) < 0 || newDate.toISOString() == skipDate)
                                     {
-                                        console.log('DATE HAS PASSED');
+                                        // console.log('DATE HAS PASSED');
                                     }
                                     // date is in the future
                                     else
                                     {
-                                        console.log('DATE NOT PASSED');
+                                        // console.log('DATE NOT PASSED');
                                         // if pickup date has hit capacity, add it to the overCapacity list
                                         if (newDate.toISOString() == lastDate)
                                         {
                                             counter += 1;
                                             if (counter => process.env.TABLE_PICKUPS_LIMIT)
                                             {
-                                                overCapacityDates.push(newDate);
+                                                overCapacityDates.push(newDate.toISOString());
                                                 skipDate = newDate.toISOString();
                                             }
                                         }
@@ -1245,23 +1226,65 @@ class DbService
                                         lastDate = newDate.toISOString();
                                     }
                                 }
-                            } 
-                            catch (error3)
-                            {
-                                console.log(error3);
+                                catch (error3)
+                                {
+                                    // console.log(error3);
+                                }
                             }
                         }
 
-
-                        console.log('overCapacityDates');
+                        console.log('overCapacityDates:');
                         console.log(overCapacityDates);
+
+                        // console.log('\n avalibleDaysandTimes: BEFORE REMOVAL');
+                        // console.log(avalibleDaysandTimes);
+
+                        // Set AvalibleYesOrNo to false on times at over capacity
+                        for (var i = 0; i < avalibleDaysandTimes.length; i++)
+                        {
+                            var element1 = new Date(avalibleDaysandTimes[i][0][2]);
+                            for (var j = 0; j < overCapacityDates.length; j++)
+                            {
+                                var element2 = new Date(overCapacityDates[j]);
+
+                                // console.log('\nelement1:');
+                                // console.log(element1.toISOString());
+
+                                // console.log('element2:');
+                                // console.log(element2.toISOString());
+
+                                var isSameDay =   (element1.getDate()     === element2.getDate() 
+                                                && element1.getMonth()    === element2.getMonth()
+                                                && element1.getFullYear() === element2.getFullYear());
+
+                                if (isSameDay)
+                                {
+                                    // console.log('isSameDay TRUE!');
+                                    for (var k = 0; k < avalibleDaysandTimes[i].length; k++)
+                                    {
+                                        var element3 = avalibleDaysandTimes[i][k]; // [locale string, AvalibleYesOrNo, date]
+                                        var element3Date = new Date(element3[2]);
+
+                                        var isSameTime = (element3Date.getHours() === element2.getHours());
+
+                                        if (isSameTime)
+                                        {
+                                            // console.log('isSameTime TRUE!');
+                                            element3[1] = false; // set AvalibleYesOrNo to false
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
                         // console.log(results[0]); // [{1: 1}]
                         // console.log(results[1]); // [{2: 2}]
                         // console.log(results[2]); // [{2: 2}]
-                        // console.log(resultDayChoices);
-                        // console.log(resultTimeChoices);
-                        resolve([resultDayChoices, resultTimeChoices, overCapacityDates]);
+
+                        console.log('\n avalibleDaysandTimes: AFTER REMOVAL');
+                        console.log(avalibleDaysandTimes);
+
+                        resolve([avalibleDaysandTimes]);
 
                     });
                 });
@@ -1269,7 +1292,7 @@ class DbService
             } catch (error)
             {
                 console.log(error);
-                reject();
+                reject(error);
             }
         });
         return response;
