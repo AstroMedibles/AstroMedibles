@@ -175,44 +175,58 @@ function populateUserOrders()
                         // add day drop down choices
                         for (var i = 0; i < avalibleDaysandTimes.length; i++)
                         {
-                            const element = avalibleDaysandTimes[i][0][0];
-                            console.log('\nelement:');
-                            console.log(element);
+                            var element1 = avalibleDaysandTimes[i];
+                            
+                            for (var j = 0; j < element1.length; j++)
+                            {
+                                var element2 = element1[j][0];
 
-                            console.log('\nelement[2]:');
-                            console.log(element[2]);
+                                console.log('\nelement:');
+                                console.log(element2);
+    
+                                console.log('\nelement[2]:');
+                                console.log(element2[2]);
+    
+                                var dateObj = new Date(element2[2]);
+                                console.log('\ndateObj:');
+                                console.log(dateObj);
+                                // create day locale string
+                                var localeTimeStr = dateObj.toLocaleTimeString().toString();
+                                var options = { weekday: 'long', month: 'short', day: 'numeric'};
+                                // getOrdinalSuffix
+                                var daySuffix = (dateObj.getDate() % 10 == 1 && dateObj.getDate() != 11 ? 'st' : (dateObj.getDate() % 10 == 2 && dateObj.getDate() != 12 ? 'nd' : (dateObj.getDate() % 10 == 3 && dateObj.getDate() != 13 ? 'rd' : 'th'))); 
+                                var dateLocaleString = dateObj.toLocaleString('en-US', options) + daySuffix;
+                                console.log('\ndateLocaleString:');
+                                console.log(dateLocaleString);
 
-                            var dateObj = new Date(element[2]);
-                            console.log('\ndateObj:');
-                            console.log(dateObj);
-                            // create day locale string
-                            var localeTimeStr = dateObj.toLocaleTimeString().toString();
-                            var options = { weekday: 'long', month: 'short', day: 'numeric'};
-                            // getOrdinalSuffix
-                            var daySuffix = (dateObj.getDate() % 10 == 1 && dateObj.getDate() != 11 ? 'st' : (dateObj.getDate() % 10 == 2 && dateObj.getDate() != 12 ? 'nd' : (dateObj.getDate() % 10 == 3 && dateObj.getDate() != 13 ? 'rd' : 'th'))); 
-                            var dateLocaleString = dateObj.toLocaleString('en-US', options) + daySuffix;
-                            console.log('\ndateLocaleString:');
-                            console.log(dateLocaleString);
-
-                            dropDownDaysChoices += `<button class="dropdown-item" data-choice="${dateLocaleString}" data-date="${element[2]}"  onClick="dropDownCustomerUpdateOrderStatusDay(event)" >${dateLocaleString}</button>`;
+                                dropDownDaysChoices += `<button class="dropdown-item" data-choice="${dateLocaleString}" data-date="${element2[2]}"  onClick="dropDownCustomerUpdateOrderStatusDay(event)" >${dateLocaleString}</button>`;
+                            }
                         }
 
                         // add time drop down choices
-                        for (var i = 0; i < avalibleDaysandTimes.length; i++)
-                        {
-                            const day = avalibleDaysandTimes[i];
+                        // [ day1[ [].. ],  day2[ [].. ] ]
+                        // for (var i = 0; i < avalibleDaysandTimes.length; i++)
+                        // {
+                        //     var element1 = avalibleDaysandTimes[i];
+                            
+                        //     for (var j = 0; j < element1.length; j++)
+                        //     {
+                        //         var element2 = element1[j]; // [ '12:00 AM', true, '2022-02-25T06:00:00.000Z' ]
 
-                            for (var j = 0; j < day.length; j++)
-                            {
-                                var element2 = day[j][0];
+                        //         for (var k = 0; k < element2.length; k++)
+                        //         {
+                        //             var localeTime_avalibility_datetimeobject = element2[k];
 
-                                if (element2[1] == true)
-                                    dropDownTimesChoices += `<button class="dropdown-item" data-choice="${element2[0]}" data-time="${element2[2]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${element2[0]}</button>`;
-                                else
-                                    dropDownTimesChoices += `<button class="dropdown-item disabled">${element2[0]}</button>`;
-                            }
+                        //             if (localeTime_avalibility_datetimeobject[1] == true)
+                        //                 dropDownTimesChoices += `<button class="dropdown-item" data-choice="${localeTime_avalibility_datetimeobject[0]}" data-time="${localeTime_avalibility_datetimeobject[2]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${localeTime_avalibility_datetimeobject[0]}</button>`;
+                        //             else
+                        //                 dropDownTimesChoices += `<button class="dropdown-item disabled">${localeTime_avalibility_datetimeobject[0]}</button>`;
+                        //         }
 
-                        }
+
+                        //     }
+
+                        // }
 
 
                     }

@@ -1132,9 +1132,6 @@ class DbService
                         return;
                     }
 
-                    // old, ignore
-                    var resultDayChoices  = [];
-                    var resultTimeChoices = [];
                     var pickupDays        = results[0];
                     var pickupTimes       = results[1];
 
