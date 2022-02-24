@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function ()
 
 // const address = 'https://www.astromedibles.com';
 const address = 'http://localhost:8080';
+var   avalibleDaysandTimes;
 
 function loadCartTotal(data)
 {
@@ -65,7 +66,7 @@ function populateUserOrders()
         var results = Array.from(data1['data']);
         // var dropDownDayResults   = results[0];
         // var dropDownTimeResults  = results[1];
-        var avalibleDaysandTimes = results;
+        avalibleDaysandTimes = results;
         console.log('\navalibleDaysandTimes:');
         console.log(avalibleDaysandTimes);
 
@@ -203,32 +204,6 @@ function populateUserOrders()
                             }
                         }
 
-                        // add time drop down choices
-                        // [ day1[ [].. ],  day2[ [].. ] ]
-                        // for (var i = 0; i < avalibleDaysandTimes.length; i++)
-                        // {
-                        //     var element1 = avalibleDaysandTimes[i];
-                            
-                        //     for (var j = 0; j < element1.length; j++)
-                        //     {
-                        //         var element2 = element1[j]; // [ '12:00 AM', true, '2022-02-25T06:00:00.000Z' ]
-
-                        //         for (var k = 0; k < element2.length; k++)
-                        //         {
-                        //             var localeTime_avalibility_datetimeobject = element2[k];
-
-                        //             if (localeTime_avalibility_datetimeobject[1] == true)
-                        //                 dropDownTimesChoices += `<button class="dropdown-item" data-choice="${localeTime_avalibility_datetimeobject[0]}" data-time="${localeTime_avalibility_datetimeobject[2]}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${localeTime_avalibility_datetimeobject[0]}</button>`;
-                        //             else
-                        //                 dropDownTimesChoices += `<button class="dropdown-item disabled">${localeTime_avalibility_datetimeobject[0]}</button>`;
-                        //         }
-
-
-                        //     }
-
-                        // }
-
-
                     }
                     
                     // drop down times
@@ -246,14 +221,14 @@ function populateUserOrders()
                     <br>
                     <div class="dropdown" >
                         ${dropDownDaysButton}
-                        <div class="dropdown-menu" name="${order_id}" ${dataAttributes} >
+                        <div class="dropdown-menu" ${dataAttributes} >
                             ${dropDownDaysChoices}
                         </div>
                     </div>
                     <br>
                     <div class="dropdown" >
                         ${dropDownTimesButton}
-                        <div class="dropdown-menu" name="${order_id}" ${dataAttributes} >
+                        <div class="dropdown-menu" id="selected-time-options-${order_id}" ${dataAttributes} >
                             ${dropDownTimesChoices}
                         </div>
                     </div>
@@ -340,15 +315,15 @@ function populateUserOrders()
                 myform.append(card);
             }
 
-                    var cancelOrderButtons = document.getElementsByName('cancel-order-button');
-                    for (var i = 0; i < cancelOrderButtons.length; i++)
-                    {
-                        // console.log("button found!");
-                        var button = cancelOrderButtons[i];
-                        button.addEventListener('click', buttonCancelOrder);
-                        // console.log("button " + i + " online!");
-                    }
-                });
+            var cancelOrderButtons = document.getElementsByName('cancel-order-button');
+            for (var i = 0; i < cancelOrderButtons.length; i++)
+            {
+                // console.log("button found!");
+                var button = cancelOrderButtons[i];
+                button.addEventListener('click', buttonCancelOrder);
+                // console.log("button " + i + " online!");
+            }
+            });
 
         });
 }
@@ -360,7 +335,7 @@ function dropDownCustomerUpdateOrderStatusDay(event)
     event = event.currentTarget;
 
     var parentDiv = event.parentNode;
-    var orderId = $(parentDiv).attr("name");
+    var orderId = $(parentDiv).attr("data-order_id");
     console.log(`orderId : ${orderId}`);
 
     var newChoice = $(event).attr("data-choice");
@@ -380,11 +355,62 @@ function dropDownCustomerUpdateOrderStatusDay(event)
     // enable time drop down
     $(`#selected-time-${orderId}`).removeClass("disabled");
 
-    // disable used option
-    // $(event).addClass("disabled");
-    // $(event).on(('onClick'), null);
 
-    // console.log("dropDownUpdateOrderStatus(event) complete");
+    // add object and add times to drop down
+
+    var timeDropDown = $(`#selected-time-options-${orderId}`);
+    timeDropDown.empty();
+
+    console.log('\n\n');
+
+    console.log('avalibleDaysandTimes');
+    console.log(avalibleDaysandTimes[0]);
+    newDate = new Date(newDate);
+
+    console.log('\n');
+    // add time drop down choices
+    for (var i = 0; i < avalibleDaysandTimes[0].length; i++)
+    {
+        var element1 = avalibleDaysandTimes[0][i];
+        var elementDay = new Date(element1[0][2]);
+
+        // console.log('newDate');
+        // console.log(newDate);
+
+        
+        // console.log('elementDay');
+        // console.log(elementDay);
+
+        console.log('\n\n');
+
+        var isSameDay =   (newDate.getDate()     === elementDay.getDate() 
+                        && newDate.getMonth()    === elementDay.getMonth()
+                        && newDate.getFullYear() === elementDay.getFullYear());
+
+        if (isSameDay)
+        {
+           console.log('DATE MATCH');
+
+           for (var j = 0; j < element1.length; j++)
+           {
+               console.log('\nlocaleTime_avalibility_datetimeobject');  // [ '12:00 AM', true, '2022-02-25T06:00:00.000Z' ]
+               console.log(localeTime_avalibility_datetimeobject);
+
+                var localeTime_avalibility_datetimeobject = element1[j];
+                var optionLocaleTime      = localeTime_avalibility_datetimeobject[0];
+                var optionAvalibility     = localeTime_avalibility_datetimeobject[1];
+                var optionDateTimeObject  = localeTime_avalibility_datetimeobject[2];
+                var option = '';
+            
+                if (optionAvalibility === true)
+                    option = `<button class="dropdown-item" data-choice="${optionLocaleTime}" data-time="${optionDateTimeObject}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${optionLocaleTime}</button>`;
+                else
+                    option = `<button class="dropdown-item disabled">${optionLocaleTime}</button>`;
+            
+                timeDropDown.append(option);
+           }
+        }
+    }
 }
 
 function dropDownCustomerUpdateOrderStatusTime(event)
@@ -394,7 +420,7 @@ function dropDownCustomerUpdateOrderStatusTime(event)
     event = event.currentTarget;
 
     var parentDiv = event.parentNode;
-    var orderId = $(parentDiv).attr("name");
+    var orderId = $(parentDiv).attr("data-order_id");
     console.log(`orderId : ${orderId}`);
 
     var newChoice = $(event).attr("data-choice");
