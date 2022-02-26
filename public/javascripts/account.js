@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function ()
     ready();
 });
 
+const address = 'https://www.astromedibles.com';
 
 
 function ready()

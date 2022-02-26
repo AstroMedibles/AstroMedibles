@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function ()
     ready();
 });
 
-// const address = 'https://www.astromedibles.com';
-const address = 'http://localhost:8080';
+const address = 'https://www.astromedibles.com';
+// const address = 'http://localhost:8080';
 
 var checkDay1 = document.getElementById('checkDay1');
 var checkDay2 = document.getElementById('checkDay2');
