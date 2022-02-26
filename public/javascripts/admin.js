@@ -624,8 +624,7 @@ function radioPickupsClick()
     {
         var pickups  = Array.from(data['data']);
         var lastYear = '';
-        var lastDate = '';
-        var lastTime = '';
+        var lastDate = new Date();
         var b = 1;
 
         for (var i = 0; i < pickups.length; i++)
@@ -655,8 +654,12 @@ function radioPickupsClick()
                 lastYear = date.getFullYear();
             }
 
+            var isSameDay =   (lastDate.getDate()     === date.getDate() 
+            && lastDate.getMonth()    === date.getMonth()
+            && lastDate.getFullYear() === date.getFullYear());
+
             console.log(`${lastDate} - ${dateLocaleString}`);
-            if (lastDate != dateLocaleString)
+            if (!isSameDay)
             {
                 tableHTML +=
                 `
@@ -667,22 +670,39 @@ function radioPickupsClick()
                     <th class="table w-25"></th>
                 </tr>
                 `;
-                lastDate = dateLocaleString;
+                lastDate = date;
                 b = 0;
             }
 
             var timeString = time;
-            if (b == 1 || lastDate == dateLocaleString)
+            // if (b == 1 || lastDate == dateLocaleString)
+
+
+            var isSameTime =   (lastDate.getHours()     === date.getHours() 
+                             && lastDate.getMinutes() === date.getMinutes());
+
+
+            console.log('\nlastDate')
+            console.log(lastDate.getHours());
+            console.log(lastDate.getMinutes());
+
+            console.log('date')
+            console.log(date.getHours());
+            console.log(date.getMinutes());
+
+            console.log('time')
+            console.log(time);
+
+            console.log('timeString')
+            console.log(timeString);
+
+            if (isSameDay && isSameTime)
             {
-                if (lastTime != time)
-                {
-                    lastTime = time;
-                    lastDate = dateLocaleString;
-                }
-                else
-                {
-                    timeString = '';
-                }
+                timeString = '';
+            }
+            else
+            {
+                lastDate = date;
             }
             
 

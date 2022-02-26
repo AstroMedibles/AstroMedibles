@@ -986,7 +986,7 @@ class DbService
         {
             try
             {
-                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status = 'Ready for Pickup'  ORDER BY pickup_scheduled ASC;";
+                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status = 'Ready for Pickup'  ORDER BY pickup_scheduled ASC, name ASC;";
                 connection.query(sql, [], (error, results) =>
                 {
                     if (error)
