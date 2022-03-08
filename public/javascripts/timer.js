@@ -39,7 +39,7 @@ function startTime()
 //   m = checkTime(m);
 //   s = checkTime(s);
   
-  document.getElementById('preorderTimer').innerHTML =  'Pre-Order Sale Event: '+ h + " hrs  " + m + " min  " + s + ' sec';
+  document.getElementById('preorderTimer').innerHTML =  'Pre-Order Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
   setTimeout(startTime, 500);
 }
 
