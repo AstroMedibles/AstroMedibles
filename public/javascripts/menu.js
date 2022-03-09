@@ -55,7 +55,7 @@ function loadMenuCards(data)
 
                 <div class="card-footer" style="width: 100%;>
                     <h5 class="card-text"><b>$${price.toFixed(2)}</b></h5>
-                    <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill " type="button" style="width: 100%;">Add to cart</button>
+                    <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill disabled" type="button" style="width: 100%;">Add to cart</button>
                 </div>
             </div>
 

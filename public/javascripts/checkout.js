@@ -43,86 +43,86 @@ function getCartDetails(userCart)
 {
 
     fetch(address + '/getMenuData')
-        .then(response => response.json())
-        .then(data =>  
+    .then(response => response.json())
+    .then(data =>  
+    {
+        var menuItems = Array.from(data['data']);
+        var subtotal = discount = shipping = total = 0;
+
+        for (let i = 0; i < userCart.length; i++)
         {
-            var menuItems = Array.from(data['data']);
-            var subtotal = discount = shipping = total = 0;
+            var element = userCart[i];
 
-            for (let i = 0; i < userCart.length; i++)
+            // for each menu item
+
+            Array.from(menuItems).forEach(function ({ id, name, price, description })
             {
-                var element = userCart[i];
+                // console.log("id + name + price + description");
 
-                // for each menu item
+                const userCartItemID = element[0];
+                const userCartItemQTY = element[1];
 
-                Array.from(menuItems).forEach(function ({ id, name, price, description })
+                // console.log(userCartItemID + " = " + id);
+                if (userCartItemID == id)
                 {
-                    // console.log("id + name + price + description");
+                    // console.log("MATCH userCartItemID == id");
+                    // console.log( id + "\t" + name + "\t" + price + "\t" + description);
 
-                    const userCartItemID = element[0];
-                    const userCartItemQTY = element[1];
+                    let card = "";
 
-                    // console.log(userCartItemID + " = " + id);
-                    if (userCartItemID == id)
+                    let dropDownValue = "";
+                    dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + "0 (delete)" + "</a>";
+                    for (let index = 1; index < 11; index++)
                     {
-                        // console.log("MATCH userCartItemID == id");
-                        // console.log( id + "\t" + name + "\t" + price + "\t" + description);
-
-                        let card = "";
-
-                        let dropDownValue = "";
-                        dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + "0 (delete)" + "</a>";
-                        for (let index = 1; index < 11; index++)
-                        {
-                            dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + index + "</a>";
-                        }
-                        dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + "25" + "</a>";
-                        dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + "50" + "</a>";
+                        dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + index + "</a>";
+                    }
+                    dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + "25" + "</a>";
+                    dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + "50" + "</a>";
 
 
 
-                        // create element in shopping cart
-                        card +=
-                            `
-                        <div class="product">
-                            <div class="row justify-content-center align-items-center">
-                                <div class="col-md-3">
-                                    <div class="product-image"><img class="img-fluid d-block mx-auto image" src="../images/${name.toLowerCase()}.jpg"></div>
-                                </div>
-                                <div class="col-md-4 product-info"><h2 class="product-name" >${name}</h2>
-                                    <div class="product-specs">
-                                        <div><span>Price:&nbsp;</span><span class="value">${price}</span></div>
-                                        <div><span class="value">${description}</span></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 d-flex flex-row flex-grow-1 justify-content-between align-items-end flex-md-column flex-md-fill price" >
-                                    <div class="d-flex flex-row" id="card-${userCartItemID}"  data-itemname="${name}" data-itemid="${userCartItemID}" data-itemprice="${price}"  data-itemqty="${userCartItemQTY}" >
-                                        <button class="btn btn-primary   " type="button" style="width: 35px;" onclick="subtractItem(event)">-</button>
-                                        <input type="text" value="${userCartItemQTY}"  readonly=""   style=" width: 40px; text-align: center; border-width:0px;  border:none;  outline:none!important; margin: 0px 0px 4px 4px;"  id="labelqty${userCartItemID}" value="${userCartItemQTY}">
-                                        <button class="btn btn-primary   " type="button" style="width: 35px;" onclick="addItem(event)">+</button>
-                                    </div>
-                                    <div class="d-flex flex-row"><span id="card-subtotal-${userCartItemID}">$${(userCartItemQTY * price).toFixed(2)}</span></div>
+                    // create element in shopping cart
+                    card +=
+                        `
+                    <div class="product">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-md-3">
+                                <div class="product-image"><img class="img-fluid d-block mx-auto image" src="../images/${name.toLowerCase()}.jpg"></div>
+                            </div>
+                            <div class="col-md-4 product-info"><h2 class="product-name" >${name}</h2>
+                                <div class="product-specs">
+                                    <div><span>Price:&nbsp;</span><span class="value">${price}</span></div>
+                                    <div><span class="value">${description}</span></div>
                                 </div>
                             </div>
+                            <div class="col-md-3 d-flex flex-row flex-grow-1 justify-content-between align-items-end flex-md-column flex-md-fill price" >
+                                <div class="d-flex flex-row" id="card-${userCartItemID}"  data-itemname="${name}" data-itemid="${userCartItemID}" data-itemprice="${price}"  data-itemqty="${userCartItemQTY}" >
+                                    <button class="btn btn-primary   " type="button" style="width: 35px;" onclick="subtractItem(event)">-</button>
+                                    <input type="text" value="${userCartItemQTY}"  readonly=""   style=" width: 40px; text-align: center; border-width:0px;  border:none;  outline:none!important; margin: 0px 0px 4px 4px;"  id="labelqty${userCartItemID}" value="${userCartItemQTY}">
+                                    <button class="btn btn-primary   " type="button" style="width: 35px;" onclick="addItem(event)">+</button>
+                                </div>
+                                <div class="d-flex flex-row"><span id="card-subtotal-${userCartItemID}">$${(userCartItemQTY * price).toFixed(2)}</span></div>
+                            </div>
                         </div>
-                            `;
+                    </div>
+                        `;
 
-                        // create card
-                        var myform = $('#cart-items');
-                        myform.append(card);
-                        // add to subtotal
-                        subtotal += (userCartItemQTY * price);
+                    // create card
+                    var myform = $('#cart-items');
+                    myform.append(card);
+                    // add to subtotal
+                    subtotal += (userCartItemQTY * price);
 
-                    }
-                });
-            }
-            // Update Summary: Subtotal, discount, shipping, total
-            // total = subtotal - discount - shipping;
-            // $("#cart-subtotal").text("$" + parseFloat(subtotal).toFixed(2));
-            // $("#cart-total").text("$" + parseFloat(total).toFixed(2));
-            updateSummary(userCart);
+                }
+            });
+        }
+        // Update Summary: Subtotal, discount, shipping, total
+        // total = subtotal - discount - shipping;
+        // $("#cart-subtotal").text("$" + parseFloat(subtotal).toFixed(2));
+        // $("#cart-total").text("$" + parseFloat(total).toFixed(2));
+        updateSummary(userCart);
 
-        });
+    });
 }
 
 function subtractItem(event)
@@ -181,16 +181,14 @@ function subtractItem(event)
                 console.log("id == cart[i][0]: " + id + " _ " + cart[i][0] + " i: " + i);
                 if (id == cart[i][0])
                 {
-                    console.log("MATCH");
+                    // console.log("MATCH");
                     matchFound = true;
                     var itemQty = cart[i][1];
-                    console.log("itemQty: " + itemQty);
-
-
-
-                    console.log("id: " + id);
-                    console.log("labelName: " + labelName);
-                    console.log("itemQty: " + itemQty);
+                    // console.log("itemQty: " + itemQty);
+                    
+                    // console.log("id: " + id);
+                    // console.log("labelName: " + labelName);
+                    // console.log("itemQty: " + itemQty);
 
 
                     // Update card dataset QTY
@@ -351,7 +349,7 @@ function updateSummary(cart)
 
 function userPlaceOrder()
 {
-    console.log(1000);
+    // console.log(1000);
     fetch(address + '/userPlaceOrder',
     {
         credentials: "include",
@@ -361,9 +359,9 @@ function userPlaceOrder()
             'Content-type': 'application/json'
         },
         body: JSON.stringify
-            ({
-                date: new Date()
-            })
+        ({
+            date: new Date()
+        })
     })
     .then(response => response.json())
     .then((response) =>
@@ -393,7 +391,6 @@ function userPlaceOrder()
         alertNotify(message, alertType, iconChoice, 3);
     });
 }
-
 
 function alertNotify(message, alertType, iconChoice, duration)
 {

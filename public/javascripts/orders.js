@@ -123,7 +123,8 @@ function populateUserOrders()
 
                 if (status === "Payment Required")
                 {
-                    status = '<a href="https://account.venmo.com/pay?txn=pay&recipients=Astro-Medibles">' + status + '</a>';
+                    status = '<a href="https://account.venmo.com/pay?txn=pay&recipients=Astro-Medibles">' + status + '</a>'
+                    + '<br>' + '<p>(Include your <b>Order ID</b>)</p>';
                     interactDiv =
                     `
                     <br>

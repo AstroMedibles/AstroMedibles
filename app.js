@@ -778,8 +778,8 @@ app.patch('/cartAddItem', (request, response) =>
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
+		console.log("route(/cartAddItem) \tresult.catch()"); 
+		console.log("route(/cartAddItem) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
 }); 
@@ -806,8 +806,36 @@ app.patch('/cartSubtractItem', (request, response) =>
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
+		console.log("route(/cartSubtractItem) \tresult.catch()"); 
+		console.log("route(/cartSubtractItem) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+}); 
+
+// patch 
+app.patch('/cartRemoveAllItems', (request, response) => 
+{
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{ 
+		console.log("\n"+ "route(/cartRemoveAllItems) "); 
+		const email = request.cookies.email; 
+		const password = request.cookies.password; 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.cartRemoveAllItems(email, password); 
+	
+		result.then(data => 
+		{ 
+			console.log("\n" + "route(/cartRemoveAllItems) \t RESULTS:"); 
+			response.json({ data: data }); 
+		}) 
+		.catch(err => console.log(err)); 
+	})
+	.catch(() => 
+	{
+		// user is not logged in
+		console.log("route(/cartRemoveAllItems) \tresult.catch()"); 
+		console.log("route(/cartRemoveAllItems) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
 }); 
