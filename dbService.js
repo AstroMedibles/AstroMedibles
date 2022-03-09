@@ -1109,6 +1109,7 @@ class DbService
     {
         console.log("/ordersCustomerGetPickupDaysAndTimes(customerDate)");
         customerDate = new Date(customerDate);
+        console.log('customerDate: ' + customerDate);
         var avalibleDaysandTimes = [];
         /* avalibleDaysandTimes = ...
         * [ 
