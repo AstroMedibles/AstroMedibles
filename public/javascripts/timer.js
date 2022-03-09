@@ -16,11 +16,11 @@ function startTime()
   // 9:00pm
   // const targetDate = new Date('2022-03-07T21:00');
     var targetDate = new Date();
-    targetDate.setHours(13);
+    targetDate.setHours(23);
     // targetDate.setHours(8);
-    targetDate.setMinutes(9);
+    targetDate.setMinutes(59);
     // targetDate.setMinutes(23);
-    targetDate.setSeconds(45);
+    targetDate.setSeconds(59);
 
   // To calculate the time difference of two dates
   var Difference_In_Time = targetDate.getTime() - today.getTime();

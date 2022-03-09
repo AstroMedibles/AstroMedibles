@@ -641,7 +641,7 @@ class DbService
                 </p>
                 `;
                 
-                // db.sendEmail(userData.email, subject, html);
+                db.sendEmail(userData.email, subject, html);
             });
 
 
@@ -725,7 +725,7 @@ class DbService
                                 </p>
                                 `;
                                 
-                                // db.sendEmail(email, subject, html);
+                                db.sendEmail(email, subject, html);
                                 
                                 console.log('Account Created!');
                                 resolve([result.insertId, result.affectedRows]);
@@ -837,7 +837,7 @@ class DbService
                     </p>
                     `;
                     
-                    // db.sendEmail(userEmail, subject, html);
+                    db.sendEmail(userEmail, subject, html);
 
                     resolve(result.affectedRows);
                 }
@@ -886,7 +886,7 @@ class DbService
                         </p>
                         `;
                         
-                        // db.sendEmail(userEmail, subject, html);
+                        db.sendEmail(userEmail, subject, html);
     
                         resolve(result.affectedRows);
                     }
@@ -1345,7 +1345,7 @@ class DbService
                                 This is an automated message.
                                 </p>
                                 `;
-                                // db.sendEmail(userEmail, subject, html);
+                                db.sendEmail(userEmail, subject, html);
                                 resolve(result2.affectedRows);
                             }
                         });
@@ -1510,7 +1510,7 @@ class DbService
                     `;
                     
                     const db = DbService.getDbServiceInstance();
-                    // db.sendEmail(email, subject, html);
+                    db.sendEmail(email, subject, html);
 
                     resolve(result.affectedRows);
                 }
@@ -1572,7 +1572,7 @@ class DbService
                                 `;
                                 
                                 const db = DbService.getDbServiceInstance();
-                                // db.sendEmail(newEmail, subject, html);
+                                db.sendEmail(newEmail, subject, html);
                                 console.log('Account Update Success!');
                                 return;
                             });
@@ -1631,7 +1631,7 @@ class DbService
                     </p>
                     `;
                     const db = DbService.getDbServiceInstance();
-                    // db.sendEmail(email, subject, html);
+                    db.sendEmail(email, subject, html);
                     resolve(result.affectedRows);
                 }
             })
@@ -1661,7 +1661,7 @@ class DbService
                 
                 // Send email
                 const db = DbService.getDbServiceInstance();
-                // db.sendEmail(toEmail, subject, html);
+                db.sendEmail(toEmail, subject, html);
                 resolve(true);
 
             } catch (error)
@@ -1694,7 +1694,7 @@ class DbService
                 
                 // Send email
                 const db = DbService.getDbServiceInstance();
-                // db.sendEmail(toEmail, subject, html);
+                db.sendEmail(toEmail, subject, html);
                 resolve(true);
 
             } catch (error)
