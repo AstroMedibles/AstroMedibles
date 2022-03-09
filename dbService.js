@@ -1344,17 +1344,17 @@ class DbService
                             else
                             {
                                 console.log(`Order ${orderId} : dateScheduledPickup (${dateScheduledPickup}) has been updated!`);
-                                var subject = `Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}`;
-                                var html = 
-                                `
-                                <h3>Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}</h3>
-                                <p>
-                                Order id: ${orderId} dateScheduledPickup has been updated!
-                                <br>
-                                This is an automated message.
-                                </p>
-                                `;
-                                db.sendEmail(userEmail, subject, html);
+                                // var subject = `Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}`;
+                                // var html = 
+                                // `
+                                // <h3>Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}</h3>
+                                // <p>
+                                // Order id: ${orderId} dateScheduledPickup has been updated!
+                                // <br>
+                                // This is an automated message.
+                                // </p>
+                                // `;
+                                // db.sendEmail(userEmail, subject, html);
                                 resolve(result2.affectedRows);
                             }
                         });
