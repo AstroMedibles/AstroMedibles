@@ -1109,7 +1109,7 @@ class DbService
     {
         console.log("/ordersCustomerGetPickupDaysAndTimes(customerDate)");
         customerDate = new Date(customerDate);
-        console.log('customerDate: ' + customerDate);
+        console.log('customerDate: ' + customerDate.toISOString());
         var avalibleDaysandTimes = [];
         /* avalibleDaysandTimes = ...
         * [ 
@@ -1171,6 +1171,9 @@ class DbService
                         }
                         avalibleDaysandTimes.push(avalibleSubElement); 
                     }
+
+                    console.log('avalibleSubElement');
+                    console.log(avalibleSubElement);
 
                     // check all pickup scheduled times sorted by descending
                     const query = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status = 'Ready for Pickup' ORDER BY pickup_scheduled DESC;";
