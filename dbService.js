@@ -582,9 +582,9 @@ class DbService
             
             const insertId = new Promise((resolve, reject) =>
             {
-                const query = "INSERT INTO " + process.env.TABLE_ORDERS + " (user_id, status, order_id, name, cart, total, date_created) VALUES (?,?,?,?,?,?,?);";
+                const query = "INSERT INTO " + process.env.TABLE_ORDERS + " (user_id, status, order_id, name, email, cart, total, date_created) VALUES (?,?,?,?,?,?,?,?);";
     
-                connection.query(query, [user_id, status, order_id, user_name, cart, total, date_created], (err, result) =>
+                connection.query(query, [user_id, status, order_id, user_name, email, cart, total, date_created], (err, result) =>
                 {
                     if (err)
                     {
@@ -922,6 +922,7 @@ class DbService
                             status           : results[i].status,
                             order_id         : results[i].order_id,
                             name             : results[i].name,
+                            email            : results[i].email,
                             status           : results[i].status,
                             cart             : results[i].cart,
                             total            : results[i].total,

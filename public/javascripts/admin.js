@@ -84,11 +84,12 @@ function populateUserOrders()
 
             var userOrder = orders[i];
 
-            var status      = userOrder.status;
-            var order_id    = userOrder.order_id;
-            var name        = userOrder.name;
-            var cart        = JSON.parse(userOrder.cart).cart;
-            var total       = userOrder.total;
+            var status       = userOrder.status;
+            var order_id     = userOrder.order_id;
+            var name         = userOrder.name;
+            var email        = userOrder.email;
+            var cart         = JSON.parse(userOrder.cart).cart;
+            var total        = userOrder.total;
             var date_created = new Date(userOrder.date_created);
             var options =
             {
@@ -243,6 +244,12 @@ function populateUserOrders()
                                 <br>
                                 <span class="value">${name}</span>
                             </div>
+
+                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                            <span>Email</span>
+                            <br>
+                            <span class="value">${email}</span>
+                        </div>
 
                         </div>
                     </div>
