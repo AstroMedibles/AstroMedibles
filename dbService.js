@@ -813,7 +813,7 @@ class DbService
         {
             // var status = "Payment Required";
             // console.log(order_id);
-            // const db = DbService.getDbServiceInstance();
+            const db = DbService.getDbServiceInstance();
 
             const query = "UPDATE " + process.env.TABLE_ORDERS + " SET status = ? WHERE order_id = ?;";
             connection.query(query, [status, orderId], (err, result) =>
@@ -1299,7 +1299,7 @@ class DbService
     {
         const response = new Promise((resolve, reject) =>
         {
-            // const db = DbService.getDbServiceInstance();
+            const db = DbService.getDbServiceInstance();
 
             // If time slot is full, reject
             const query1 = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE pickup_scheduled = ?; ";
