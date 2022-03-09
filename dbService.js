@@ -1144,6 +1144,8 @@ class DbService
                         // create possible day
                         var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + i);
 
+                        console.log('suggestedDate: ' + suggestedDate.toISOString());
+
                         // if suggested day is not available on admin options, skip
                         if (pickupDays[suggestedDate.getDay()].available == 0)
                         {
@@ -1162,6 +1164,8 @@ class DbService
                             }
     
                             suggestedDate.setHours(pickupTimes[j].time);
+                            // console.log()
+
 
                             var localeString = new Date(0, 0, 0, j).toLocaleString();
                             localeString = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
@@ -1170,10 +1174,11 @@ class DbService
                             avalibleSubElement.push([localeString, AvalibleYesOrNo, suggestedDate.toISOString()]);
                         }
                         avalibleDaysandTimes.push(avalibleSubElement); 
+                        console.log('avalibleSubElement');
+                        console.log(avalibleSubElement);
+    
                     }
 
-                    console.log('avalibleSubElement');
-                    console.log(avalibleSubElement);
 
                     // check all pickup scheduled times sorted by descending
                     const query = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status = 'Ready for Pickup' ORDER BY pickup_scheduled DESC;";
