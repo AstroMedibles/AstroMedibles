@@ -1207,7 +1207,7 @@ class DbService
                                     var newDate = new Date(results2[i].pickup_scheduled);
 
                                     // if pickup date is in the past, skip. Or if date equals an already marked overcapacity date, skip.
-                                    if (Date.parse(newDate) - Date.parse(new Date()) < 0 || newDate.toISOString() == skipDate)
+                                    if (Date.parse(newDate) - Date.parse(customerDate) < 0 || newDate.toISOString() == skipDate)
                                     {
                                         // console.log('DATE HAS PASSED');
                                     }
