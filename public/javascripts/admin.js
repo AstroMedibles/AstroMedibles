@@ -100,6 +100,9 @@ function populateUserOrders()
                 day: "2-digit"
 
             };
+            var dataAttributes = 
+            `data-order_id="${order_id}" data-status="${status}" data-name="${name}" data-email="${email}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`;
+
             date_created = date_created.toLocaleString('en-us', options);
 
             // Payment Required - Order will not be made until this is paid.
@@ -168,19 +171,12 @@ function populateUserOrders()
                 `;
             }
 
-
-
-            // var date_created = userOrder.date_created.substring(0, 10) + "<br>" // date
-            //     + timeHour + userOrder.date_created.substring(13, 16) + amOrPm;    // time
-
             var cartText = "";
             for (let j = 1; j < cart.length; j++)
             {
                 var cartElement = cart[j];
                 cartText += "(" + cartElement[1] + ") " + cartElement[2] + "<br>";
             }
-
-            
 
             let card = "";
 
@@ -189,7 +185,7 @@ function populateUserOrders()
             card +=
             `
             <div class="product">
-                <div class="row product-image d-flex justify-content-between align-items-start ">
+                <div class="row product-image d-flex justify-content-between align-items-start" ${dataAttributes} >
 
                     <div class="col-md-4 product-info">
                         <div class="product-specs d-flex flex-column  align-items-center">
@@ -273,8 +269,13 @@ function dropDownUpdateOrderStatus(event)
     // console.log('start dropDownUpdateOrderStatus(event)');
 
     event = event.currentTarget;
-    var parentDiv = event.parentNode;
-    var orderId = $(parentDiv).attr("name");
+    var parentDiv = event.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+    var orderId = $(parentDiv).attr("data-order_id");
+    var email = $(parentDiv).attr("data-email");
+
+    console.log('FOUND EMAIL: ' + email);
+
+
     // console.log(orderId);
 
     var status = $(event).attr("name");
@@ -289,7 +290,8 @@ function dropDownUpdateOrderStatus(event)
     {
         // 
         // console.log('Update order pressed.');
-    } else
+    } 
+    else
     {
         // 
         // console.log('Cancel action pressed.');
@@ -310,13 +312,14 @@ function dropDownUpdateOrderStatus(event)
         body: JSON.stringify(
             {
                 orderId: orderId,
-                status: status
+                status: status,
+                email: email
             })
     })
     .then(response => response.json())
     .then((data) => 
     {
-        // Update Status to7 new option
+        // Update Status to new option
         $(dropDownSubElementID).text(status);
 
         // disable used option
@@ -726,7 +729,7 @@ function radioPickupsClick()
         document.getElementById("tablePickups").innerHTML = tableHTML;
     });
 
-    console.log('we made it');
+    // console.log('we made it');
 
     fetch(address + '/getPickupAvailabilityDays')
     .then(response => response.json())

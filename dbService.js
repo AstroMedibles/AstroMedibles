@@ -807,11 +807,10 @@ class DbService
         return response;
     }
 
-    async adminUpdateOrderStatus(orderId, status)
+    async adminUpdateOrderStatus(orderId, status, userEmail)
     {
         const response = new Promise((resolve, reject) =>
         {
-            // var status = "Payment Required";
             // console.log(order_id);
             const db = DbService.getDbServiceInstance();
 
@@ -825,13 +824,13 @@ class DbService
                 else
                 {
 
-                    console.log(`Order ${orderId} : ${status} has been updated!`);
-                    var subject = `Order id: ${orderId} Status: ${status}`;
+                    console.log(`Order ${orderId} : Statis is now ${status}!`);
+                    var subject = `Order ${orderId}, Status: ${status}`;
                     var html = 
                     `
-                    <h3>Order id: ${orderId} Status: ${status}</h3>
+                    <h3>Your Order Status has been updated to ${status}</h3>
                     <p>
-                    Order id: ${orderId} status has been updated!
+                    Visit <a href="https://www.astromedibles.com/orders">this link</a> to see your order.
                     <br>
                     This is an automated message.
                     </p>

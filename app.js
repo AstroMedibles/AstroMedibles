@@ -850,9 +850,9 @@ app.patch('/adminUpdateOrderStatus', (request, response) =>
 		console.log("adminUpdateOrderStatus(/) \tresult.then()"); 
 		if (accountAttributes.isAdmin === 1) 
 		{ 
-			const { orderId, status } = request.body; 
+			const { orderId, status, email } = request.body; 
 			const db = dbService.getDbServiceInstance(); 
-			const result = db.adminUpdateOrderStatus(orderId, status); 
+			const result = db.adminUpdateOrderStatus(orderId, status, email); 
 		 
 			result.then((data) => 
 			{ 
