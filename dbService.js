@@ -675,7 +675,7 @@ class DbService
         accessCode = accessCode.toUpperCase();
         email = email.toLowerCase();
         const isAdmin = 0;
-        var date_created = new Date();
+        var date_created = new Date().toISOString();
         password = CryptoJS.AES.encrypt(password, process.env.KEY).toString();
 
         var cart =
