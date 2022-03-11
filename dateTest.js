@@ -4,6 +4,25 @@ const dbDateString = '2022-02-18T02:24';
 
 var event2 = new Date(new Date().toISOString());
 
+
+
+console.log('index test');
+
+for (let index = 0; index < 10; index++)
+{
+
+    if (index < 4)
+    {
+        continue;
+    }
+
+    console.log(index);
+}
+
+console.log('index test END');
+
+
+
 console.log('event2');
 console.log(event2);
 console.log(event2.toLocaleString());
@@ -32,6 +51,8 @@ var timeInteger = timeHour + timeMinutes;
 // console.log(event2);
 // expected output: Thu Jul 01 1999 00:00:00 GMT+0200 (CEST)
 // (note: your timezone may vary)
+
+
 
 
 console.log("dateIntger: " + dateIntger);

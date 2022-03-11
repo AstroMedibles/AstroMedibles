@@ -1144,21 +1144,22 @@ class DbService
                         // create possible day
                         var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + i);
 
-                        console.log('suggestedDate: ' + suggestedDate.toISOString());
 
                         // if suggested day is not available on admin options, skip
-                        if (pickupDays[suggestedDate.getDay()].available == 0)
+                        if (pickupDays[suggestedDate.getDay()].available === 0)
                         {
                             continue;
                         }
+                        console.log('suggestedDate: ' + suggestedDate.toISOString());
+                        console.log('DATE GOOD')
 
                         var avalibleSubElement = [];
 
+                        // now that day is good, add times to day
                         for (var j = 0; j < pickupTimes.length; j++)
                         {
-    
                             // if suggested time is not available on admin options, skip
-                            if (pickupTimes[j].available == 0)
+                            if (pickupTimes[j].available === 0)
                             {
                                 continue;
                             }
@@ -1166,6 +1167,7 @@ class DbService
                             suggestedDate.setHours(pickupTimes[j].time);
                             // console.log()
 
+                            console.log(' Hour Changed - suggestedDate: ' + suggestedDate.toISOString());
 
                             var localeString = new Date(0, 0, 0, j).toLocaleString();
                             localeString = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
