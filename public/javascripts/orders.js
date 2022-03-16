@@ -394,14 +394,14 @@ function dropDownCustomerUpdateOrderStatusDay(event)
 
            for (var j = 0; j < element1.length; j++)
            {
-               console.log('\nlocaleTime_avalibility_datetimeobject');  // [ '12:00 AM', true, '2022-02-25T06:00:00.000Z' ]
-               console.log(localeTime_avalibility_datetimeobject);
-
                 var localeTime_avalibility_datetimeobject = element1[j];
                 var optionLocaleTime      = localeTime_avalibility_datetimeobject[0];
                 var optionAvalibility     = localeTime_avalibility_datetimeobject[1];
                 var optionDateTimeObject  = localeTime_avalibility_datetimeobject[2];
                 var option = '';
+
+                console.log('\nlocaleTime_avalibility_datetimeobject');  // [ '12:00 AM', true, '2022-02-25T06:00:00.000Z' ]
+                console.log(localeTime_avalibility_datetimeobject);
             
                 if (optionAvalibility === true)
                     option = `<button class="dropdown-item" data-choice="${optionLocaleTime}" data-time="${optionDateTimeObject}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${optionLocaleTime}</button>`;
