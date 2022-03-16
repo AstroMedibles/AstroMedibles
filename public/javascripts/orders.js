@@ -424,32 +424,28 @@ function dropDownCustomerUpdateOrderStatusTime(event)
     var orderId = $(parentDiv).attr("data-order_id");
     console.log(`orderId : ${orderId}`);
 
-    var newChoice = $(event).attr("data-choice");
-    console.log(`newChoice : ${newChoice}`);
-
     var date = new Date($(`#selected-${orderId}`).attr("data-date"));
-    console.log(`date : ${date}`);
+    // console.log(`date : ${date}`);
 
+    var newChoice = $(event).attr("data-choice");
+    console.log(`data-choice : ${newChoice}`);
 
     var time = new Date($(event).attr("data-time"));
-    console.log(`time : ${time}`);
+    console.log(`data-time : ${time}`);
 
-    date.setHours(time.getHours());
+    // date.setHours(time.getHours());
 
-    console.log(`dateTIME : ${date}`);
-
+    // console.log(`dateTIME : ${date}`);
 
     var dropDownSubElementID = $(`#selected-time-${orderId}`); 
-    console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
-
-
+    // console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
 
     if (confirm('Confirm scheduled pickup? \nThis action cannot be undone.'))
     {
         // 
         // console.log('Update order pressed.');
 
-        var dateScheduledPickup = date;
+        var dateScheduledPickup = time;
 
 
         fetch(address + '/userUpdateScheduledPickup',
@@ -490,9 +486,6 @@ function dropDownCustomerUpdateOrderStatusTime(event)
 
                 alert(`(${newChoice}) Time slot is not available anymore, try again`);
             }
-
-
-
 
         }).catch((error => 
         {
