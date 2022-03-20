@@ -431,7 +431,7 @@ function dropDownCustomerUpdateOrderStatusTime(event)
     console.log(`data-choice : ${newChoice}`);
 
     var time = new Date($(event).attr("data-time"));
-    console.log(`data-time : ${time}`);
+    console.log(`data-time : ${time.toISOString()}`);
 
     // date.setHours(time.getHours());
 
@@ -445,9 +445,6 @@ function dropDownCustomerUpdateOrderStatusTime(event)
         // 
         // console.log('Update order pressed.');
 
-        var dateScheduledPickup = time;
-
-
         fetch(address + '/userUpdateScheduledPickup',
         {
             credentials: "include",
@@ -459,7 +456,7 @@ function dropDownCustomerUpdateOrderStatusTime(event)
             body: JSON.stringify(
                 {
                     orderId: orderId,
-                    dateScheduledPickup: dateScheduledPickup
+                    dateScheduledPickup: time.toISOString()
                 })
         })
         .then(response => response.json())
