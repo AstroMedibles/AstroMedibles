@@ -1,27 +1,8 @@
 // const event2 = new Date('July 1, 1999');
 // new Date(year, monthIndex, day, hours, minutes, seconds, milliseconds)
-const dbDateString = '2022-02-18T02:24';
+const dbDateString = '2022-03-25T17:00:00.000Z';
 
-var event2 = new Date(new Date().toISOString());
-
-
-
-console.log('index test');
-
-for (let index = 0; index < 10; index++)
-{
-
-    if (index < 4)
-    {
-        continue;
-    }
-
-    console.log(index);
-}
-
-console.log('index test END');
-
-
+var event2 = new Date(new Date(dbDateString).toISOString());
 
 console.log('event2');
 console.log(event2);
@@ -33,11 +14,11 @@ console.log(event2.toString());
 // console.log(event2.toUTCString());
 // console.log(event2.valueOf());
 
-var dateIntger  = event2.getFullYear().toString() + (event2.getMonth() + 1).toString() + event2.getDate().toString();
-var timeHour    = event2.getHours().toString();
-var timeMinutes = event2.getMinutes().toString();
+// var dateIntger  = event2.getFullYear().toString() + (event2.getMonth() + 1).toString() + event2.getDate().toString();
+// var timeHour    = event2.getHours().toString();
+// var timeMinutes = event2.getMinutes().toString();
 
-var timeInteger = timeHour + timeMinutes;
+// var timeInteger = timeHour + timeMinutes;
 
 // console.log("dateIntger: " + dateIntger);
 // console.log("timeInteger:" + timeInteger);
@@ -55,20 +36,20 @@ var timeInteger = timeHour + timeMinutes;
 
 
 
-console.log("dateIntger: " + dateIntger);
-console.log("timeInteger:" + timeInteger);
+// console.log("dateIntger: " + dateIntger);
+// console.log("timeInteger:" + timeInteger);
 
-console.log("Day:" + event2.getDate());
+// console.log("Day:" + event2.getDate());
 
-console.log("Day:" + new Date().getDate());
+// console.log("Day:" + new Date().getDate());
 
-console.log(`Event 2: ${event2.toISOString()}`);
-console.log(event2.toLocaleString());
+// console.log(`Event 2: ${event2.toISOString()}`);
+// console.log(event2.toLocaleString());
 
-event2.setHours(23);
+// event2.setHours(23);
 
-console.log(`Event 2: ${event2.toISOString()}`);
-console.log(event2.toLocaleString());
+// console.log(`Event 2: ${event2.toISOString()}`);
+// console.log(event2.toLocaleString());
 
 
 if(Date.parse(event2)-Date.parse(new Date())<0)

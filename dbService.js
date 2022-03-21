@@ -1169,7 +1169,7 @@ class DbService
 
                             console.log(' Hour Changed - suggestedDate: ' + suggestedDate.toISOString());
 
-                            var localeString = new Date(0, 0, 0, j).toLocaleString();
+                            var localeString = suggestedDate.toLocaleString();
                             localeString = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
                             // console.log(`suggestedTime: ${localeString}`);
                             var AvalibleYesOrNo = true;
