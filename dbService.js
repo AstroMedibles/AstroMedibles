@@ -1109,6 +1109,11 @@ class DbService
     {
         console.log("/ordersCustomerGetPickupDaysAndTimes(customerDate)");
         customerDate = new Date(customerDate);
+
+        // TIMEZONE OFFSET, NEW YORK SERVER
+        // customerDate.setHours(customerDate.getHours() + 1);
+
+
         console.log('customerDate: ' + customerDate.toISOString());
         var avalibleDaysandTimes = [];
         /* avalibleDaysandTimes = ...
@@ -1144,7 +1149,6 @@ class DbService
                         // create possible day
                         var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + i);
 
-
                         // if suggested day is not available on admin options, skip
                         if (pickupDays[suggestedDate.getDay()].available === 0)
                         {
@@ -1167,12 +1171,14 @@ class DbService
                             suggestedDate.setHours(pickupTimes[j].time);
                             // console.log()
 
-                            console.log(' Hour Changed - suggestedDate: ' + suggestedDate.toISOString());
-
                             var localeString = suggestedDate.toLocaleString();
                             localeString = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
                             // console.log(`suggestedTime: ${localeString}`);
                             var AvalibleYesOrNo = true;
+
+                            console.log('suggestedDate + time: ' + suggestedDate.toISOString());
+                            console.log('localeString: ' + localeString);
+                            
                             avalibleSubElement.push([localeString, AvalibleYesOrNo, suggestedDate.toISOString()]);
                         }
                         avalibleDaysandTimes.push(avalibleSubElement); 
