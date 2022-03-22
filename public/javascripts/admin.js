@@ -941,13 +941,25 @@ function updateTimesSchedule(event)
 
 function ready()
 {
-    // get cart total
-    fetch(address + '/getCartData')
-    .then(response => response.json())
-    .then(data => 
+    try 
     {
-        loadCartTotal(data['data']);
-    });
-
-    radioOrdersClick();
+        // get cart total
+        fetch(address + '/getCartData')
+        .then(response => response.json())
+        .then(data => 
+        {
+            loadCartTotal(data['data']);
+        });
+    } catch (error)
+    {
+        console.log(error);
+    }
+    
+    try
+    {
+        radioOrdersClick();
+    } catch (error)
+    {
+        console.log(error);
+    }
 }
