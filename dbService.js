@@ -1171,7 +1171,7 @@ class DbService
                             suggestedDate.setHours(pickupTimes[j].time);
                             // console.log()
 
-                            var localeString = suggestedDate.toLocaleString();
+                            var localeString = suggestedDate.toLocaleString("en-US", {timeZone: "America/Chicago"});
                             localeString = `${localeString.substring(localeString.indexOf(' ') + 1).replace('00:00', '00')}`;
                             // console.log(`suggestedTime: ${localeString}`);
                             var AvalibleYesOrNo = true;

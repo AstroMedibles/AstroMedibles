@@ -1,22 +1,39 @@
-// const event2 = new Date('July 1, 1999');
+// const date1 = new Date('July 1, 1999');
 // new Date(year, monthIndex, day, hours, minutes, seconds, milliseconds)
 const dbDateString = '2022-03-25T17:00:00.000Z';
 
-var event2 = new Date(new Date(dbDateString).toISOString());
+var date1 = new Date(new Date(dbDateString).toISOString());
+var date2 = new Date(dbDateString);
 
-console.log('event2');
-console.log(event2);
-console.log(event2.toLocaleString());
-// console.log(event2.toLocaleDateString());
-// console.log(event2.toLocaleTimeString());
-console.log(event2.toString());
-// console.log(event2.toTimeString());
-// console.log(event2.toUTCString());
-// console.log(event2.valueOf());
+console.log('date1');
+console.log('ISO: \t\t\t\t\t' + date1.toISOString());
+console.log('Locale String: \t\t\t' + date1.toLocaleString("en-US", {timeZone: "America/New_York"}));
+console.log('toLocaleDateString: \t' + date1.toLocaleDateString("en-US", {timeZone: "America/New_York"}));
+console.log('toLocaleTimeString: \t' + date1.toLocaleTimeString("en-US", {timeZone: "America/New_York"}));
+// console.log('Locale String: \t\t\t' + date1.toLocaleString());
+// console.log('toLocaleDateString: \t' + date1.toLocaleDateString());
+// console.log('toLocaleTimeString: \t' + date1.toLocaleTimeString());
+console.log('toString: \t\t\t\t' + date1.toString());
+console.log('toTimeString: \t\t\t' + date1.toTimeString());
+console.log('toUTCString: \t\t\t' + date1.toUTCString());
+console.log('valueOf: \t\t\t\t' + date1.valueOf());
 
-// var dateIntger  = event2.getFullYear().toString() + (event2.getMonth() + 1).toString() + event2.getDate().toString();
-// var timeHour    = event2.getHours().toString();
-// var timeMinutes = event2.getMinutes().toString();
+console.log('\n');
+
+console.log('date2');
+console.log('ISO: \t\t\t\t\t' + date2.toISOString());
+console.log('Locale String: \t\t\t' + date2.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+console.log('toLocaleDateString: \t' + date2.toLocaleDateString("en-US", {timeZone: "America/Chicago"}));
+console.log('toLocaleTimeString: \t' + date2.toLocaleTimeString("en-US", {timeZone: "America/Chicago"}));
+console.log('toString: \t\t\t\t' + date2.toString());
+console.log('toTimeString: \t\t\t' + date2.toTimeString());
+console.log('toUTCString: \t\t\t' + date2.toUTCString());
+console.log('valueOf: \t\t\t\t' + date2.valueOf());
+
+
+// var dateIntger  = date1.getFullYear().toString() + (date1.getMonth() + 1).toString() + date1.getDate().toString();
+// var timeHour    = date1.getHours().toString();
+// var timeMinutes = date1.getMinutes().toString();
 
 // var timeInteger = timeHour + timeMinutes;
 
@@ -27,9 +44,9 @@ console.log(event2.toString());
 // console.log(event1);
 // expected output: Thu Jul 01 1999 00:00:00 GMT+0200 (CEST)
 
-// event2.setTime(event1.getTime());
-// console.log('event2');
-// console.log(event2);
+// date1.setTime(event1.getTime());
+// console.log('date1');
+// console.log(date1);
 // expected output: Thu Jul 01 1999 00:00:00 GMT+0200 (CEST)
 // (note: your timezone may vary)
 
@@ -39,56 +56,56 @@ console.log(event2.toString());
 // console.log("dateIntger: " + dateIntger);
 // console.log("timeInteger:" + timeInteger);
 
-// console.log("Day:" + event2.getDate());
+// console.log("Day:" + date1.getDate());
 
 // console.log("Day:" + new Date().getDate());
 
-// console.log(`Event 2: ${event2.toISOString()}`);
-// console.log(event2.toLocaleString());
+// console.log(`Event 2: ${date1.toISOString()}`);
+// console.log(date1.toLocaleString());
 
-// event2.setHours(23);
+// date1.setHours(23);
 
-// console.log(`Event 2: ${event2.toISOString()}`);
-// console.log(event2.toLocaleString());
-
-
-if(Date.parse(event2)-Date.parse(new Date())<0)
-{
-   console.log('DATE HAS PASSED');
-}
-else
-{
-    console.log('DATE NOT PASSED');
-}
+// console.log(`Event 2: ${date1.toISOString()}`);
+// console.log(date1.toLocaleString());
 
 
-for (let index = 0; index < 15; index++)
-{
-    var suggestedDate = new Date(event2.getFullYear(), event2.getMonth(), event2.getDate() + index);
+// if(Date.parse(date1)-Date.parse(new Date())<0)
+// {
+//    console.log('DATE HAS PASSED');
+// }
+// else
+// {
+//     console.log('DATE NOT PASSED');
+// }
+
+
+// for (let index = 0; index < 15; index++)
+// {
+//     var suggestedDate = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate() + index);
 
     // console.log(`${index}. ${suggestedDate.toString().substring(0, 16)} day[${suggestedDate.getDay()}]`);
 
-}
+// }
 
 
-for (let index = 0; index < 24; index++)
-{
-    var suggestedTime = new Date(0, 0, 0, index);
-    var localeString = suggestedTime.toLocaleString();
-    // console.log(`${index}. ${localeString.substring(localeString.indexOf(' ') + 1)}`);
+// for (let index = 0; index < 24; index++)
+// {
+//     var suggestedTime = new Date(0, 0, 0, index);
+//     var localeString = suggestedTime.toLocaleString();
+//     // console.log(`${index}. ${localeString.substring(localeString.indexOf(' ') + 1)}`);
 
-}
+// }
 
 var dateObject = '2021-10-25T19:55:28.607Z'
 dateObject = '';
 
 if (dateObject.length > 1)
 {
-    console.log('PASS: ' + dateObject);
+    // console.log('PASS: ' + dateObject);
 }
 else
 {
-    console.log('FAIL: ' + dateObject);
+    // console.log('FAIL: ' + dateObject);
 }
 
 console.log('\n\n');

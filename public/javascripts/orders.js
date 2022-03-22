@@ -149,7 +149,7 @@ function populateUserOrders()
                     {
 
                         var date = new Date(pickup_scheduled);
-                        var localeTimeStr = date.toLocaleTimeString().toString();
+                        var localeTimeStr = date.toLocaleTimeString("en-US", {timeZone: "America/Chicago"}).toString();
                         var time = localeTimeStr.substring(0, localeTimeStr.lastIndexOf(':')) + localeTimeStr.substring(localeTimeStr.lastIndexOf(':') + 3) 
                         var options = { weekday: 'long', month: 'short', day: 'numeric'};
                         var dateLocaleString = date.toLocaleString('en-US', options) + getOrdinalSuffix(date);
