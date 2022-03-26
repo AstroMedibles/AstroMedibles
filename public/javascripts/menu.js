@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () 
 {
-    console.log("DOMContentLoaded");
+    // console.log("DOMContentLoaded");
 
     // UPDATE PORT, DO NOT FORGET
     fetch(address + '/getMenuData')
@@ -43,7 +43,7 @@ function loadMenuCards(data)
             <div class="col-6 col-md-3 d-flex  text-center">
 
             <div name="card" class="card  d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
-                <img class="card-img-top" src="../images/${name.toLowerCase()}.jpg"   alt="...">
+                <img class="card-img-top" src="../images/${name.toLowerCase()}.jpeg"   alt="...">
 
                 <div class="card-header" style="width: 100%;">
                     <h6 class="card-title"><b>${name}</b></h6>
