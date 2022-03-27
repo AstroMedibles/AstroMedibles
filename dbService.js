@@ -1701,7 +1701,6 @@ class DbService
                 var subject = `[Help Desk] Order: ${orderId}`;
                 var html = 
                 `
-                <img  src="../images/email/header.jpg"  alt="Header"> 
                 <h3>Help Desk Response:</h3>
                 <p>
                     "${description}"
