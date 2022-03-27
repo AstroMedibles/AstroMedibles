@@ -110,7 +110,8 @@ function updateAccountAttributes()
         else
         {
             var error = data;
-            console.log(error);
+            error = 'Error: Email possibly already in use.'
+            // console.log(error);
 
             // Notification
             const message       =  error; 
