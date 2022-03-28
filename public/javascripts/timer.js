@@ -18,9 +18,9 @@ function startTime()
     var targetDate = new Date();
     targetDate.setHours(16);
     // targetDate.setHours(8);
-    targetDate.setMinutes(20);
+    targetDate.setMinutes(30);
     // targetDate.setMinutes(23);
-    targetDate.setSeconds(59);
+    targetDate.setSeconds(0);
 
   // To calculate the time difference of two dates
   var Difference_In_Time = targetDate.getTime() - today.getTime();
