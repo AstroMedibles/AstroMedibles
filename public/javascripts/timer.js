@@ -16,9 +16,9 @@ function startTime()
   // 9:00pm
   // const targetDate = new Date('2022-03-07T21:00');
     var targetDate = new Date();
-    targetDate.setHours(21);
+    targetDate.setHours(16);
     // targetDate.setHours(8);
-    targetDate.setMinutes(59);
+    targetDate.setMinutes(20);
     // targetDate.setMinutes(23);
     targetDate.setSeconds(59);
 
