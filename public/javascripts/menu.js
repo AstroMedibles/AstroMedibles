@@ -19,7 +19,7 @@ function loadMenuCards(data)
     {
         if (data.length === 0)
         {
-            console.log("data.length === 0");
+            // console.log("data.length === 0");
             return;
         }
     } catch (error)
@@ -30,7 +30,7 @@ function loadMenuCards(data)
     var myform = $('#myform');
     Array.from(data).forEach(function ({ id, name, price, description })
     {
-        console.log(id + "\t" + name + "\t" + price + "\t" + description);
+        // console.log(id + "\t" + name + "\t" + price + "\t" + description);
 
         id = parseInt(id);
         price = parseFloat(price);
@@ -64,7 +64,7 @@ function loadMenuCards(data)
 
         myform.append(card);
     });
-    console.log("buttons created");
+    // console.log("buttons created");
 
     // create menu buttons
     var removeCartItemButtons = document.getElementsByClassName('btn-danger');
@@ -85,23 +85,23 @@ function loadMenuCards(data)
     var addToCartButtons = document.getElementsByName('shop-item-button');
     for (var i = 0; i < addToCartButtons.length; i++)
     {
-        console.log("button found!");
+        // console.log("button found!");
         var button = addToCartButtons[i];
         button.addEventListener('click', addToCartClicked);
-        console.log("button " + i + " online!");
+        // console.log("button " + i + " online!");
     }
-    console.log("shop-item-button Search End");
+    // console.log("shop-item-button Search End");
 
 }
 
 function loadCartTotal(data)
 {
-    console.log("loadCartTotal() START");
+    // console.log("loadCartTotal() START");
 
     try
     {
         var cart = data.cart.cart[0][1];
-        console.log(cart);
+        // console.log(cart);
 
         if (data == null)
         {
@@ -117,21 +117,21 @@ function loadCartTotal(data)
     {
         console.log(error);
     }
-    console.log("function: loadCartTotal END");
+    // console.log("function: loadCartTotal END");
 }
 
 function addToCartClicked(event)
 {
-    console.log("\n" + "addToCartClicked()");
+    // console.log("\n" + "addToCartClicked()");
     var button = event.target;
     var id = parseInt(button.dataset.id);
     var title = button.dataset.name;
     var price = parseFloat(button.dataset.price);
 
     // console.log(shopItem.dataAttributes);
-    console.log("id:\t" + id);
-    console.log("title:\t" + title);
-    console.log("price:\t" + price);
+    // console.log("id:\t" + id);
+    // console.log("title:\t" + title);
+    // console.log("price:\t" + price);
 
     fetch(address + '/cartAddItem',
         {
@@ -152,7 +152,7 @@ function addToCartClicked(event)
         {
             var cart = data['data']['cart'];
             var total = cart[0][1];
-            console.log(cart);
+            // console.log(cart);
 
             // console.log(cart.data.cart);
             var cartQty = document.getElementById('cart-quantity');
@@ -166,7 +166,7 @@ function addToCartClicked(event)
             const iconChoice    = 1;
             alertNotify(message, alertType, iconChoice, 2);
 
-            console.log("addToCartClicked complete");
+            // console.log("addToCartClicked complete");
         }).catch((error => 
         {
             console.log("addToCartClicked(event)  catch:" + error);
