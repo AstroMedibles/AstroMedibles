@@ -2,7 +2,7 @@ var preorderTimer, preorderNavbar;
 
 document.addEventListener('DOMContentLoaded', function () 
 {
-  preorderTimer = document.getElementById('preorderTimer');
+  preorderTimer  = document.getElementById('preorderTimer');
   preorderNavbar = document.getElementById('preorderNavbar');
   
   startTime();
@@ -10,98 +10,141 @@ document.addEventListener('DOMContentLoaded', function ()
 
 function startTime()
 {
-  const today = new Date();
-//   console.log('working');
+
   
   // 9:00pm
-  // const targetDate = new Date('2022-03-07T21:00');
-    var targetDate = new Date();
-    targetDate.setHours(16);
-    // targetDate.setHours(8);
-    targetDate.setMinutes(30);
-    // targetDate.setMinutes(23);
-    targetDate.setSeconds(0);
+  // var startDate = new Date();
+  var todayDate = new Date();
+  // var todayDate = new Date('2022-04-02T00:00');
 
-  // To calculate the time difference of two dates
-  var Difference_In_Time = targetDate.getTime() - today.getTime();
+  var startDate = new Date('2022-03-30T00:00');
+  // var startDate = new Date();
+  var endDate   = new Date('2022-04-01T00:00');
+  // var endDate = new Date();
+  // endDate.setHours(16);
+  // endDate.setMinutes(30);
+  // endDate.setSeconds(0);
 
-  if (Difference_In_Time > 0)
+  var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
+
+
+  // if todays date is before the start of sale date
+  if (Difference_In_Time1 > 0)
   {
-
-    // console.log(`Difference_In_Time: ${Difference_In_Time}`);
-  
-      // To calculate the no. of hours between two dates
-      var Difference_In_Hours = parseInt(Difference_In_Time / (1000 * 60 * 60));
-      Difference_In_Time -= Difference_In_Hours * (1000 * 60 * 60);
-  
-  
-      // To calculate the no. of minutes between two dates
-      var Difference_In_Minutes = parseInt(Difference_In_Time / (1000 * 60));
-      Difference_In_Time -= Difference_In_Minutes * (1000 * 60);
-  
-      // To calculate the no. of seconds between two dates
-      var Difference_In_Seconds = parseInt(Difference_In_Time / (1000));
-      Difference_In_Time -= Difference_In_Seconds * (1000);
-  
-  
-      let h = Difference_In_Hours;
-      let m = Difference_In_Minutes;
-      let s = Difference_In_Seconds;
-      //   h = checkTime(h);
-      //   m = checkTime(m);
-      //   s = checkTime(s);
-
-    var addToCartButtons = document.getElementsByName('shop-item-button');
-    for (var i = 0; i < addToCartButtons.length; i++)
-    {
-        var button = addToCartButtons[i];
-        button.addEventListener('click', addToCartClicked);
-        button.classList.remove('disabled');
-    }
-
-    preorderTimer.innerHTML =  'Pre-Order Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
-    setTimeout(startTime, 500);
-  } 
-  else
-  {
-    // console.log('DISABLE BUTTONS, TIMER OVER');
-    var addToCartButtons = document.getElementsByName('shop-item-button');
-    for (var i = 0; i < addToCartButtons.length; i++)
-    {
-        var button = addToCartButtons[i];
-        button.addEventListener('click', null);
-        button.classList.add('disabled');
-    }
-    // console.log('DISABLE SUCCESS');
-
+    console.log('today is before sale');
     preorderNavbar.classList.remove('bg-primary');
     preorderNavbar.classList.add('bg-dark');
-    // preorderTimer.innerHTML =  'Pre-Order Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
-    preorderTimer.innerHTML =  'Pre-Order Sale Over: See your order status at <a href="/orders">My Orders</a>'
+
+    // To calculate the no. of hours between two dates
+    var Difference_In_Hours = parseInt(Difference_In_Time1 / (1000 * 60 * 60));
+    Difference_In_Time1 -= Difference_In_Hours * (1000 * 60 * 60);
+
+
+    // To calculate the no. of minutes between two dates
+    var Difference_In_Minutes = parseInt(Difference_In_Time1 / (1000 * 60));
+    Difference_In_Time1 -= Difference_In_Minutes * (1000 * 60);
+
+    // To calculate the no. of seconds between two dates
+    var Difference_In_Seconds = parseInt(Difference_In_Time1 / (1000));
+    Difference_In_Time1 -= Difference_In_Seconds * (1000);
+
+
+    var h = Difference_In_Hours;
+    var m = Difference_In_Minutes;
+    var s = Difference_In_Seconds;
+
+
+    preorderTimer.innerHTML =  'Upcoming Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
+    setTimeout(startTime, 500);
+
+  }
+  else 
+  {
+    // To calculate the time difference of two dates
+    var Difference_In_Time = endDate.getTime() - startDate.getTime();
+
+    console.log(Difference_In_Time);
+
+    // if 
+    if (Difference_In_Time > 0 && (endDate.getTime() - todayDate.getTime() > 0))
+    {
+
+      // console.log(`Difference_In_Time: ${Difference_In_Time}`);
     
-    // console.log('Difference_In_Time: ' + Difference_In_Time / (1000 * 60 * 60));
-    // if user logs in less than one hour after sale has ended, place their order
-    // else clear their cart
+        // To calculate the no. of hours between two dates
+        var Difference_In_Hours = parseInt(Difference_In_Time / (1000 * 60 * 60));
+        Difference_In_Time -= Difference_In_Hours * (1000 * 60 * 60);
+    
+    
+        // To calculate the no. of minutes between two dates
+        var Difference_In_Minutes = parseInt(Difference_In_Time / (1000 * 60));
+        Difference_In_Time -= Difference_In_Minutes * (1000 * 60);
+    
+        // To calculate the no. of seconds between two dates
+        var Difference_In_Seconds = parseInt(Difference_In_Time / (1000));
+        Difference_In_Time -= Difference_In_Seconds * (1000);
+    
+    
+        var h = Difference_In_Hours;
+        var m = Difference_In_Minutes;
+        var s = Difference_In_Seconds;
+        //   h = checkTime(h);
+        //   m = checkTime(m);
+        //   s = checkTime(s);
 
-    console.log('CART: '  +$("#cart-quantity").text());
-    if ($("#cart-quantity").text() != 0)
-    {
-      console.log('CART NOT ZERO BABY');
-    }
+      var addToCartButtons = document.getElementsByName('shop-item-button');
+      for (var i = 0; i < addToCartButtons.length; i++)
+      {
+          var button = addToCartButtons[i];
+          button.addEventListener('click', addToCartClicked);
+          button.classList.remove('disabled');
+      }
 
-    if ((Difference_In_Time / (1000 * 60 * 60) ) > -1 && $("#cart-quantity").text() != 0)
-    {
-      userPlaceOrder();
-      // console.log('ORDER PLACED AUTOMATICALLY');
-    }
+      preorderTimer.innerHTML =  'Pre-Order Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
+      setTimeout(startTime, 500);
+    } 
     else
     {
-      cartRemoveAllItems();
-      // $("#cart-quantity").text(0);
-      // console.log('CART EMPTIED AUTOMATICALLY');
+      // console.log('DISABLE BUTTONS, TIMER OVER');
+      var addToCartButtons = document.getElementsByName('shop-item-button');
+      for (var i = 0; i < addToCartButtons.length; i++)
+      {
+          var button = addToCartButtons[i];
+          button.addEventListener('click', null);
+          button.classList.add('disabled');
+      }
+      // console.log('DISABLE SUCCESS');
+
+      preorderNavbar.classList.remove('bg-primary');
+      preorderNavbar.classList.add('bg-dark');
+      // preorderTimer.innerHTML =  'Pre-Order Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
+      preorderTimer.innerHTML =  'Pre-Order Sale Over: See your order status at <a href="/orders">My Orders</a>'
+      
+      // console.log('Difference_In_Time: ' + Difference_In_Time / (1000 * 60 * 60));
+      // if user logs in less than one hour after sale has ended, place their order
+      // else clear their cart
+
+      console.log('CART: '  +$("#cart-quantity").text());
+      if ($("#cart-quantity").text() != 0)
+      {
+        console.log('CART NOT ZERO BABY');
+      }
+
+      if ((Difference_In_Time / (1000 * 60 * 60) ) > -1 && $("#cart-quantity").text() != 0)
+      {
+        userPlaceOrder();
+        // console.log('ORDER PLACED AUTOMATICALLY');
+      }
+      else
+      {
+        cartRemoveAllItems();
+        // $("#cart-quantity").text(0);
+        // console.log('CART EMPTIED AUTOMATICALLY');
+      }
     }
-    
-  }
+}
+
+
 }
 
 function checkTime(i)
@@ -173,7 +216,7 @@ function cartRemoveAllItems()
   .then((response) =>
   {
     $("#cart-quantity").text(0);
-    console.log('remove complete');
+    // console.log('remove complete');
   })
 }
 

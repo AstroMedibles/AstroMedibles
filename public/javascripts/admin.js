@@ -80,7 +80,7 @@ function populateUserOrders()
 
         for (let i = 0; i < orders.length; i++)
         {
-            console.log(orders[i]);
+            // console.log(orders[i]);
 
             var userOrder = orders[i];
 
@@ -273,7 +273,7 @@ function dropDownUpdateOrderStatus(event)
     var orderId = $(parentDiv).attr("data-order_id");
     var email = $(parentDiv).attr("data-email");
 
-    console.log('FOUND EMAIL: ' + email);
+    // console.log('FOUND EMAIL: ' + email);
 
 
     // console.log(orderId);
@@ -640,7 +640,7 @@ function radioPickupsClick()
         for (var i = 0; i < pickups.length; i++)
         {
             b = 1;
-            console.log(pickups[i]);
+            // console.log(pickups[i]);
             var date = new Date(pickups[i].date);
 
             var localeTimeStr = date.toLocaleTimeString().toString();
@@ -668,7 +668,7 @@ function radioPickupsClick()
             && lastDate.getMonth()    === date.getMonth()
             && lastDate.getFullYear() === date.getFullYear());
 
-            console.log(`${lastDate} - ${dateLocaleString}`);
+            // console.log(`${lastDate} - ${dateLocaleString}`);
             if (!isSameDay)
             {
                 tableHTML +=
@@ -692,19 +692,19 @@ function radioPickupsClick()
                              && lastDate.getMinutes() === date.getMinutes());
 
 
-            console.log('\nlastDate')
-            console.log(lastDate.getHours());
-            console.log(lastDate.getMinutes());
+            // console.log('\nlastDate')
+            // console.log(lastDate.getHours());
+            // console.log(lastDate.getMinutes());
 
-            console.log('date')
-            console.log(date.getHours());
-            console.log(date.getMinutes());
+            // console.log('date')
+            // console.log(date.getHours());
+            // console.log(date.getMinutes());
 
-            console.log('time')
-            console.log(time);
+            // console.log('time')
+            // console.log(time);
 
-            console.log('timeString')
-            console.log(timeString);
+            // console.log('timeString')
+            // console.log(timeString);
 
             if (isSameDay && isSameTime)
             {
@@ -768,7 +768,7 @@ function radioPickupsClick()
             // console.log(checkData[i]);
             if (checkData[i] == 1)
             {
-                console.log(3000);
+                // console.log(3000);
                 checks[i].parentNode.setAttribute("style","font-weight: bold");
                 checks[i].checked = true;
             }
@@ -811,7 +811,7 @@ function getOrdinalSuffix(dt)
 
 function updateDaysSchedule(event)
 {
-    console.log("\n" + "updateDaysSchedule(event)");
+    // console.log("\n" + "updateDaysSchedule(event)");
 
     if (confirm('Update Days Schedule?'))
     {
@@ -825,7 +825,7 @@ function updateDaysSchedule(event)
     }
 
     var checks = [checkDay1.checked, checkDay2.checked, checkDay3.checked, checkDay4.checked, checkDay5.checked, checkDay6.checked, checkDay7.checked];
-    console.log(checks);
+    // console.log(checks);
    
     fetch(address + '/adminSetPickupsDays',
     {
@@ -843,7 +843,7 @@ function updateDaysSchedule(event)
     .then(response => response.json())
     .then((data) => 
     {
-        console.log(123456);
+        // console.log(123456);
         checks = [checkDay1, checkDay2, checkDay3, checkDay4, checkDay5, checkDay6, checkDay7];
         checks.forEach(element =>
             {
@@ -859,7 +859,7 @@ function updateDaysSchedule(event)
             });
 
 
-        console.log("updateDaysSchedule complete");
+        // console.log("updateDaysSchedule complete");
         // Update Summary
     }).catch((error => 
     {
@@ -869,7 +869,7 @@ function updateDaysSchedule(event)
 
 function updateTimesSchedule(event)
 {
-    console.log("\n" + "updateTimesSchedule(event)");
+    // console.log("\n" + "updateTimesSchedule(event)");
 
     if (confirm('Update Times Schedule?'))
     {
@@ -888,7 +888,7 @@ function updateTimesSchedule(event)
         checkTime17.checked, checkTime18.checked, checkTime19.checked,checkTime20.checked,
         checkTime21.checked, checkTime22.checked, checkTime23.checked,checkTime24.checked
     ];
-    console.log(checks);
+    // console.log(checks);
    
     fetch(address + '/adminSetPickupsTimes',
     {
@@ -931,11 +931,11 @@ function updateTimesSchedule(event)
             });
 
 
-        console.log("updateTimesSchedule complete");
+        // console.log("updateTimesSchedule complete");
         // Update Summary
     }).catch((error => 
     {
-        console.log("updateTimesSchedule(event)  catch:" + error);
+        // console.log("updateTimesSchedule(event)  catch:" + error);
     }));
 }
 
@@ -952,7 +952,7 @@ function ready()
         });
     } catch (error)
     {
-        console.log(error);
+        // console.log(error);
     }
     
     try
@@ -960,6 +960,6 @@ function ready()
         radioOrdersClick();
     } catch (error)
     {
-        console.log(error);
+        // console.log(error);
     }
 }

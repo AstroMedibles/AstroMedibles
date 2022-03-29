@@ -34,7 +34,7 @@ function loadCartTotal(data)
     }
     catch (error)
     {
-        console.log(error);
+        // console.log(error);
     }
     // console.log("function: loadCartTotal END");
 }
@@ -127,7 +127,7 @@ function getCartDetails(userCart)
 
 function subtractItem(event)
 {
-    console.log("\n" + "subtractItem(event)");
+    // console.log("\n" + "subtractItem(event)");
 
     // grab item attributes, id, name, qty
     var parentDiv = event.currentTarget.parentNode;
@@ -158,7 +158,7 @@ function subtractItem(event)
         .then(response => response.json())
         .then((data) => 
         {
-            console.log("cartRemoveItem.then");
+            // console.log("cartRemoveItem.then");
             var cart = data['data']['cart'];
             var total = cart[0][1];
 
@@ -169,7 +169,7 @@ function subtractItem(event)
 
             // Update item Qty within Card
 
-            console.log(cart);
+            // console.log(cart);
             let matchFound = false;
             let labelName = "labelqty" + id;
             const cardSubtotalLabel = "#card-subtotal-" + id;
@@ -178,7 +178,7 @@ function subtractItem(event)
 
             for (let i = 0; i < cart.length; i++)
             {
-                console.log("id == cart[i][0]: " + id + " _ " + cart[i][0] + " i: " + i);
+                // console.log("id == cart[i][0]: " + id + " _ " + cart[i][0] + " i: " + i);
                 if (id == cart[i][0])
                 {
                     // console.log("MATCH");
@@ -225,7 +225,7 @@ function subtractItem(event)
 
 function addItem(event)
 {
-    console.log("\n" + "cartAddItem(event)");
+    // console.log("\n" + "cartAddItem(event)");
 
     // grab item attributes, id, name, qty
     var parentDiv = event.currentTarget.parentNode;
@@ -233,9 +233,9 @@ function addItem(event)
     var name = parentDiv.getAttribute('data-itemname');
     var qty = parentDiv.getAttribute('data-itemqty');
     var price = parentDiv.getAttribute('data-itemprice');
-    console.log("Name: " + name);
-    console.log("ID: " + id);
-    console.log("QTY: " + qty);
+    // console.log("Name: " + name);
+    // console.log("ID: " + id);
+    // console.log("QTY: " + qty);
 
     // use itemId to remove "1" qty from cart
     fetch(address + '/cartAddItem',
@@ -264,21 +264,21 @@ function addItem(event)
             $("#cart-quantity").text(total);
 
             // Update item Qty within Card
-            console.log(cart);
+            // console.log(cart);
             let labelName = "labelqty" + id;
             const cardSubtotalLabel = "#card-subtotal-" + id;
 
             for (let i = 0; i < cart.length; i++)
             {
-                console.log("id == cart[i][0]: " + id + " _ " + cart[i][0] + " i: " + i);
+                // console.log("id == cart[i][0]: " + id + " _ " + cart[i][0] + " i: " + i);
                 if (id == cart[i][0])
                 {
-                    console.log("MATCH");
+                    // console.log("MATCH");
                     var itemQty = cart[i][1];
-                    console.log("itemQty: " + itemQty);
-                    console.log("id: " + id);
-                    console.log("labelName: " + labelName);
-                    console.log("itemQty: " + itemQty);
+                    // console.log("itemQty: " + itemQty);
+                    // console.log("id: " + id);
+                    // console.log("labelName: " + labelName);
+                    // console.log("itemQty: " + itemQty);
 
 
                     // Update card dataset QTY
@@ -292,7 +292,7 @@ function addItem(event)
                 }
             }
 
-            console.log("addItem complete");
+            // console.log("addItem complete");
             // Update Summary
             updateSummary(cart);
         }).catch((error => 
@@ -303,17 +303,17 @@ function addItem(event)
 
 function updateSummary(cart)
 {
-    console.log("updateSummary(cart) START");
+    // console.log("updateSummary(cart) START");
     let shipping = 0;
     let discount = 0;
     let total = 0;
     let subtotal = 0;
-    console.log("cart");
-    console.log(cart);
+    // console.log("cart");
+    // console.log(cart);
     for (let i = 1; i < cart.length; i++)
     {
-        console.log("Searching for " + "card-" + cart[i][0]);
-        console.log();
+        // console.log("Searching for " + "card-" + cart[i][0]);
+        // console.log();
         const userCartElement = document.getElementById("card-" + cart[i][0]);
         var id = userCartElement.getAttribute('data-itemid');
         var name = userCartElement.getAttribute('data-itemname');
@@ -324,10 +324,10 @@ function updateSummary(cart)
 
     total = subtotal - discount - shipping;
 
-    console.log(subtotal);
-    console.log(discount);
-    console.log(shipping);
-    console.log(total);
+    // console.log(subtotal);
+    // console.log(discount);
+    // console.log(shipping);
+    // console.log(total);
 
 
     if (parseFloat(subtotal) > 0)
@@ -344,12 +344,11 @@ function updateSummary(cart)
     $("#summary-discount").text("$" + parseFloat(discount).toFixed(2));
     $("#summary-shipping").text("$" + parseFloat(shipping).toFixed(2));
     $("#summary-total").text("$" + parseFloat(total).toFixed(2));
-    console.log("updateSummary(cart) END");
+    // console.log("updateSummary(cart) END");
 }
 
 function userPlaceOrder()
 {
-    // console.log(1000);
     fetch(address + '/userPlaceOrder',
     {
         credentials: "include",
