@@ -41,15 +41,15 @@ connection.on('release', function (connection)
 });
 
 console.log("\n" + "Server Started:");
-console.log(process.env.HOST);
-console.log(process.env.USER);
-console.log(process.env.PASSWORD);
-console.log(process.env.DATABASE);
-console.log(process.env.TABLE_ITEMS);
-console.log(process.env.TABLE_NAMES);
-console.log(process.env.TABLE_ORDERS);
-console.log(process.env.PORT);
-console.log(process.env.DB_PORT);
+// console.log(process.env.HOST);
+// console.log(process.env.USER);
+// console.log(process.env.PASSWORD);
+// console.log(process.env.DATABASE);
+// console.log(process.env.TABLE_ITEMS);
+// console.log(process.env.TABLE_NAMES);
+// console.log(process.env.TABLE_ORDERS);
+// console.log(process.env.PORT);
+// console.log(process.env.DB_PORT);
 console.log("\n");
 
 const address = 'https://astromedibles.com';
@@ -569,7 +569,7 @@ class DbService
 
             // console.log("user_name");
             const cart          = JSON.stringify(userData.cart);
-            // date_created.toLocaleString('en-US', { timeZone: 'America/New_York' });
+            // date_created.toLocaleString('en-US', { timeZone: 'America/Chicago' });
 
             console.log(userData);
             console.log(user_id);
@@ -584,7 +584,7 @@ class DbService
             {
                 const query = "INSERT INTO " + process.env.TABLE_ORDERS + " (user_id, status, order_id, name, email, cart, total, date_created) VALUES (?,?,?,?,?,?,?,?);";
     
-                connection.query(query, [user_id, status, order_id, user_name, email, cart, total, date_created], (err, result) =>
+                connection.query(query, [user_id, status, order_id, user_name, email, cart, total, date_created], (err, result1) =>
                 {
                     if (err)
                     {
@@ -594,9 +594,23 @@ class DbService
                     {
                         // clear user cart
                         db.cartRemoveAllItems(email, password);
-                        resolve(result.insertId);
+
+                        // set user date_orderLastPlaced to now
+                        const query2 = "UPDATE " + process.env.TABLE_NAMES + " SET date_lastOrderPlaced = ? WHERE id = ?;";
+                        connection.query(query2, [date_created, user_id], (err, result2) =>
+                        {
+                            if (err) 
+                            {
+                                reject(err);
+                            }
+                            else
+                            {
+                                resolve([result1.insertId, result2.affectedRows]);
+                            }
+                        });
+                        // resolve(result.insertId);
                     }
-                })
+                });
             });
             // order created, now email user
             insertId.then((result) =>
@@ -641,7 +655,7 @@ class DbService
                 </p>
                 `;
                 
-                db.sendEmail(userData.email, subject, html);
+                // db.sendEmail(userData.email, subject, html);
             });
 
 
@@ -704,8 +718,8 @@ class DbService
                     {
                         console.log(`Code: ${accessCode} CONSUMED`);
 
-                        var query2 = "INSERT INTO " + process.env.TABLE_NAMES + " (isAdmin, name, password, cart, email, date_created, verificationCode) VALUES (?,?,?,?,?,?,?);";
-                        connection.query(query2, [isAdmin, name, password, cart, email, date_created, accessCode], (err, result) =>
+                        var query2 = "INSERT INTO " + process.env.TABLE_NAMES + " (isAdmin, name, password, cart, email, date_created, verificationCode) VALUES (?,?,?,?,?,?,?,?);";
+                        connection.query(query2, [isAdmin, name, password, cart, email, date_created, accessCode, ''], (err, result) =>
                         {
                             if (err) 
                             {
@@ -865,7 +879,7 @@ class DbService
                 // console.log(status);
         
                 const query = "DELETE FROM " + process.env.TABLE_ORDERS + " WHERE (user_id = ?) AND (order_id = ?) AND (status = ?);";
-                connection.query(query, [userId, order_id, status], (err, result) =>
+                connection.query(query, [userId, order_id, status], (err, result1) =>
                 {
                     if (err)
                     {
@@ -874,20 +888,32 @@ class DbService
                     else
                     {
 
-                        console.log(`Order ${order_id} for ${userName} has been deleted!`);
-                        var subject = "Your order has been canceled";
-                        var html = 
-                        `
-                        <h3>No need to worry. Order id: ${order_id} has been canceled. </h3>
-                        <p>
-                        Start your new order at <a href="${address}">AstroMedibles.com</a>.<br>
-                        This is an automated message.
-                        </p>
-                        `;
-                        
-                        db.sendEmail(userEmail, subject, html);
-    
-                        resolve(result.affectedRows);
+                        const query2 = "UPDATE " + process.env.TABLE_NAMES + " SET date_lastOrderPlaced = ? WHERE id = ?;";
+                        const lastOrderPlaced = '';
+                        connection.query(query2, [lastOrderPlaced, userId], (err, result2) =>
+                        {
+                            if (err) 
+                            {
+                                reject(err);
+                            }
+                            else
+                            {
+                                console.log(`Order ${order_id} for ${userName} has been deleted!`);
+                                var subject = "Your order has been canceled";
+                                var html = 
+                                `
+                                <h3>No need to worry. Order id: ${order_id} has been canceled. </h3>
+                                <p>
+                                Start your new order at <a href="${address}">AstroMedibles.com</a>.<br>
+                                This is an automated message.
+                                </p>
+                                `;
+                                
+                                db.sendEmail(userEmail, subject, html);
+
+                                resolve([result1.affectedRows, result2.affectedRows]);
+                            }
+                        });
                     }
                 })
             });

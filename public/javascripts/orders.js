@@ -390,7 +390,7 @@ function dropDownCustomerUpdateOrderStatusDay(event)
 
         if (isSameDay)
         {
-           console.log('DATE MATCH');
+        //    console.log('DATE MATCH');
 
            for (var j = 0; j < element1.length; j++)
            {
