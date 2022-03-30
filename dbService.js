@@ -718,7 +718,7 @@ class DbService
                     {
                         console.log(`Code: ${accessCode} CONSUMED`);
 
-                        var query2 = "INSERT INTO " + process.env.TABLE_NAMES + " (isAdmin, name, password, cart, email, date_created, verificationCode) VALUES (?,?,?,?,?,?,?,?);";
+                        var query2 = "INSERT INTO " + process.env.TABLE_NAMES + " (isAdmin, name, password, cart, email, date_created, verificationCode, date_lastOrderPlaced) VALUES (?,?,?,?,?,?,?,?);";
                         connection.query(query2, [isAdmin, name, password, cart, email, date_created, accessCode, ''], (err, result) =>
                         {
                             if (err) 
