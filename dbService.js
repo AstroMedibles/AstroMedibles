@@ -651,11 +651,12 @@ class DbService
                 <br>
                 To cancel your order, go to <a href="${address}/MyOrders">My Orders</a>.<br>
                 After we confirm your payment, your order status will be updated and you will be notified.
+                <br>
                 This is an automated message.
                 </p>
                 `;
                 
-                // db.sendEmail(userData.email, subject, html);
+                db.sendEmail(userData.email, subject, html);
             });
 
 
@@ -732,9 +733,10 @@ class DbService
                                 var subject = "Welcome " + name + "! Your account has been created! 🚀";
                                 var html = 
                                 `
-                                <h3>Time to earn points!</h3>
+                                <h3>Welcome to the new website!</h3>
                                 <p>
-                                Head over to <a href="${address}">AstroMedibles.com</a> to start your order.<br>
+                                Head over to <a href="${address}">AstroMedibles.com</a> to start your order.
+                                <br>
                                 This is an automated message.
                                 </p>
                                 `;
@@ -898,13 +900,14 @@ class DbService
                             }
                             else
                             {
-                                console.log(`Order ${order_id} for ${userName} has been deleted!`);
+                                console.log(`Order ${order_id} for ${userName} has been canceled!`);
                                 var subject = "Your order has been canceled";
                                 var html = 
                                 `
                                 <h3>No need to worry. Order id: ${order_id} has been canceled. </h3>
                                 <p>
-                                Start your new order at <a href="${address}">AstroMedibles.com</a>.<br>
+                                Start your new order at <a href="${address}">AstroMedibles.com</a>.
+                                <br>
                                 This is an automated message.
                                 </p>
                                 `;
@@ -1378,10 +1381,10 @@ class DbService
                             else
                             {
                                 console.log(`Order ${orderId} : dateScheduledPickup (${dateScheduledPickup}) has been updated!`);
-                                // var subject = `Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}`;
+                                // var subject = `Order ${orderId}, sta dateScheduledPickup: ${dateScheduledPickup}`;
                                 // var html = 
                                 // `
-                                // <h3>Order id: ${orderId} dateScheduledPickup: ${dateScheduledPickup}</h3>
+                                // <h3>Order ID: ${orderId} dateScheduledPickup: ${dateScheduledPickup}</h3>
                                 // <p>
                                 // Order id: ${orderId} dateScheduledPickup has been updated!
                                 // <br>
@@ -1535,7 +1538,7 @@ class DbService
                 {
                     if (result.affectedRows <= 0)
                     {
-                        var error = 'forgotPasswordGenerateCode(email) ERROR: Email could not be found. Rejected.';
+                        var error = 'forgotPasswordGenerateCode(email) ERROR: Email could not be found.';
                         reject(error);
                         return;
                     }
@@ -1611,6 +1614,7 @@ class DbService
                                 `
                                 <h3>Your account information has been updated at astromedibles.com</b></h3>
                                 <p>
+                                This is an automated message.
                                 </p>
                                 `;
                                 
@@ -1697,7 +1701,7 @@ class DbService
                 <h3>Feedback Response:</h3>
                 <p>
                     "${description}"
-                <br><br>
+                <br>
                 This is an automated message.
                 </p>
                 `;
@@ -1730,7 +1734,7 @@ class DbService
                 <h3>Help Desk Response:</h3>
                 <p>
                     "${description}"
-                <br><br>
+                <br>
                 This is an automated message.
                 </p>
                 `;
