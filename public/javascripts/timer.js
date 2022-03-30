@@ -1,4 +1,5 @@
 var preorderTimer, preorderNavbar;
+var notifcationOrderPlacedSentAlready = false;
 
 document.addEventListener('DOMContentLoaded', function () 
 {
@@ -20,10 +21,12 @@ function startTime()
   // var Difference_In_Time3 = endDate.getTime() - startDate.getTime();
   // console.log('Difference_In_Time3: ' + Difference_In_Time3);
   
+
+
   // case 1 today date is before start date 
   if (Difference_In_Time1 > 0)
   {
-    console.log('case 1 today date is before start date ');
+    // console.log('case 1 today date is before start date ');
     preorderNavbar.classList.remove('bg-primary');
     preorderNavbar.classList.add('bg-dark');
 
@@ -49,7 +52,7 @@ function startTime()
   // case 2 today date is after start date && today date is before end date
   else if (Difference_In_Time1 <= 0 && Difference_In_Time2 >= 0)
   {
-    console.log('case 2 today date is after start date && today date is before end date');
+    // console.log('case 2 today date is after start date && today date is before end date');
     // To calculate the no. of hours between two dates
     var Difference_In_Hours = parseInt(Difference_In_Time2 / (1000 * 60 * 60));
     Difference_In_Time2 -= Difference_In_Hours * (1000 * 60 * 60);
@@ -69,21 +72,56 @@ function startTime()
     //   m = checkTime(m);
     //   s = checkTime(s);
 
-    var addToCartButtons = document.getElementsByName('shop-item-button');
-    for (var i = 0; i < addToCartButtons.length; i++)
-    {
-        var button = addToCartButtons[i];
-        button.addEventListener('click', addToCartClicked);
-        button.classList.remove('disabled');
-    }
 
+      var addToCartButtons = document.getElementsByName('shop-item-button');
+      for (var i = 0; i < addToCartButtons.length; i++)
+      {
+        try
+        {
+          // console.log('notifcationOrderPlacedSentAlready: ' + notifcationOrderPlacedSentAlready);
+          if (!notifcationOrderPlacedSentAlready)
+          {
+            var dlop = $('#myform').attr('data-dlop');
+            var date_dlop = new Date(dlop);
+            // console.log('dlop: ' + dlop);
+    
+            var Difference_In_Time1 = startDate.getTime() - date_dlop.getTime();
+    
+    
+            // console.log('Difference_In_Time1: ' + Difference_In_Time1);
+            // console.log();
+            if (Difference_In_Time1 > 259200000)
+            {
+              // console.log('Purchase is old enough, new one valid');
+              var button = addToCartButtons[i];
+              button.addEventListener('click', addToCartClicked);
+              button.classList.remove('disabled');
+            }
+            else
+            {
+              // console.log('Purchase too recent, cannot place additional one')
+              // Notification
+              const message = "Order already placed";
+              const alertType     = 'info';
+              const iconChoice    = 2;
+              alertNotify(message, alertType, iconChoice, 3);
+              notifcationOrderPlacedSentAlready = true;
+            }
+          }
+          
+  
+        } catch (error)
+        {
+          console.log(error);
+        } 
+    }
     preorderTimer.innerHTML =  'Pre-Order Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
     setTimeout(startTime, 500);
   }
   // case 3 today date is after start date && today date is after end date
   else if (Difference_In_Time1 <= 0 && Difference_In_Time2 <= 0)
   {
-    console.log('case 3 today date is after start date && today date is after end date');
+    // console.log('case 3 today date is after start date && today date is after end date');
 
     // console.log('DISABLE BUTTONS, TIMER OVER');
     var addToCartButtons = document.getElementsByName('shop-item-button');

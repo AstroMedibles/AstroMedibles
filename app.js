@@ -133,9 +133,9 @@ app.get('/account', (request, response) =>
 	})
 	.catch((error) =>
 	{
-		console.log("route(/account) \tresult.catch()");
-		console.log("route(/account) \tif loggedIn === false");
-		console.log(error);
+		// console.log("route(/account) \tresult.catch()");
+		// console.log("route(/account) \tif loggedIn === false");
+		// console.log(error);
 		response.redirect('/login'); 
 	});
 });
@@ -242,7 +242,16 @@ app.get('/menu', function (request, response)
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{
-		response.render('menu'); 
+		// console.log("accountAttributes.date_lastOrderPlaced");
+		// console.log(accountAttributes.date_lastOrderPlaced);
+
+		// console.log(accountAttributes);
+		// console.table(accountAttributes);
+
+		response.render('menu',
+		{
+			dlop: accountAttributes.date_lastOrderPlaced
+		}); 
 	})
 	.catch(() => 
 	{ 
@@ -262,9 +271,9 @@ app.post('/auth', function (request, response)
 		const email = request.body.email; 
 		const password = request.body.password; 
  
-		console.log("email, password: "); 
-		console.log(email); 
-		console.log(password); 
+		// console.log("email, password: "); 
+		// console.log(email); 
+		// console.log(password); 
  
 		const db = dbService.getDbServiceInstance(); 
 		const result = db.getUserData(email, password); 
@@ -272,78 +281,49 @@ app.post('/auth', function (request, response)
 		// console.log(1111);
 		result.then(results => 
 		{ 
-				// console.log(3333);
-			// 	console.log("loggedIn === true"); 
-			// 	loggedIn = true;
+			let options = 
+			{ 
+				maxAge: 1000 * 60 * 20160, // Would expire after two weeks (20160 minutes)
+				httpOnly: false, // The cookie only accessible by the web server 
+				signed: false // Indicates if the cookie should be signed 
+			} 
 
-			// if (loggedIn === true) 
-			// { 
-				// console.log("route(/auth) \tif loggedIn === true"); 
-				let options = 
-				{ 
-					maxAge: 1000 * 60 * 20160, // Would expire after two weeks (20160 minutes)
-					httpOnly: false, // The cookie only accessible by the web server 
-					signed: false // Indicates if the cookie should be signed 
-				} 
- 
-				// Set cookie 
-				response.cookie('email', email, options) // options is optional 
-				response.cookie('password', password, options) // options is optional 
- 
-				console.log("Cookies created: email, password"); 
-				// response.redirect('/menu'); 
-				response.json(true); 
- 
-			// } 
- 
-			// if (loggedIn === false) 
-			// { 
-			// 	console.log("route(/auth) \tif loggedIn === false"); 
- 
-			// 	// expire the false cookies 
-			// 	var options = 
-			// 	{ 
-			// 		maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
-			// 		httpOnly: false, // The cookie only accessible by the web server 
-			// 		signed: false // Indicates if the cookie should be signed 
-			// 	} 
- 
-			// 	// Set cookie 
-			// 	response.cookie('email', email, options) // options is optional 
-			// 	response.cookie('password', password, options) // options is optional 
-			// 	response.json(loggedIn); 
-			// } 
-			// if logged out, route to /login 
+			// Set cookie 
+			response.cookie('email', email, options) // options is optional 
+			response.cookie('password', password, options) // options is optional 
+
+			// console.log("Cookies created: email, password"); 
+			// response.redirect('/menu'); 
+			response.json(true); 
  
 		}).catch((dataResult) => 
 		{ 
 			console.log("route(/auth) \tresult.catch()"); 
 			console.log(dataResult); 
 			var options = 
-				{
-					maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
-					httpOnly: false, // The cookie only accessible by the web server 
-					signed: false // Indicates if the cookie should be signed 
-				} 
- 
-				// Set cookie 
-				response.cookie('email', email, options) // options is optional 
-				response.cookie('password', password, options) // options is optional 
-				response.json(false); 			
+			{
+				maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
+				httpOnly: false, // The cookie only accessible by the web server 
+				signed: false // Indicates if the cookie should be signed 
+			} 
+
+			// Set cookie 
+			response.cookie('email', email, options) // options is optional 
+			response.cookie('password', password, options) // options is optional 
+			response.json(false); 			
 		}); 
 	} 
 	catch (error)  
 	{ 
 		console.log("route(/auth) \tError:" + error); 
 		response.redirect('/login'); 
-	} 
- 
+	}
 }); 
  
 // read 
 app.get('/getMenuData', (request, response) => 
 { 
-	console.log("\n" + "route(/getMenuData) "); 
+	// console.log("\n" + "route(/getMenuData) "); 
 	const db = dbService.getDbServiceInstance(); 
 	const result = db.getMenuData(); 
  
@@ -352,7 +332,7 @@ app.get('/getMenuData', (request, response) =>
 	{ 
 		result.then(data =>  
 		{ 
-			console.log(data); 
+			// console.log(data); 
 			response.json({ data: data });
 		})
 		.catch(err => console.log(err)); 
@@ -873,7 +853,6 @@ app.patch('/adminUpdateOrderStatus', (request, response) =>
 	});
 });
 
-
 app.patch('/userUpdateScheduledPickup', (request, response) =>
 {
 	console.log("\n"+ "route(/userUpdateScheduledPickup) "); 
@@ -903,7 +882,6 @@ app.patch('/userUpdateScheduledPickup', (request, response) =>
 		response.redirect('/login'); 
 	});
 });
-
 
 app.patch('/adminSetPickupsDays', (request, response) =>
 {
@@ -1124,7 +1102,6 @@ app.post('/customerSupportEmailFeedback', (request, response) =>
 		response.redirect('/login'); 
 	});
 });
-
 
 // delete 
 app.delete('/cancelOrder', (request, response) => 

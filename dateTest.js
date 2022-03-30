@@ -8,9 +8,24 @@
 // var date2 = new Date(dbDateString);
 
 // var todayDate = new Date();
-var date1    = new Date('2022-03-30T05:00:00.000Z');
+var startDate    = new Date('2022-03-30T05:00:00.000Z');
 var endDate      = new Date('2022-04-01T05:00:00.000Z');
 
+var dlop         = new Date('2022-03-28T05:00:00.000Z');
+
+var Difference_In_Time1 = startDate.getTime() - dlop.getTime();
+
+
+console.log('Difference_In_Time1: ' + Difference_In_Time1);
+console.log();
+if (Difference_In_Time1 > 259200000)
+{
+    console.log('Purchase is old enough, new one valid');
+}
+else
+{
+    console.log('Purchase too recent, cannot place additional one')
+}
 
 // var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
 // var Difference_In_Time2 = endDate.getTime() - todayDate.getTime();
@@ -43,13 +58,13 @@ var endDate      = new Date('2022-04-01T05:00:00.000Z');
 
 
 
-console.log('date1');
-console.log('ISO: \t\t\t' + date1.toISOString());
-console.log('Locale String: \t\t' + date1.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+// console.log('date1');
+// console.log('ISO: \t\t\t' + date1.toISOString());
+// console.log('Locale String: \t\t' + date1.toLocaleString("en-US", {timeZone: "America/Chicago"}));
 // console.log('toLocaleDateString: \t' + date1.toLocaleDateString("en-US", {timeZone: "America/Chicago"}));
 // console.log('toLocaleTimeString: \t' + date1.toLocaleTimeString("en-US", {timeZone: "America/Chicago"}));
 
-console.log('Locale String: \t\t' + date1.toLocaleString());
+// console.log('Locale String: \t\t' + date1.toLocaleString());
 // console.log('toLocaleDateString: \t' + date1.toLocaleDateString());
 // console.log('toLocaleTimeString: \t' + date1.toLocaleTimeString());
 
