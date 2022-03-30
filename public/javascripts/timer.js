@@ -79,8 +79,8 @@ function startTime()
         try
         {
           // console.log('notifcationOrderPlacedSentAlready: ' + notifcationOrderPlacedSentAlready);
-          if (!notifcationOrderPlacedSentAlready)
-          {
+          // if (!notifcationOrderPlacedSentAlready)
+          // {
             var dlop = $('#myform').attr('data-dlop');
             var date_dlop = new Date(dlop);
             // console.log('dlop: ' + dlop);
@@ -90,24 +90,24 @@ function startTime()
     
             // console.log('Difference_In_Time1: ' + Difference_In_Time1);
             // console.log();
-            if (Difference_In_Time1 > 259200000)
-            {
+            // if (Difference_In_Time1 > 259200000)
+            // {
               // console.log('Purchase is old enough, new one valid');
               var button = addToCartButtons[i];
               button.addEventListener('click', addToCartClicked);
               button.classList.remove('disabled');
-            }
-            else
-            {
-              // console.log('Purchase too recent, cannot place additional one')
-              // Notification
-              const message = "Order already placed";
-              const alertType     = 'info';
-              const iconChoice    = 2;
-              alertNotify(message, alertType, iconChoice, 3);
-              notifcationOrderPlacedSentAlready = true;
-            }
-          }
+            // }
+            // else
+            // {
+            //   // console.log('Purchase too recent, cannot place additional one')
+            //   // Notification
+            //   const message = "Order already placed";
+            //   const alertType     = 'info';
+            //   const iconChoice    = 2;
+            //   alertNotify(message, alertType, iconChoice, 3);
+            //   notifcationOrderPlacedSentAlready = true;
+            // }
+          // }
           
   
         } catch (error)
