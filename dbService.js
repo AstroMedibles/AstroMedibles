@@ -903,16 +903,22 @@ class DbService
                         <p>
                         <b>Directions For Pickup 77598:</b>
                         <br>
-                        <a href="https://goo.gl/maps/jQcvTGmZJdWFp3q16">18833 Town Ridge Ln, Webster, TX 77598, United States</a>.
+                        <a href="https://goo.gl/maps/jQcvTGmZJdWFp3q16">18833 Town Ridge Ln, Webster, TX 77598, United States</a>
                         <br>
                         Do not enter the apartment complex. Please park on the side on the street, closer to Retail Rd. Park on any side of the street.
                         <br>
+                        Let me know you have arrived.
                         <br>
-                        <b>Alternative Location Pickup Directions 77504:</b>
+                        Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter</a>
                         <br>
-                        To pick up at 77504, please let me know a day before so I can take your order over to Lazy Daze, and give you directions.
                         <br>
-                        Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter.</a>
+                        <b>Alternative Location Pickup Directions 77504 (Lazy Daze):</b>
+                        <br>
+                        <a href="https://goo.gl/maps/yG57sXc9Mt3jaQMr8">4416 Fairmont Pkwy Ste 103, Pasadena, TX 77504</a>
+                        <br>
+                        To request to pick up at 77504, please let me know at least a day before so I can take your order over to Lazy Daze, and give you directions.
+                        <br>
+                        Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter</a>
                         <br>
                         <br>
                         Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
