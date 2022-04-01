@@ -102,32 +102,41 @@ class DbService
                         reject(new Error("dbService.js getUserData(email, password) ERROR\n" + err.message));
                     }
 
-                    if (results.length > 0)
+                    try
                     {
-                        var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
-
-                        // console.log('OriginalText: ' + password);
-                        // console.log('decryptedText: ' + decryptedText);
-
-                        if (password == decryptedText)
+                        if (results.length > 0)
                         {
-                            // console.log('Login success!');
-                            // console.log("results[0]");
-                            // console.log(results[0]);
-                            resolve(results[0]);
-                            return;
+                            var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
+    
+                            // console.log('OriginalText: ' + password);
+                            // console.log('decryptedText: ' + decryptedText);
+    
+                            if (password == decryptedText)
+                            {
+                                // console.log('Login success!');
+                                // console.log("results[0]");
+                                // console.log(results[0]);
+                                resolve(results[0]);
+                                return;
+                            }
+                            else
+                            {
+                                reject('Wrong password');
+                                return;
+                            }
                         }
                         else
                         {
-                            reject('Wrong password');
+                            reject('Wrong email.');
                             return;
                         }
-                    }
-                    else
+                    } 
+                    catch
                     {
-                        reject('Wrong email.');
+                        reject('/getUserData(email, password) - DATABASE ERROR');
                         return;
                     }
+                    
                 });
             }
             catch (error)
@@ -901,7 +910,9 @@ class DbService
                         <br>
                         <b>Alternative Location Pickup Directions 77504:</b>
                         <br>
-                        To pick up at 77504, please text me/dm me for those directions. <a href="https://twitter.com/AMedibles">AstroMedibles Twitter.</a>
+                        To pick up at 77504, please let me know a day before so I can take your order over to Lazy Daze, and give you directions.
+                        <br>
+                        Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter.</a>
                         <br>
                         <br>
                         Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
@@ -1224,8 +1235,6 @@ class DbService
         customerDate = new Date(customerDate);
 
         // TIMEZONE OFFSET, NEW YORK SERVER
-        // customerDate.setHours(customerDate.getHours() + 1);
-
 
         console.log('customerDate: ' + customerDate.toISOString());
         var avalibleDaysandTimes = [];
