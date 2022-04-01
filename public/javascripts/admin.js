@@ -286,7 +286,7 @@ function dropDownUpdateOrderStatus(event)
 
 
 
-    if (confirm('Are you sure you want to update this order?'))
+    if (confirm('Are you sure you want to update this order status?\nThis user will be notified.\nThis action cannot be undone'))
     {
         // 
         // console.log('Update order pressed.');

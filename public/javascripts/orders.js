@@ -440,7 +440,7 @@ function dropDownCustomerUpdateOrderStatusTime(event)
     var dropDownSubElementID = $(`#selected-time-${orderId}`); 
     // console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
 
-    if (confirm('Confirm scheduled pickup? \nThis action cannot be undone.'))
+    if (confirm('Confirm time for scheduled pickup? \nThis action cannot be undone.'))
     {
         // 
         // console.log('Update order pressed.');

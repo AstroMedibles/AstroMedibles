@@ -839,18 +839,102 @@ class DbService
                 }
                 else
                 {
-
                     console.log(`Order ${orderId} : Statis is now ${status}!`);
                     var subject = `Order ${orderId}, Status: ${status}`;
                     var html = 
                     `
                     <h3>Your Order Status has been updated to ${status}</h3>
                     <p>
-                    Visit <a href="https://www.astromedibles.com/orders">this link</a> to see your order.
+                    Visit <a href="https://www.astromedibles.com/orders">this link</a> to see your order status.
                     <br>
                     This is an automated message.
                     </p>
                     `;
+
+
+                    if (status === 'Payment Required')
+                    {
+                        console.log('Status Case: 1');
+
+                        
+                    } else if (status === 'Preparing Order')
+                    {
+                        console.log('Status Case: 2');
+                        html = 
+                        `
+                        <h3>Your Order Status has been updated to ${status}</h3>
+                        <p>
+                        This means that we have confirmed your payment, and your order is being prepared.
+                        <br>
+                        You will recieve a notification once your order status has been updated to 'Ready for Pickup'.
+                        <br>
+                        When your order is Ready for Pickup, you will be able to select your scheduled pick up day & time. Along with directions and an address.
+                        <br>
+                        <br>
+                        Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
+                        <br>
+                        <br>
+                        This is an automated message.
+                        </p>
+                        `;
+                    } else if (status === 'Ready for Pickup')
+                    {
+                        console.log('Status Case: 3');
+
+                        html = 
+                        `
+                        <h3>Step 1: Select Pickup Day & Time</h3>
+                        <p>
+                        First, confirm your pickup time at <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a>.
+                        <br>
+                        After you have selected your confirmed pickup time, follow these directions for pickup.
+                        </p>
+                        <br>
+                        <h3>Step 2: Pickup At Location</h3>
+                        <p>
+                        <b>Directions For Pickup 77598:</b>
+                        <br>
+                        <a href="https://goo.gl/maps/jQcvTGmZJdWFp3q16">18833 Town Ridge Ln, Webster, TX 77598, United States</a>.
+                        <br>
+                        Do not enter the apartment complex. Please park on the side on the street, closer to Retail Rd. Park on any side of the street.
+                        <br>
+                        <br>
+                        <b>Alternative Location Pickup Directions 77504:</b>
+                        <br>
+                        To pick up at 77504, please text me/dm me for those directions. <a href="https://twitter.com/AMedibles">AstroMedibles Twitter.</a>
+                        <br>
+                        <br>
+                        Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
+                        <br>
+                        <br>
+                        This is an automated message.
+                        </p>
+                        `;
+
+
+                    } else if (status === 'Complete')
+                    {
+                        console.log('Status Case: 4');
+                        html = 
+                        `
+                        <p>
+                        We confirmed you have picked up your order, and we hope you enjoy! 🚀
+                        <br>
+                        <b>Thank you for choosing AstroMedibles! 👩‍🚀</b>
+                        <br>
+                        <br>
+                        If you have any concerns, you can ask us at our <a href="https://www.astromedibles.com/help">Help Desk</a>.
+                        <br>
+                        Or if you just wanted to give some feedback, you can do that at our <a href="https://www.astromedibles.com/feedback">Send Feedback</a> page. 👩
+                        <br>
+                        <br>
+                        This is an automated message.
+                        </p>
+                        `;
+                    }
+
+
+                   
                     
                     db.sendEmail(userEmail, subject, html);
 
@@ -1183,8 +1267,8 @@ class DbService
                         {
                             continue;
                         }
-                        console.log('suggestedDate: ' + suggestedDate.toISOString());
-                        console.log('DATE GOOD')
+                        // console.log('suggestedDate: ' + suggestedDate.toISOString());
+                        // console.log('DATE GOOD')
 
                         var avalibleSubElement = [];
 
@@ -1205,14 +1289,14 @@ class DbService
                             // console.log(`suggestedTime: ${localeString}`);
                             var AvalibleYesOrNo = true;
 
-                            console.log('suggestedDate + time: ' + suggestedDate.toISOString());
-                            console.log('localeString: ' + localeString);
+                            // console.log('suggestedDate + time: ' + suggestedDate.toISOString());
+                            // console.log('localeString: ' + localeString);
                             
                             avalibleSubElement.push([localeString, AvalibleYesOrNo, suggestedDate.toISOString()]);
                         }
                         avalibleDaysandTimes.push(avalibleSubElement); 
-                        console.log('avalibleSubElement');
-                        console.log(avalibleSubElement);
+                        // console.log('avalibleSubElement');
+                        // console.log(avalibleSubElement);
     
                     }
 
