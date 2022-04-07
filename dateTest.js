@@ -29,10 +29,10 @@ else
 
 
 
-var date1 = new Date('2022-04-07T14:00:00.000Z');
+var date1 = new Date('2022-04-07T00:42:00.000Z');
 // var date1 = new Date();
 
-
+date1.setHours('5');
 
 // var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
 // var Difference_In_Time2 = endDate.getTime() - todayDate.getTime();
