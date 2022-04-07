@@ -1271,8 +1271,8 @@ class DbService
 
 
                     // 1. create possible days
-                    var numberOfDays = 7;
-                    for (var i = 1; i < numberOfDays + 1; i++)
+                    var numberOfDays = 6;
+                    for (var i = 0; i < numberOfDays; i++)
                     {
                         // create possible day
                         var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + i);
