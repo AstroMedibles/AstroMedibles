@@ -39,13 +39,13 @@ function populateUserOrders()
 
     console.log('Attempting Connection...');
 
-    var newDate = new Date();
-    newDate.setSeconds(0);
-    newDate.setMilliseconds(0);
+    var newDate1 = new Date();
+    newDate1.setSeconds(0);
+    newDate1.setMilliseconds(0);
 
 
-    newDate = newDate.toISOString();
-    console.log('newDate: ' + newDate);
+    newDate1 = newDate1.toISOString();
+    console.log('newDate: ' + newDate1);
     fetch(address + '/ordersCustomerGetPickupDaysAndTimes',
     {
         credentials: "include",
@@ -56,7 +56,7 @@ function populateUserOrders()
         },
         body: JSON.stringify(
         {
-            customerDate : newDate
+            customerDate : newDate1
         })
     })
     .then(response => response.json())
