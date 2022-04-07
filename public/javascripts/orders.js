@@ -170,7 +170,7 @@ function populateUserOrders()
                     {
                         dropDownDaysButton = 
                         `
-                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-sm btn-primary rounded-pill dropdown-toggle w-100 disabled" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${dropDownDaysText}</button>
+                        <button id="selected-${order_id}" ${dataAttributes} class="btn btn-sm btn-primary rounded-pill dropdown-toggle w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${dropDownDaysText}</button>
                         `;
 
 
@@ -331,7 +331,11 @@ function populateUserOrders()
 
 function dropDownCustomerUpdateOrderStatusDay(event)
 {
+try
+{
     console.log('start dropDownCustomerUpdateOrderStatusDay(event)');
+
+    // console.log('checkpoint 1');
 
     event = event.currentTarget;
 
@@ -356,6 +360,7 @@ function dropDownCustomerUpdateOrderStatusDay(event)
     // enable time drop down
     $(`#selected-time-${orderId}`).removeClass("disabled");
 
+    console.log('Removing disabled at: ' + `#selected-time-${orderId}`);
 
     // add object and add times to drop down
 
@@ -369,6 +374,7 @@ function dropDownCustomerUpdateOrderStatusDay(event)
     newDate = new Date(newDate);
 
     console.log('\n');
+    // console.log('checkpoint 2');
     // add time drop down choices
     for (var i = 0; i < avalibleDaysandTimes[0].length; i++)
     {
@@ -404,19 +410,37 @@ function dropDownCustomerUpdateOrderStatusDay(event)
                 console.log(localeTime_avalibility_datetimeobject);
             
                 if (optionAvalibility === true)
+                {
                     option = `<button class="dropdown-item" data-choice="${optionLocaleTime}" data-time="${optionDateTimeObject}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${optionLocaleTime}</button>`;
+                }
                 else
+                {
                     option = `<button class="dropdown-item disabled">${optionLocaleTime}</button>`;
-            
+
+                }
                 timeDropDown.append(option);
            }
         }
     }
+    // console.log('checkpoint 3');
+
+    
+
+
+} catch (error)
+{
+    console.log('ERROR:' + error);
+    console.log('\n')
+    console.trace(error);    
+}
+
+    
 }
 
 function dropDownCustomerUpdateOrderStatusTime(event)
 {
     console.log('start dropDownCustomerUpdateOrderStatusTime(event)');
+    // console.log('checkpoint 4');
 
     event = event.currentTarget;
 

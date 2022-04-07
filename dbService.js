@@ -1296,7 +1296,7 @@ class DbService
                                 continue;
                             }
     
-                            suggestedDate.setHours(pickupTimes[j].time);
+                            suggestedDate.setHours(pickupTimes[j].time + 1);
                             // console.log()
 
                             var localeString = suggestedDate.toLocaleString("en-US", {timeZone: "America/Chicago"});
@@ -1355,7 +1355,7 @@ class DbService
                                         if (newDate.toISOString() == lastDate)
                                         {
                                             counter += 1;
-                                            if (counter => process.env.TABLE_PICKUPS_LIMIT)
+                                            if (counter == process.env.TABLE_PICKUPS_LIMIT)
                                             {
                                                 overCapacityDates.push(newDate.toISOString());
                                                 skipDate = newDate.toISOString();

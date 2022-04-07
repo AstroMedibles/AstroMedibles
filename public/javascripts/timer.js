@@ -142,7 +142,7 @@ function startTime()
     // console.log('Difference_In_Time: ' + Difference_In_Time / (1000 * 60 * 60));
     // if user logs in less than one hour after sale has ended, place their order
     // else clear their cart
-    if ((Difference_In_Time / (1000 * 60 * 60) ) > -1 && $("#cart-quantity").text() != 0)
+    if ((Difference_In_Time2 / (1000 * 60 * 60) ) > -1 && $("#cart-quantity").text() != 0)
     {
       userPlaceOrder();
       // console.log('ORDER PLACED AUTOMATICALLY');
