@@ -98,7 +98,7 @@ app.get('/login', (request, response) =>
 });
 
 // Route to ForgotPassword Page 
-app.get('/forgot-password', (request, response) => 
+app.get('/forgotPassword', (request, response) => 
 { 
 	console.log("\n" + "route(/forgot-password)"); 
  
