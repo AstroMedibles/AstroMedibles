@@ -84,6 +84,7 @@ function populateUserOrders()
 
             var userOrder = orders[i];
 
+            var status_id    = userOrder.status_id;
             var status       = userOrder.status;
             var order_id     = userOrder.order_id;
             var name         = userOrder.name;
@@ -101,7 +102,7 @@ function populateUserOrders()
 
             };
             var dataAttributes = 
-            `data-order_id="${order_id}" data-status="${status}" data-name="${name}" data-email="${email}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`;
+            `data-order_id="${order_id}" data-status_id="${status_id}"  data-status="${status}" data-name="${name}" data-email="${email}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`;
 
             date_created = date_created.toLocaleString('en-us', options);
 
@@ -109,7 +110,6 @@ function populateUserOrders()
             // Preparing Order - Order is in queue to be baked.
             // Ready for Pickup - Order has been made, and waiting for pickup.
             // Complete - Order has been delivered.
-            // <a class="dropdown-item" href='javascript:;' " onClick="dropDownUpdateOrderStatus();">Preparing Order</a>
 
 
             var statusText = status;
@@ -249,18 +249,13 @@ function populateUserOrders()
 
                         </div>
                     </div>
-
-
                 </div>
             </div>
             `;
-
             // create card
             var ordersHTML = $('#orders-items');
             ordersHTML.append(card);
-
         }
-
     });
 }
 
@@ -269,17 +264,17 @@ function dropDownUpdateOrderStatus(event)
     // console.log('start dropDownUpdateOrderStatus(event)');
 
     event = event.currentTarget;
-    var parentDiv = event.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
-    var orderId = $(parentDiv).attr("data-order_id");
-    var email = $(parentDiv).attr("data-email");
-
-    // console.log('FOUND EMAIL: ' + email);
-
-
+    var parentDiv   = event.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+    var orderId     = $(parentDiv).attr("data-order_id");
+    var email       = $(parentDiv).attr("data-email");
+    var status_id   = null;
+    // var status_id   = $(parentDiv).attr("data-status_id");
     // console.log(orderId);
 
-    var status = $(event).attr("name");
-    // console.log(status);
+    var newSelectedStatus = $(event).attr("name");
+    console.log('attr name: ' + newSelectedStatus);
+    // console.log('attr data-status_id: ' + status_id);
+
 
     var dropDownSubElementID = $(`#selected-${orderId}`); 
     // console.log(dropDownSubElementID);
@@ -300,6 +295,21 @@ function dropDownUpdateOrderStatus(event)
 
     // $(dropDownSubElementID).text(status);
 
+    // console.log("status.includes('complete')");
+    // console.log(status.includes('complete'));
+
+    if (newSelectedStatus === 'Preparing Order')
+    {
+        status_id = 2;
+    } 
+    else if (newSelectedStatus === 'Ready for Pickup')
+    {
+        status_id = 3;
+    } 
+    else if (newSelectedStatus === 'Complete')
+    {
+        status_id = 4;
+    }
 
     fetch(address + '/adminUpdateOrderStatus',
     {
@@ -311,16 +321,17 @@ function dropDownUpdateOrderStatus(event)
         },
         body: JSON.stringify(
             {
-                orderId: orderId,
-                status: status,
-                email: email
+                orderId:    orderId,
+                status_id:  status_id,
+                status:     newSelectedStatus,
+                email:      email
             })
     })
     .then(response => response.json())
     .then((data) => 
     {
         // Update Status to new option
-        $(dropDownSubElementID).text(status);
+        $(dropDownSubElementID).text(newSelectedStatus);
 
         // disable used option
         $(event).addClass("disabled");
@@ -328,22 +339,28 @@ function dropDownUpdateOrderStatus(event)
 
         // console.log('Status check: ' + status);
 
-        status = status.toLowerCase();
         // console.log("status.includes('complete')");
         // console.log(status.includes('complete'));
 
-        if (status === 'preparing order')
+        console.log('New Status ID: ' + status_id);
+
+        // if 'Preparing Order'
+        if (status_id === 2)
         {
             // console.log(1);
             dropDownSubElementID.removeClass("btn-danger");
             dropDownSubElementID.addClass("btn-primary");
-        } else if (status === 'ready for pickup')
+        }
+        // if 'Ready for Pickup'
+        else if (status_id === 3)
         {
             // console.log(2);
             dropDownSubElementID.removeClass("btn-danger");
             dropDownSubElementID.removeClass("btn-primary");
             dropDownSubElementID.addClass("btn-warning");
-        } else if (status === 'complete')
+        }
+        // if 'Complete'
+        else if (status_id === 4)
         {
             // console.log(3);
             dropDownSubElementID.removeClass("btn-danger");

@@ -547,6 +547,7 @@ class DbService
         return response;
     }
 
+    // create user order
     async submitUserOrder(email, password, date_created)
     {
         const db        = DbService.getDbServiceInstance();
@@ -591,9 +592,9 @@ class DbService
             
             const insertId = new Promise((resolve, reject) =>
             {
-                const query = "INSERT INTO " + process.env.TABLE_ORDERS + " (user_id, status, order_id, name, email, cart, total, date_created) VALUES (?,?,?,?,?,?,?,?);";
+                const query = "INSERT INTO " + process.env.TABLE_ORDERS + " (user_id, status_id, status, order_id, name, email, cart, total, date_created) VALUES (?,?,?,?,?,?,?,?,?);";
     
-                connection.query(query, [user_id, status, order_id, user_name, email, cart, total, date_created], (err, result1) =>
+                connection.query(query, [user_id, 1, status, order_id, user_name, email, cart, total, date_created], (err, result1) =>
                 {
                     if (err)
                     {
@@ -832,15 +833,15 @@ class DbService
         return response;
     }
 
-    async adminUpdateOrderStatus(orderId, status, userEmail)
+    async adminUpdateOrderStatus(orderId, status_id, status, userEmail)
     {
         const response = new Promise((resolve, reject) =>
         {
             // console.log(order_id);
             const db = DbService.getDbServiceInstance();
 
-            const query = "UPDATE " + process.env.TABLE_ORDERS + " SET status = ? WHERE order_id = ?;";
-            connection.query(query, [status, orderId], (err, result) =>
+            const query = "UPDATE " + process.env.TABLE_ORDERS + " SET status_id = ?, status = ? WHERE order_id = ?;";
+            connection.query(query, [status_id, status, orderId], (err, result) =>
             {
                 if (err)
                 {
@@ -1031,7 +1032,7 @@ class DbService
         {
             try
             {
-                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " ORDER BY date_created DESC;";
+                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " ORDER BY status_id ASC, date_created DESC;";
                 connection.query(sql, [], (error, results) =>
                 {
                     if (error)
@@ -1048,6 +1049,7 @@ class DbService
                     {
                         var order = 
                         {
+                            status_id        : results[i].status_id,
                             status           : results[i].status,
                             order_id         : results[i].order_id,
                             name             : results[i].name,
@@ -1116,7 +1118,7 @@ class DbService
         {
             try
             {
-                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status = 'Ready for Pickup'  ORDER BY pickup_scheduled ASC, name ASC;";
+                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status = 'Ready for Pickup' ORDER BY pickup_scheduled ASC, name ASC;";
                 connection.query(sql, [], (error, results) =>
                 {
                     if (error)
@@ -1871,16 +1873,16 @@ class DbService
             html:    html
         };
         
-        transporter.sendMail(mailOptions, function (error, info)
-        {
-            if (error)
-            {
-                console.log(error);
-            } else
-            {
-                console.log('Email sent: ' + info.response);
-            }
-        });
+        // transporter.sendMail(mailOptions, function (error, info)
+        // {
+        //     if (error)
+        //     {
+        //         console.log(error);
+        //     } else
+        //     {
+        //         console.log('Email sent: ' + info.response);
+        //     }
+        // });
     }
 }
 
