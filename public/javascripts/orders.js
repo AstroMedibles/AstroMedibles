@@ -171,6 +171,22 @@ function populateUserOrders()
                         dropDownDaysButton = 
                         `
                         <button id="selected-${order_id}" ${dataAttributes} class="btn btn-sm btn-primary rounded-pill dropdown-toggle w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${dropDownDaysText}</button>
+
+                        <br><br>
+
+                        <div class="form-check">
+                            <label class="form-check-label">
+                            <input type="radio" class="form-check-input" id="optionsRadios1" name="radioLocation" value="option1" checked="">
+                                LOCATION I
+                            </label>
+
+                            <br>
+                            
+                            <label class="form-check-label">
+                            <input type="radio" class="form-check-input" id="optionsRadios2" name="radioLocation" value="option2">
+                                LOCATION II
+                            </label>
+                        </div>
                         `;
 
 
