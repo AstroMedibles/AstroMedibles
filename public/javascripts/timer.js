@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function ()
 function startTime()
 {
   var todayDate = new Date();
-  var startDate    = new Date('2022-03-30T05:00:00.000Z');
-  var endDate      = new Date('2022-04-01T05:00:00.000Z');
+  var startDate    = new Date('2022-04-20T05:00:00.000Z');
+  var endDate      = new Date('2022-05-01T05:00:00.000Z');
 
   var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
   var Difference_In_Time2 = endDate.getTime() - todayDate.getTime();
@@ -31,6 +31,10 @@ function startTime()
     preorderNavbar.classList.add('bg-dark');
 
     // To calculate the no. of hours between two dates
+    var Difference_In_Days = parseInt(Difference_In_Time1 / (1000 * 60 * 60 * 24));
+    Difference_In_Time1 -= Difference_In_Days * (1000 * 60 * 60 * 24);
+
+    // To calculate the no. of hours between two dates
     var Difference_In_Hours = parseInt(Difference_In_Time1 / (1000 * 60 * 60));
     Difference_In_Time1 -= Difference_In_Hours * (1000 * 60 * 60);
 
@@ -42,11 +46,12 @@ function startTime()
     var Difference_In_Seconds = parseInt(Difference_In_Time1 / (1000));
     Difference_In_Time1 -= Difference_In_Seconds * (1000);
 
+    var d = Difference_In_Days;
     var h = Difference_In_Hours;
     var m = Difference_In_Minutes;
     var s = Difference_In_Seconds;
 
-    preorderTimer.innerHTML =  'Upcoming Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
+    preorderTimer.innerHTML =  'Upcoming Sale 🚀 ' + d + " days  " + h + " hrs  " + m + " min  " + s + ' sec 🚀';
     setTimeout(startTime, 500);
   }
   // case 2 today date is after start date && today date is before end date
