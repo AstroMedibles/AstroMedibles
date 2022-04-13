@@ -41,9 +41,9 @@
                     <div class="row content">
                         <div class="col-md-12">
 
-                            <div id="orders-items-outer" class="items" >
+                            <div id="orders-items-outer" class="items w-100" style="padding: 0px;">
                                 <div class="product">
-                                    <div class="row product-image">
+                                    <div class="row product-image" style="padding: 15px 0px 15px 0px;">
                                         <br>
                                         <h4 style="text-align: center;">Customer Orders</h4>
                                         
@@ -59,13 +59,11 @@
                                 </div>
                             </div>
                             
-                            <div id="codes-items" class="items" hidden >
+                            <div id="codes-items" class="items w-100" hidden style="padding: 0px;">
 
                                 <!-- CODES -->
-
-
                                 <div class="product">
-                                    <div class="row product-image d-flex justify-content-between align-items-start ">  
+                                    <div class="row product-image d-flex justify-content-between align-items-start" style="padding: 15px 0px 15px 0px;">  
                                         
                                         <h4 style="text-align: center;">Create or Get Access Codes</h4>
                                         <p style="text-align: center;">Share these codes with new customers to allow them to create an account</p>
@@ -99,12 +97,12 @@
                                 </div>
                             </div>
 
-                            <div id="chart-items" class="items" hidden>
+                            <div id="chart-items" class="items w-100" hidden style="padding: 0px;">
 
                                 <!-- CHART -->
 
                                 <div class="product">
-                                    <div class="row product-image d-flex justify-content-between align-items-start ">
+                                    <div class="row product-image d-flex justify-content-between align-items-start" style="padding: 15px 0px 15px 0px;">
                                         <h4 style="text-align: center;">What items to bake?</h4>
                                         <p style="text-align: center;">This table shows what items customers have ordered</p>
 
@@ -122,12 +120,12 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody id="chartTable" style="font-weight: normal;" >
-                                                        <tr>
+                                                        <!-- <tr>
                                                             <td class="table"> ... </td>
                                                             <td class="table-danger"  >0</td>
                                                             <td class="table-primary" >0</td>
                                                             <td>0</td>
-                                                        </tr>
+                                                        </tr> -->
                                                     </tbody>
                                                 </table>
 
@@ -143,30 +141,30 @@
                                 </div>
                             </div>
 
-                            <div id="pickups-items" class="items" hidden>
+                            <div id="pickups-items" class="items w-100" hidden style="padding: 0px;">
 
                                 <!-- PICKUPS -->
 
                                 <div class="product">
-                                    <div class="row product-image flex justify-content-between align-items-start ">
+                                    <div class="row product-image flex justify-content-between align-items-start" style="padding: 15px 0px 15px 0px;">
                                         <h4 style="text-align: center;">Upcoming Customer Pickups</h4>
                                         <p style="text-align: center;">Days and times customers have requested to pick up their order</p>
 
-                                        <div class="col-md-12 product-info">
+                                        <div class="col-md-12 product-info ">
                                             <div class="flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
                                                 <br>
                                                 <br>
                                                 <table class="table">
                                                     <thead>
-                                                        <tr>
-                                                            <th scope="col" style="font-weight: normal;">Date</th>
-                                                            <th scope="col" style="font-weight: normal;">Name</th>
-                                                            <th scope="col" style="font-weight: normal;">Order ID</th>
-                                                            <th scope="col" style="font-weight: normal;">Location</th>
+                                                        <tr  style="font-size: small;">
+                                                            <th scope="col" style="font-weight: normal;" >Date</th>
+                                                            <th scope="col" style="font-weight: normal;" >Name</th>
+                                                            <th scope="col" style="font-weight: normal;" >Order ID</th>
+                                                            <th scope="col" style="font-weight: normal;" >Location</th>
                                                         </tr>
                                                     </thead>
 
-                                                    <tbody id="tablePickups" style="font-weight: normal;" >
+                                                    <tbody id="tablePickups"  style="font-size: small;" >
                                                         <!-- Date
                                                         <tr>
                                                             <th class="table w-50">November 17th</th>

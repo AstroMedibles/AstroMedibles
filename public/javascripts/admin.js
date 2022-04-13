@@ -606,7 +606,7 @@ function radioChartClick()
 
             tableHTML +=
                     `
-                    <tr>
+                    <tr style="font-size: small;">
                         <th scope="row" style="font-weight: normal;">${value.name}</th>
                         <td class="table-danger"  >${quantityRequired}</td>
                         <td class="table-primary" >${quantityRecieved}</td>
@@ -737,12 +737,12 @@ function radioPickupsClick()
 
             tableHTML +=
             `
-            <!-- Time, Name, Order ID -->
-            <tr>
+            <!-- Time, Name, Order ID, Location -->
+            <tr style="font-size: small;">
                 <td class="table w-50" >${timeString}</td>
-                <td class="table w-25" style="font-size: small; font-weight: normal;" >${pickups[i].name}</td>
-                <td class="table w-25" style="font-size: small; font-weight: normal;" >${pickups[i].order_id}</td>
-                <td class="table w-25" style="font-size: small; font-weight: normal;" >${pickups[i].pickup_location}</td>
+                <td class="table w-25" >${pickups[i].name}</td>
+                <td class="table w-25" >${pickups[i].order_id}</td>
+                <td class="table w-25" >${pickups[i].pickup_location}</td>
             </tr>
             `
         }
