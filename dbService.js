@@ -811,7 +811,8 @@ class DbService
                             cart             : results[i].cart,
                             total            : results[i].total,
                             date_created     : results[i].date_created,
-                            pickup_scheduled : results[i].pickup_scheduled
+                            pickup_scheduled : results[i].pickup_scheduled,
+                            pickup_location  : results[i].pickup_location
                         };
 
                         console.log('order');
@@ -904,13 +905,11 @@ class DbService
                         <p>
                         <b>Directions For Pickup 77598:</b>
                         <br>
-                        <a href="https://goo.gl/maps/jQcvTGmZJdWFp3q16">18833 Town Ridge Ln, Webster, TX 77598, United States</a>
+                        <a href="https://goo.gl/maps/jQcvTGmZJdWFp3q16">18833 Town Ridge Ln, Webster, TX 77598</a>
                         <br>
                         Do not enter the apartment complex. Please park on the side on the street, closer to Retail Rd. Park on any side of the street.
                         <br>
                         Let me know you have arrived.
-                        <br>
-                        Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter</a>
                         <br>
                         <br>
                         <b>Alternative Location Pickup Directions 77504 (Lazy Daze):</b>
@@ -918,6 +917,7 @@ class DbService
                         <a href="https://goo.gl/maps/yG57sXc9Mt3jaQMr8">4416 Fairmont Pkwy Ste 103, Pasadena, TX 77504</a>
                         <br>
                         To request to pick up at 77504, please let me know at least a day before so I can take your order over to Lazy Daze, and give you directions.
+                        <br>
                         <br>
                         Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter</a>
                         <br>
@@ -950,10 +950,6 @@ class DbService
                         </p>
                         `;
                     }
-
-
-                   
-                    
                     db.sendEmail(userEmail, subject, html);
 
                     resolve(result.affectedRows);
@@ -1141,10 +1137,11 @@ class DbService
                                 var pickupDate = new Date(results[i].pickup_scheduled);
                                 var pickupElement = 
                                 {
-                                    id       : results[i].id,
-                                    date     : pickupDate,
-                                    order_id : results[i].order_id,
-                                    name     : results[i].name
+                                    id:              results[i].id,
+                                    date:            pickupDate,
+                                    pickup_location: results[i].pickup_location,
+                                    order_id:        results[i].order_id,
+                                    name:            results[i].name
                                 };
                                 pickups.push(pickupElement);
                             }
@@ -1442,7 +1439,7 @@ class DbService
         return response;
     }
 
-    async userUpdateScheduledPickup(orderId, dateScheduledPickup)
+    async userUpdateScheduledPickup(orderId, dateScheduledPickup, pickupLocation)
     {
         const response = new Promise((resolve, reject) =>
         {
@@ -1470,10 +1467,11 @@ class DbService
                     else
                     {
                         console.log('Time Slot avalible, accepted');
+                        console.table([dateScheduledPickup, pickupLocation, orderId]);
 
                         // update timeslot with new order
-                        const query2 = "UPDATE " + process.env.TABLE_ORDERS + " SET pickup_scheduled = ? WHERE order_id = ?;";
-                        connection.query(query2, [dateScheduledPickup, orderId], (error2, result2) =>
+                        const query2 = "UPDATE " + process.env.TABLE_ORDERS + " SET pickup_scheduled = ?, pickup_location = ? WHERE order_id = ?;";
+                        connection.query(query2, [dateScheduledPickup, pickupLocation, orderId], (error2, result2) =>
                         {
                             if (error2)
                             {
@@ -1873,16 +1871,16 @@ class DbService
             html:    html
         };
         
-        transporter.sendMail(mailOptions, function (error, info)
-        {
-            if (error)
-            {
-                console.log(error);
-            } else
-            {
-                console.log('Email sent: ' + info.response);
-            }
-        });
+        // transporter.sendMail(mailOptions, function (error, info)
+        // {
+        //     if (error)
+        //     {
+        //         console.log(error);
+        //     } else
+        //     {
+        //         console.log('Email sent: ' + info.response);
+        //     }
+        // });
     }
 }
 

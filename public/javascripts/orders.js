@@ -90,16 +90,18 @@ function populateUserOrders()
                 var cart             = JSON.parse(userOrder.cart).cart;
                 var total            = userOrder.total;
                 var pickup_scheduled = userOrder.pickup_scheduled;
+                var pickup_location  = userOrder.pickup_location;
+
 
                 // if null, make it empty string
                 try { pickup_scheduled.length; } catch (error) { pickup_scheduled = ''; }
 
-                console.log
-                (`
-                order_id: ${order_id}
+                // console.log
+                // (`
+                // order_id: ${order_id}
 
-                pickup_scheduled: ${pickup_scheduled}
-                `);
+                // pickup_scheduled: ${pickup_scheduled}
+                // `);
 
 
                 var date_created = new Date(userOrder.date_created);
@@ -117,7 +119,7 @@ function populateUserOrders()
                 date_created = date_created.toLocaleString('en-us', options);
                 // console.log(date_created);
 
-                var interactDiv = "";
+                var interactDiv = '', locationDiv = '';
                 var dataAttributes = `data-order_id="${order_id}" data-status="${status}"`;
 
 
@@ -158,35 +160,47 @@ function populateUserOrders()
                         dropDownDaysText  = dateLocaleString;
                         dropDownTimesText = time;
 
+                        locationDiv = 
+                        `
+                        <span>Pickup Location</span>
+                        <p style="font-weight: normal;">${pickup_location}</p>
+                        <br>
+                        `;
+
                         dropDownDaysButton = 
                         `
                         <button id="selected-${order_id}" ${dataAttributes} class="btn btn-sm btn-primary rounded-pill dropdown-toggle disabled w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${dropDownDaysText}</button>
                         `;
-
-
                     }
                     // if the order does not have a pickup scheduled
                     else
                     {
+                        locationDiv = 
+                        `
+                        <span>Select Pick Up Location</span>
+                        <div class="form-check" style="font-weight: normal;">
+                            <label class="form-check-label">
+                            <input type="radio" class="form-check-input" id="radioLocation1" style="float: none;" name="radioLocation" value="Lazy Daze" checked="">
+                                <b>Lazy Daze</b>
+                                <br>
+                                4416 Fairmont Pkwy Ste 103, Pasadena, TX 77504
+                            </label>
+    
+                            <br><br>
+                            
+                            <label class="form-check-label">
+                            <input type="radio" class="form-check-input" id="radioLocation2" style="float: none;" name="radioLocation" value="Apartment">
+                                <b>Apartment</b>
+                                <br>
+                                18833 Town Ridge Ln, Webster, TX 77598
+                            </label>
+                        </div>
+                        <br><br>
+                        `;
+
                         dropDownDaysButton = 
                         `
                         <button id="selected-${order_id}" ${dataAttributes} class="btn btn-sm btn-primary rounded-pill dropdown-toggle w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${dropDownDaysText}</button>
-
-                        <br><br>
-
-                        <div class="form-check">
-                            <label class="form-check-label">
-                            <input type="radio" class="form-check-input" id="optionsRadios1" name="radioLocation" value="option1" checked="">
-                                LOCATION I
-                            </label>
-
-                            <br>
-                            
-                            <label class="form-check-label">
-                            <input type="radio" class="form-check-input" id="optionsRadios2" name="radioLocation" value="option2">
-                                LOCATION II
-                            </label>
-                        </div>
                         `;
 
 
@@ -199,23 +213,23 @@ function populateUserOrders()
                             {
                                 var element2 = element1[j][0];
 
-                                console.log('\nelement:');
-                                console.log(element2);
+                                // console.log('\nelement:');
+                                // console.log(element2);
     
-                                console.log('\nelement[2]:');
-                                console.log(element2[2]);
+                                // console.log('\nelement[2]:');
+                                // console.log(element2[2]);
     
                                 var dateObj = new Date(element2[2]);
-                                console.log('\ndateObj:');
-                                console.log(dateObj);
+                                // console.log('\ndateObj:');
+                                // console.log(dateObj);
                                 // create day locale string
                                 var localeTimeStr = dateObj.toLocaleTimeString().toString();
                                 var options = { weekday: 'long', month: 'short', day: 'numeric'};
                                 // getOrdinalSuffix
                                 var daySuffix = (dateObj.getDate() % 10 == 1 && dateObj.getDate() != 11 ? 'st' : (dateObj.getDate() % 10 == 2 && dateObj.getDate() != 12 ? 'nd' : (dateObj.getDate() % 10 == 3 && dateObj.getDate() != 13 ? 'rd' : 'th'))); 
                                 var dateLocaleString = dateObj.toLocaleString('en-US', options) + daySuffix;
-                                console.log('\ndateLocaleString:');
-                                console.log(dateLocaleString);
+                                // console.log('\ndateLocaleString:');
+                                // console.log(dateLocaleString);
 
                                 dropDownDaysChoices += `<button class="dropdown-item" data-choice="${dateLocaleString}" data-date="${element2[2]}"  onClick="dropDownCustomerUpdateOrderStatusDay(event)" >${dateLocaleString}</button>`;
                             }
@@ -234,6 +248,9 @@ function populateUserOrders()
 
                     interactDiv =
                     `
+                    ${locationDiv}
+
+
                     <span>Pick Up Time</span>
                     <br>
                     <div class="dropdown" >
@@ -309,7 +326,7 @@ function populateUserOrders()
                             <div class="product-specs d-flex flex-column  align-items-center">
 
                                 <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                    <span>Date Created:</span>
+                                    <span>Date Created</span>
                                     <br>
                                     <span class="value">${date_created}</span>
                                 </div>
@@ -347,110 +364,103 @@ function populateUserOrders()
 
 function dropDownCustomerUpdateOrderStatusDay(event)
 {
-try
-{
-    console.log('start dropDownCustomerUpdateOrderStatusDay(event)');
-
-    // console.log('checkpoint 1');
-
-    event = event.currentTarget;
-
-    var parentDiv = event.parentNode;
-    var orderId = $(parentDiv).attr("data-order_id");
-    console.log(`orderId : ${orderId}`);
-
-    var newChoice = $(event).attr("data-choice");
-    var newDate = $(event).attr("data-date");
-    console.log(`newChoice : ${newChoice}`);
-
-    var dropDownSubElementID = $(`#selected-${orderId}`); 
-    console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
-
-    // $(dropDownSubElementID).text(status);
-
-
-    // Update Status to new option
-    $(dropDownSubElementID).text(newChoice);
-    $(dropDownSubElementID).attr('data-date', newDate);
-
-    // enable time drop down
-    $(`#selected-time-${orderId}`).removeClass("disabled");
-
-    console.log('Removing disabled at: ' + `#selected-time-${orderId}`);
-
-    // add object and add times to drop down
-
-    var timeDropDown = $(`#selected-time-options-${orderId}`);
-    timeDropDown.empty();
-
-    console.log('\n\n');
-
-    console.log('avalibleDaysandTimes');
-    console.log(avalibleDaysandTimes[0]);
-    newDate = new Date(newDate);
-
-    console.log('\n');
-    // console.log('checkpoint 2');
-    // add time drop down choices
-    for (var i = 0; i < avalibleDaysandTimes[0].length; i++)
+    try
     {
-        var element1 = avalibleDaysandTimes[0][i];
-        var elementDay = new Date(element1[0][2]);
+        console.log('start dropDownCustomerUpdateOrderStatusDay(event)');
 
-        // console.log('newDate');
-        // console.log(newDate);
+        // console.log('checkpoint 1');
 
-        
-        // console.log('elementDay');
-        // console.log(elementDay);
+        event = event.currentTarget;
+
+        var parentDiv = event.parentNode;
+        var orderId = $(parentDiv).attr("data-order_id");
+        console.log(`orderId : ${orderId}`);
+
+        var newChoice = $(event).attr("data-choice");
+        var newDate = $(event).attr("data-date");
+        console.log(`newChoice : ${newChoice}`);
+
+        var dropDownSubElementID = $(`#selected-${orderId}`); 
+        console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
+
+        // $(dropDownSubElementID).text(status);
+
+
+        // Update Status to new option
+        $(dropDownSubElementID).text(newChoice);
+        $(dropDownSubElementID).attr('data-date', newDate);
+
+        // enable time drop down
+        $(`#selected-time-${orderId}`).removeClass("disabled");
+
+        console.log('Removing disabled at: ' + `#selected-time-${orderId}`);
+
+        // add object and add times to drop down
+
+        var timeDropDown = $(`#selected-time-options-${orderId}`);
+        timeDropDown.empty();
 
         console.log('\n\n');
 
-        var isSameDay =   (newDate.getDate()     === elementDay.getDate() 
-                        && newDate.getMonth()    === elementDay.getMonth()
-                        && newDate.getFullYear() === elementDay.getFullYear());
+        // console.log('avalibleDaysandTimes');
+        // console.log(avalibleDaysandTimes[0]);
+        newDate = new Date(newDate);
 
-        if (isSameDay)
+        console.log('\n');
+        // console.log('checkpoint 2');
+        // add time drop down choices
+        for (var i = 0; i < avalibleDaysandTimes[0].length; i++)
         {
-        //    console.log('DATE MATCH');
+            var element1 = avalibleDaysandTimes[0][i];
+            var elementDay = new Date(element1[0][2]);
 
-           for (var j = 0; j < element1.length; j++)
-           {
-                var localeTime_avalibility_datetimeobject = element1[j];
-                var optionLocaleTime      = localeTime_avalibility_datetimeobject[0];
-                var optionAvalibility     = localeTime_avalibility_datetimeobject[1];
-                var optionDateTimeObject  = localeTime_avalibility_datetimeobject[2];
-                var option = '';
+            // console.log('newDate');
+            // console.log(newDate);
 
-                console.log('\nlocaleTime_avalibility_datetimeobject');  // [ '12:00 AM', true, '2022-02-25T06:00:00.000Z' ]
-                console.log(localeTime_avalibility_datetimeobject);
             
-                if (optionAvalibility === true)
-                {
-                    option = `<button class="dropdown-item" data-choice="${optionLocaleTime}" data-time="${optionDateTimeObject}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${optionLocaleTime}</button>`;
-                }
-                else
-                {
-                    option = `<button class="dropdown-item disabled">${optionLocaleTime}</button>`;
+            // console.log('elementDay');
+            // console.log(elementDay);
 
-                }
-                timeDropDown.append(option);
-           }
+            console.log('\n\n');
+
+            var isSameDay =   (newDate.getDate()     === elementDay.getDate() 
+                            && newDate.getMonth()    === elementDay.getMonth()
+                            && newDate.getFullYear() === elementDay.getFullYear());
+
+            if (isSameDay)
+            {
+            //    console.log('DATE MATCH');
+
+            for (var j = 0; j < element1.length; j++)
+            {
+                    var localeTime_avalibility_datetimeobject = element1[j];
+                    var optionLocaleTime      = localeTime_avalibility_datetimeobject[0];
+                    var optionAvalibility     = localeTime_avalibility_datetimeobject[1];
+                    var optionDateTimeObject  = localeTime_avalibility_datetimeobject[2];
+                    var option = '';
+
+                    console.log('\nlocaleTime_avalibility_datetimeobject');  // [ '12:00 AM', true, '2022-02-25T06:00:00.000Z' ]
+                    console.log(localeTime_avalibility_datetimeobject);
+                
+                    if (optionAvalibility === true)
+                    {
+                        option = `<button class="dropdown-item" data-choice="${optionLocaleTime}" data-time="${optionDateTimeObject}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${optionLocaleTime}</button>`;
+                    }
+                    else
+                    {
+                        option = `<button class="dropdown-item disabled">${optionLocaleTime}</button>`;
+
+                    }
+                    timeDropDown.append(option);
+            }
+            }
         }
+    } catch (error)
+    {
+        console.log('ERROR:' + error);
+        console.log('\n')
+        console.trace(error);    
     }
-    // console.log('checkpoint 3');
-
-    
-
-
-} catch (error)
-{
-    console.log('ERROR:' + error);
-    console.log('\n')
-    console.trace(error);    
-}
-
-    
 }
 
 function dropDownCustomerUpdateOrderStatusTime(event)
@@ -479,12 +489,29 @@ function dropDownCustomerUpdateOrderStatusTime(event)
 
     var dropDownSubElementID = $(`#selected-time-${orderId}`); 
     // console.log(`dropDownSubElementID : ${dropDownSubElementID}`);
+    // console.table([document.getElementById("radioLocation1").checked, document.getElementById("radioLocation2").checked]);
 
     if (confirm('Confirm time for scheduled pickup? \nThis action cannot be undone.'))
     {
         // 
         // console.log('Update order pressed.');
 
+
+        // get pickup location value
+        var pickupLocation = '';
+        if (document.getElementById("radioLocation1").checked === true)
+        {
+            pickupLocation = 'Lazy Daze';
+            
+        }
+        else if (document.getElementById("radioLocation2").checked === true)
+        {
+            pickupLocation = 'Apartment';
+        }
+
+        console.table(['pickupLocation', pickupLocation]);
+
+        // submit pickup information
         fetch(address + '/userUpdateScheduledPickup',
         {
             credentials: "include",
@@ -496,13 +523,14 @@ function dropDownCustomerUpdateOrderStatusTime(event)
             body: JSON.stringify(
                 {
                     orderId: orderId,
-                    dateScheduledPickup: time.toISOString()
+                    dateScheduledPickup: time.toISOString(),
+                    pickupLocation: pickupLocation
                 })
         })
         .then(response => response.json())
         .then((data) => 
         {
-            console.log(`data: ${data}`);
+            // console.log(`data: ${data}`);
             if (data == true)
             {
                 // Update Status to new option
@@ -514,6 +542,16 @@ function dropDownCustomerUpdateOrderStatusTime(event)
                 // disable drop down time
                 $(`#selected-time-${orderId}`).addClass("disabled");
                 $(`#selected-time-${orderId}`).on(('onClick'), null);
+
+                $(`#radioLocation1`).attr("disabled", 'disabled');
+                $(`#radioLocation2`).attr("disabled", 'disabled');
+
+
+                // Notification
+                const message = `Success, Pickup Set`;
+                const alertType     = 'success';
+                const iconChoice    = 1;
+                alertNotify(message, alertType, iconChoice, 2);
             }
             else
             {
@@ -602,4 +640,37 @@ function ready()
 function getOrdinalSuffix(dt)
 {
     return (dt.getDate() % 10 == 1 && dt.getDate() != 11 ? 'st' : (dt.getDate() % 10 == 2 && dt.getDate() != 12 ? 'nd' : (dt.getDate() % 10 == 3 && dt.getDate() != 13 ? 'rd' : 'th'))); 
+}
+
+
+function alertNotify(message, alertType, iconChoice, duration)
+{
+    if (iconChoice == 1)      // ✔
+        iconChoice = 'check-circle-fill';
+    else if (iconChoice == 2) // i
+        iconChoice = 'info-fill';
+    else if (iconChoice == 3) // !
+        iconChoice = 'exclamation-triangle-fill';
+
+    var iconHTML = `<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="${alertType}}:"><use xlink:href="#${iconChoice}"/></svg>`;
+    alertType = `alert-${alertType}`;
+
+    var html = 
+    `
+    <div id="alertNotification" class="alert ${alertType}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+        <span>
+            ${iconHTML}
+            ${message}
+        </span>
+    </div>
+    `;
+
+    // show pop up
+    $('#notification').append(html);
+    
+    duration *= 1000;
+    setTimeout(function ()
+    { // this will automatically close the alert in 2 secs
+        $("#alertNotification").remove();
+    }, duration);
 }

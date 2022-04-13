@@ -229,7 +229,7 @@ function populateUserOrders()
                     <div class="col-md-4 product-info ">
                         <div class="product-specs d-flex flex-column  align-items-center">
                             <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                                <span>Date:</span>
+                                <span>Date Created</span>
                                 <br>
                                 <span class="value">${date_created}</span>
                             </div>
@@ -469,7 +469,7 @@ function radioChartClick()
 
             var userOrder = orders[i];
 
-            var statusText  = userOrder.status;
+            var statusText      = userOrder.status;
             var cart        = JSON.parse(userOrder.cart).cart;
 
             // create chartMap
@@ -676,6 +676,7 @@ function radioPickupsClick()
                     <th class="table w-50">${date.getFullYear()}</th>
                     <th class="table w-25"></th>
                     <th class="table w-25"></th>
+                    <th class="table w-25"></th>
                 </tr>
                 `;
                 lastYear = date.getFullYear();
@@ -693,6 +694,7 @@ function radioPickupsClick()
                 <!-- Date -->
                 <tr>
                     <th class="table w-50">${dateLocaleString}</th>
+                    <th class="table w-25"></th>
                     <th class="table w-25"></th>
                     <th class="table w-25"></th>
                 </tr>
@@ -738,8 +740,9 @@ function radioPickupsClick()
             <!-- Time, Name, Order ID -->
             <tr>
                 <td class="table w-50" >${timeString}</td>
-                <td class="table w-25" >${pickups[i].name}</td>
-                <td class="table w-25" >${pickups[i].order_id}</td>
+                <td class="table w-25" style="font-size: small; font-weight: normal;" >${pickups[i].name}</td>
+                <td class="table w-25" style="font-size: small; font-weight: normal;" >${pickups[i].order_id}</td>
+                <td class="table w-25" style="font-size: small; font-weight: normal;" >${pickups[i].pickup_location}</td>
             </tr>
             `
         }

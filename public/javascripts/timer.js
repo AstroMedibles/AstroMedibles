@@ -51,7 +51,7 @@ function startTime()
     var m = Difference_In_Minutes;
     var s = Difference_In_Seconds;
 
-    preorderTimer.innerHTML =  'Upcoming Sale 🚀 ' + d + " days  " + h + " hrs  " + m + " min  " + s + ' sec 🚀';
+    preorderTimer.innerHTML =  'Next Sale 🚀 ' + d + " days  " + h + " hrs  " + m + " min  " + s + ' sec 🚀';
     setTimeout(startTime, 500);
   }
   // case 2 today date is after start date && today date is before end date

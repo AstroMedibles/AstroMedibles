@@ -863,9 +863,9 @@ app.patch('/userUpdateScheduledPickup', (request, response) =>
 		console.log("userUpdateScheduledPickup(/) \tresult.then()");
 		console.log(accountAttributes);
 
-		const { orderId, dateScheduledPickup } = request.body; 
+		const { orderId, dateScheduledPickup, pickupLocation } = request.body; 
 		const db = dbService.getDbServiceInstance();
-		const result = db.userUpdateScheduledPickup(orderId, dateScheduledPickup); 
+		const result = db.userUpdateScheduledPickup(orderId, dateScheduledPickup, pickupLocation); 
 		
 		result.then((data) => 
 		{ 
