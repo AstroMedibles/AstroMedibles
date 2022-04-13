@@ -896,14 +896,21 @@ class DbService
                         `
                         <h3>Step 1: Select Pickup Day & Time</h3>
                         <p>
-                        First, confirm your pickup time at <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a>.
+                        First, confirm your pickup time & location at <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a>.
                         <br>
                         After you have selected your confirmed pickup time, follow these directions for pickup.
                         </p>
                         <br>
                         <h3>Step 2: Pickup At Location</h3>
                         <p>
-                        <b>Directions For Pickup 77598:</b>
+                        <b>Directions for Pickup 77504 (Lazy Daze)</b>
+                        <br>
+                        <a href="https://goo.gl/maps/yG57sXc9Mt3jaQMr8">4416 Fairmont Pkwy Ste 103, Pasadena, TX 77504</a>
+                        <br>
+                        Lazy Daze is avalible for pickup anytime within their business hours.
+                        <br><br>
+
+                        <b>Directions for Pickup 77598 (Apartment)</b>
                         <br>
                         <a href="https://goo.gl/maps/jQcvTGmZJdWFp3q16">18833 Town Ridge Ln, Webster, TX 77598</a>
                         <br>
@@ -911,13 +918,7 @@ class DbService
                         <br>
                         Let me know you have arrived.
                         <br>
-                        <br>
-                        <b>Alternative Location Pickup Directions 77504 (Lazy Daze):</b>
-                        <br>
-                        <a href="https://goo.gl/maps/yG57sXc9Mt3jaQMr8">4416 Fairmont Pkwy Ste 103, Pasadena, TX 77504</a>
-                        <br>
-                        To request to pick up at 77504, please let me know at least a day before so I can take your order over to Lazy Daze, and give you directions.
-                        <br>
+
                         <br>
                         Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter</a>
                         <br>
