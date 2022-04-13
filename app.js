@@ -124,8 +124,10 @@ app.get('/account', (request, response) =>
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{
-		// console.log('accountAttributes');
-		// console.log(accountAttributes.isAdmin);
+		console.log('accountAttributes');
+		console.log(accountAttributes.isAdmin);
+		console.table(accountAttributes);
+
 		response.render('account',
 		{
 			accountAttributes: accountAttributes
@@ -167,12 +169,12 @@ app.patch('/updateAccountAttributes', function(request, response)
 	const password 			= request.cookies.password; 
 
 	const newEmail 			= request.body.email; 
-	// const password 			= request.body.password; 
 	const name 				= request.body.name;
 
     console.log(currentEmail);
 	console.log(newEmail);
-    console.log(password);
+    // console.log(password);
+	console.log('***');
     console.log(name);
 
 	const db = dbService.getDbServiceInstance(); 

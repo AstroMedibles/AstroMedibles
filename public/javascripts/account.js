@@ -54,9 +54,9 @@ function updateAccountAttributes()
     var name = $('#inputName').val();
     name = $.trim(name);
 
-    if (name.length > 20)
+    if (name.length > 30)
     {
-        name = name.substring(0, 20);
+        name = name.substring(0, 30);
     }
 
     if (email.length > 60)
