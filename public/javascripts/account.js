@@ -81,7 +81,7 @@ function updateAccountAttributes()
         body: JSON.stringify
             ({
                 email: email,
-                password: '12345',
+                password: password,
                 name: name
             })
     })
