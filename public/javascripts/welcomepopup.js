@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function ()
         $("#modal1").modal('show');
         setCookie('welcome', 'HELLO', 999);
     }
-    console.log(`Cookie Value (${name}): ` + cValue);
+    // console.log(`Cookie Value (${name}): ` + cValue);
 });
 
 function getCookie(cname)

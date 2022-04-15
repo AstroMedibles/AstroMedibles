@@ -26,7 +26,8 @@ function loadMenuCards(data)
     }
 
     var myform = $('#myform');
-    Array.from(data).forEach(function ({ id, name, price, description })
+    // Array.from(data).forEach(function ({ id, name, price, description, stock })
+    Array.from(data).forEach(function ({ id, name, price, description})
     {
         // console.log(id + "\t" + name + "\t" + price + "\t" + description);
 
@@ -53,8 +54,11 @@ function loadMenuCards(data)
                     <p class="card-text">${description}</p>
                 </div>
 
+
                 <div class="card-footer" style="width: 100%;>
                     <h5 class="card-text"><b>$${price.toFixed(2)}</b></h5>
+                    <!-- <p class="card-text" style="font-size: small;" >(%{stock}) in stock</p> -->
+                    
                     <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill disabled" type="button" style="width: 100%;">Add to cart</button>
                 </div>
             </div>

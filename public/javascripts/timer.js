@@ -96,6 +96,7 @@ function startTime()
     
             // console.log('Difference_In_Time1: ' + Difference_In_Time1);
             // console.log();
+            // if order is in past 3 days or 259200000 ms
             if (Difference_In_Time1 > 259200000 || isNaN(Difference_In_Time1))
             {
               // console.log('Purchase is old enough, new one valid');
