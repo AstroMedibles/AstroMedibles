@@ -92,7 +92,7 @@ function getCartDetails(userCart)
                             </div>
                             <div class="col-md-4 product-info"><h2 class="product-name" >${name}</h2>
                                 <div class="product-specs">
-                                    <div><span>Price:&nbsp;</span><span class="value">${price}</span></div>
+                                    <div><span>Price:&nbsp;</span><span class="value">$${price.toFixed(2)}</span></div>
                                     <div><span class="value">${description}</span></div>
                                 </div>
                             </div>
