@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () 
 {
     // console.log("DOMContentLoaded");
-
-    // UPDATE PORT, DO NOT FORGET
     fetch(address + '/getMenuData')
-        .then(response => response.json())
-        .then(data => loadMenuCards(data['data']))
-        .then(ready());
+    .then(response => response.json())
+    .then(data => loadMenuCards(data['data']))
+    .then(ready());
 });
 
 const address = 'https://www.astromedibles.com';
@@ -38,13 +36,15 @@ function loadMenuCards(data)
         let card = "";
         let dataAttributes = ` data-id="${id}"  data-name="${name}"  data-price="${price}"`;
         
+
+        // <div name="card" class="card  d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
+        // <img class="card-img-top" src="../images/${name}.jpg"  alt="...">
+
         card +=
             `
             <div class="col-6 col-md-3 d-flex  text-center">
 
             <div name="card" class="card  d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
-                <img class="card-img-top" src="../images/${name}.jpg"  alt="...">
-
                 <div class="card-header" style="width: 100%;">
                     <h6 class="card-title"><b>${name}</b></h6>
                 </div>
@@ -61,7 +61,6 @@ function loadMenuCards(data)
 
             </div>
         `;
-
         myform.append(card);
     });
     // console.log("buttons created");
