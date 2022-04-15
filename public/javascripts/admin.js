@@ -673,10 +673,10 @@ function radioPickupsClick()
                 tableHTML +=
                 `
                 <tr>
-                    <th class="table w-50">${date.getFullYear()}</th>
-                    <th class="table w-25"></th>
-                    <th class="table w-25"></th>
-                    <th class="table w-25"></th>
+                    <th class="table" style="width: 40%;" >${date.getFullYear()}</th>
+                    <th class="table" style="width: 20%;" ></th>
+                    <th class="table" style="width: 20%;" ></th>
+                    <th class="table" style="width: 20%;" ></th>
                 </tr>
                 `;
                 lastYear = date.getFullYear();
@@ -693,10 +693,10 @@ function radioPickupsClick()
                 `
                 <!-- Date -->
                 <tr>
-                    <th class="table w-50">${dateLocaleString}</th>
-                    <th class="table w-25"></th>
-                    <th class="table w-25"></th>
-                    <th class="table w-25"></th>
+                    <th class="table" style="width: 40%;" >${dateLocaleString}</th>
+                    <th class="table" style="width: 20%;" ></th>
+                    <th class="table" style="width: 20%;" ></th>
+                    <th class="table" style="width: 20%;" ></th>
                 </tr>
                 `;
                 lastDate = date;
@@ -739,10 +739,10 @@ function radioPickupsClick()
             `
             <!-- Time, Name, Order ID, Location -->
             <tr style="font-size: small;">
-                <td class="table w-50" >${timeString}</td>
-                <td class="table w-25" >${pickups[i].name}</td>
-                <td class="table w-25" >${pickups[i].order_id}</td>
-                <td class="table w-25" >${pickups[i].pickup_location}</td>
+                <td class="table" style="width: 40%;" >${timeString}</td>
+                <td class="table" style="width: 20%;" >${pickups[i].name}</td>
+                <td class="table" style="width: 20%;" >${pickups[i].order_id}</td>
+                <td class="table" style="width: 20%;" >${pickups[i].pickup_location}</td>
             </tr>
             `
         }
