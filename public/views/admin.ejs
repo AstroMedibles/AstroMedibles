@@ -42,13 +42,23 @@
                         <div class="col-md-12">
 
                             <div id="orders-items-outer" class="items w-100" style="padding: 0px;">
+                                <!-- ORDERS SECTION -->
                                 <div class="product">
                                     <div class="row product-image" style="padding: 15px 0px 15px 0px;">
                                         <br>
                                         <h4 style="text-align: center;">Customer Orders</h4>
                                         
-                                        <p style="text-align: center;">Update the status of customer orders</p>
-
+                                        <p style="text-align: center;">Update the Status of Customer Orders</p>
+                                        
+                                        <!-- SEARCH DIV -->
+                                    
+                                        <div class="input-group mb-3" style="width: 96%; max-width: 600px;">
+                                            <label id="inputSearchLabel" type="text"  style="align-self: center; margin-right: 15px;" >()</label>
+                                            <input id="inputSearchOrders" type="text" class="form-control" maxlength="100" placeholder="Search all orders" autocomplete="off">
+                                            <button type="button" class="input-group-text" onClick="searchOrderClick(event);">Search</button>
+                                        </div>
+                                        
+                                        
                                         <div id="orders-items" class="items">
             
                                             <!-- ORDERS -->
