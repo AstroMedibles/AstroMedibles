@@ -305,7 +305,7 @@ class DbService
             var cartResult = db.getUserData(email, password);
             cartResult.then(results => 
             {
-                console.log("cartSubtractItem .then");
+                // console.log("cartSubtractItem .then");
                 var cart = [[0, 0]];
                 try
                 {
@@ -420,7 +420,7 @@ class DbService
             var menuData = db.getMenuData();
             menuData.then(data => 
             {
-                console.log(data);
+                // console.log(data);
                 // console.log(data['data']);s
                 var menuItems = Array.from(data);
                 /*  loop through user's cart
@@ -446,8 +446,8 @@ class DbService
                 }
                 // console.log("Cart items:");
                 // console.log(cartItems);
-                console.log("Calculated total:");
-                console.log(cartTotal);
+                // console.log("Calculated total:");
+                // console.log(cartTotal);
                 resolve([cartTotal, menuItems]);
             });
         });
@@ -487,7 +487,7 @@ class DbService
     {
         const response = await new Promise((resolve, reject) => 
         {
-            console.log(`generateAccessCodes(${quantity})`);
+            console.log(`/generateAccessCodes(${quantity})`);
             var values = [];
             for (let i = 0; i < quantity; i++)
             {
@@ -497,8 +497,8 @@ class DbService
                 values.push(code);
             }
             // values = [values];
-            console.log("values");
-            console.log(values);
+            // console.log("values");
+            // console.log(values);
             const sql = "INSERT INTO " + process.env.TABLE_CODES + " (code) VALUES ?";
             connection.query(sql, [values], (err, result) =>
             {
@@ -522,14 +522,14 @@ class DbService
 
         const response = await new Promise((resolve, reject) => 
         {
-            console.log(`generateAccessCodes(${code})`);
+            console.log(`/generateAccessCodes(${code})`);
 
-            console.log(code);
+            // console.log(code);
             code = [code];
             values.push(code);
 
-            console.log("values");
-            console.log(values);
+            // console.log("values");
+            // console.log(values);
             const sql = "INSERT INTO " + process.env.TABLE_CODES + " (code) VALUES ?";
             connection.query(sql, [values], (err, result) =>
             {
@@ -558,7 +558,7 @@ class DbService
 
         console.log('submitUserOrder(email, password, date_created)');
 
-        console.log(date_created);
+        // console.log(date_created);
 
 
         const order_id  = Math.random().toString(36).toUpperCase().substr(2,6); // Random 6 char alphanumeric - uppercase only
@@ -581,8 +581,8 @@ class DbService
             const cart          = JSON.stringify(userData.cart);
             // date_created.toLocaleString('en-US', { timeZone: 'America/Chicago' });
 
-            console.log(userData);
-            console.log(user_id);
+            // console.log(userData);
+            // console.log(user_id);
             // console.log(status);
             // console.log(order_id);
             // console.log(user_name);
@@ -727,7 +727,7 @@ class DbService
                     }
                     else
                     {
-                        console.log(`Code: ${accessCode} CONSUMED`);
+                        console.log(`Access Code: ${accessCode} CONSUMED`);
 
                         var query2 = "INSERT INTO " + process.env.TABLE_NAMES + " (isAdmin, name, password, cart, email, date_created, verificationCode, date_lastOrderPlaced) VALUES (?,?,?,?,?,?,?,?);";
                         connection.query(query2, [isAdmin, name, password, cart, email, date_created, accessCode, ''], (err, result) =>
@@ -815,8 +815,8 @@ class DbService
                             pickup_location  : results[i].pickup_location
                         };
 
-                        console.log('order');
-                        console.log(order);
+                        // console.log('order');
+                        // console.log(order);
                         userOrders.push(order);
                     }
 
@@ -865,12 +865,12 @@ class DbService
 
                     if (status === 'Payment Required')
                     {
-                        console.log('Status Case: 1');
+                        // console.log('Status Case: 1');
 
                         
                     } else if (status === 'Preparing Order')
                     {
-                        console.log('Status Case: 2');
+                        // console.log('Status Case: 2');
                         html = 
                         `
                         <h3>Your Order Status has been updated to ${status}</h3>
@@ -890,7 +890,7 @@ class DbService
                         `;
                     } else if (status === 'Ready for Pickup')
                     {
-                        console.log('Status Case: 3');
+                        // console.log('Status Case: 3');
 
                         html = 
                         `
@@ -933,7 +933,7 @@ class DbService
 
                     } else if (status === 'Complete')
                     {
-                        console.log('Status Case: 4');
+                        // console.log('Status Case: 4');
                         html = 
                         `
                         <p>
@@ -1132,7 +1132,7 @@ class DbService
                     {
                         try 
                         { 
-                            console.log(results[i]);
+                            // console.log(results[i]);
                             if (results[i].pickup_scheduled.length > 2)
                             {
                                 var pickupDate = new Date(results[i].pickup_scheduled);
@@ -1153,8 +1153,8 @@ class DbService
                         }
                     }
 
-                    console.log('pickups');
-                    console.log(pickups);
+                    // console.log('pickups');
+                    // console.log(pickups);
                     resolve(pickups);
                 })
             }
@@ -1237,12 +1237,12 @@ class DbService
     */
     async ordersCustomerGetPickupDaysAndTimes(customerDate)
     {
-        console.log("/ordersCustomerGetPickupDaysAndTimes(customerDate)");
+        // console.log("/ordersCustomerGetPickupDaysAndTimes(customerDate)");
         customerDate = new Date(customerDate);
 
         // TIMEZONE OFFSET, NEW YORK SERVER
 
-        console.log('customerDate: ' + customerDate.toISOString());
+        // console.log('customerDate: ' + customerDate.toISOString());
         var avalibleDaysandTimes = [];
         /* avalibleDaysandTimes = ...
         * [ 
@@ -1375,8 +1375,8 @@ class DbService
                             }
                         }
 
-                        console.log('overCapacityDates:');
-                        console.log(overCapacityDates);
+                        // console.log('overCapacityDates:');
+                        // console.log(overCapacityDates);
 
                         // console.log('\n avalibleDaysandTimes: BEFORE REMOVAL');
                         // console.log(avalibleDaysandTimes);
@@ -1423,8 +1423,8 @@ class DbService
                         // console.log(results[1]); // [{2: 2}]
                         // console.log(results[2]); // [{2: 2}]
 
-                        console.log('\n avalibleDaysandTimes: AFTER REMOVAL');
-                        console.log(avalibleDaysandTimes);
+                        // console.log('\n avalibleDaysandTimes: AFTER REMOVAL');
+                        // console.log(avalibleDaysandTimes);
 
                         resolve([avalibleDaysandTimes]);
 
@@ -1508,9 +1508,6 @@ class DbService
         {
             try
             {
-                console.log('available:');
-                console.log(available);
-
                 const query1 = "UPDATE " + process.env.TABLE_PICKUPS_DAYS  + " SET `available` = ? WHERE (`id` = '1');";
                 const query2 = "UPDATE " + process.env.TABLE_PICKUPS_DAYS  + " SET `available` = ? WHERE (`id` = '2');";
                 const query3 = "UPDATE " + process.env.TABLE_PICKUPS_DAYS  + " SET `available` = ? WHERE (`id` = '3');";
@@ -1529,13 +1526,6 @@ class DbService
                     }
                     else
                     {
-                        // console.log(results[0]); // [{1: 1}]
-                        // console.log(results[1]); // [{2: 2}]
-                        console.log("\n");
-                        console.log("results.affectedRows:");
-                        console.log(results[0].affectedRows);
-                        console.log('New Schedule DAYS Update Complete');
-
                         resolve(results.affectedRows);
                     }
                 });
@@ -1554,8 +1544,8 @@ class DbService
         {
             try
             {
-                console.log('available:');
-                console.log(available);
+                // console.log('available:');
+                // console.log(available);
 
                 const query1  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '1');";
                 const query2  = "UPDATE " + process.env.TABLE_PICKUPS_TIMES  + " SET `available` = ? WHERE (`id` = '2');";
@@ -1600,13 +1590,6 @@ class DbService
                     }
                     else
                     {
-                        // console.log(results[0]); // [{1: 1}]
-                        // console.log(results[1]); // [{2: 2}]
-                        console.log("\n");
-                        console.log("results.affectedRows:");
-                        console.log(results[0].affectedRows);
-                        console.log('New Schedule TIMES Update Complete');
-
                         resolve(results.affectedRows);
                     }
                 });
@@ -1766,7 +1749,7 @@ class DbService
                 }
                 else
                 {
-                    console.log(result);
+                    // console.log(result);
                     console.log(`updatePassword Email: ${email} : ${verificationCode} Password updated!`);
                     var subject = 'Your password has been updated';
                     var html = 
