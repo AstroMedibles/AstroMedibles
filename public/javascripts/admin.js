@@ -1170,32 +1170,35 @@ function updateTimesSchedule(event)
 
 function check_new_orders()
 {
-    fetch(address + '/adminGetUserOrders')
-    .then(response => response.json())
-    .then(data =>  
+    // if no notification is sent yet, keep checking for new orders
+    if (new_order_notification == false)
     {
-        var new_order_count = Array.from(data['data']).length;
-
-        // if the new orders count is higher than the current, and the notification has not been sent already
-        // play notification sound
-        if (new_order_count > orders.length && new_order_notification == false)
+        fetch(address + '/adminGetUserOrders')
+        .then(response => response.json())
+        .then(data =>  
         {
-            var audio = new Audio('/audio/money.mp3');
-            audio.play();
-
-            // Notification
-            const message       = `New Customer Order!`;
-            const alertType     = 'primary';
-            const iconChoice    = 2;
-            const duration      = 5;
-            alertNotify(message, alertType, iconChoice, duration);
-
-            // update notification sent flag to true
-            new_order_notification = true;
-        }
-        // console.table(['new_order_notification', new_order_notification]);
-    });
-
+            var new_order_count = Array.from(data['data']).length;
+    
+            // if the new orders count is higher than the current, and the notification has not been sent already
+            // play notification sound
+            if (new_order_count > orders.length)
+            {
+                var audio = new Audio('/audio/money.mp3');
+                audio.play();
+    
+                // Notification
+                const message       = `New Customer Order!`;
+                const alertType     = 'primary';
+                const iconChoice    = 2;
+                const duration      = 5;
+                alertNotify(message, alertType, iconChoice, duration);
+    
+                // update notification sent flag to true
+                new_order_notification = true;
+            }
+            // console.table(['new_order_notification', new_order_notification]);
+        });
+    }
     // check for new orders every 10 seconds
     setTimeout(check_new_orders, 10000);
 }
