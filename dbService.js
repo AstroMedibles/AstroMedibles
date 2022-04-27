@@ -1602,7 +1602,6 @@ class DbService
         return response;
     }
 
-
     async forgotPasswordGenerateCode(email)
     {
         const response = new Promise((resolve, reject) =>
@@ -1779,6 +1778,7 @@ class DbService
                 var toEmail = `${process.env.AM_USER}, ${userEmail}`;
 
                 subject = `[Feedback] ${subject}`;
+                // <img style="width: 700px;" src="cid:header"/>
                 var html = 
                 `
                 <h3>Feedback Response:</h3>
@@ -1853,6 +1853,12 @@ class DbService
             to:      toEmail,
             subject: subject,
             html:    html
+            // attachments:
+            // [{
+            //     filename: 'header.png',
+            //     path: __dirname +'/public/images/email/header.png', 
+            //     cid: 'header' //same cid value as in the html img src
+            // }]
         };
         
         transporter.sendMail(mailOptions, function (error, info)

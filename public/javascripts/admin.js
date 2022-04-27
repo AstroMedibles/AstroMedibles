@@ -1,12 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () 
 {
     // console.log("DOMContentLoaded");
+    // $('#inputSearchOrders').text('');
     ready();
 });
 
 const address = 'https://www.astromedibles.com';
 // const address = 'http://localhost:8080';
-var orders    = null;
+var orders                  = null;
+var new_order_notification  = false;
 
 var checkDay1 = document.getElementById('checkDay1');
 var checkDay2 = document.getElementById('checkDay2');
@@ -69,6 +71,10 @@ function loadCartTotal(data)
 
 function populateUserOrders()
 {
+    // reset notification flag
+    new_order_notification = false;
+
+    // populate page with new user orders
     fetch(address + '/adminGetUserOrders')
     .then(response => response.json())
     .then(data =>  
@@ -596,8 +602,6 @@ function radioOrdersClick()
     document.getElementById("radioCodes").classList.remove("active");
     document.getElementById("radioChart").classList.remove("active");
     document.getElementById("radioPickups").classList.remove("active");
-
-
 
     populateUserOrders();
 }
@@ -1164,6 +1168,70 @@ function updateTimesSchedule(event)
     }));
 }
 
+function check_new_orders()
+{
+    fetch(address + '/adminGetUserOrders')
+    .then(response => response.json())
+    .then(data =>  
+    {
+        var new_order_count = Array.from(data['data']).length;
+
+        // if the new orders count is higher than the current, and the notification has not been sent already
+        // play notification sound
+        if (new_order_count > orders.length && new_order_notification == false)
+        {
+            var audio = new Audio('/audio/money.mp3');
+            audio.play();
+
+            // Notification
+            const message       = `New Customer Order!`;
+            const alertType     = 'primary';
+            const iconChoice    = 2;
+            const duration      = 5;
+            alertNotify(message, alertType, iconChoice, duration);
+
+            // update notification sent flag to true
+            new_order_notification = true;
+        }
+        // console.table(['new_order_notification', new_order_notification]);
+    });
+
+    // check for new orders every 10 seconds
+    setTimeout(check_new_orders, 10000);
+}
+
+function alertNotify(message, alertType, iconChoice, duration)
+{
+    if (iconChoice == 1)      // ✔
+        iconChoice = 'check-circle-fill';
+    else if (iconChoice == 2) // i
+        iconChoice = 'info-fill';
+    else if (iconChoice == 3) // !
+        iconChoice = 'exclamation-triangle-fill';
+
+    var iconHTML = `<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="${alertType}}:"><use xlink:href="#${iconChoice}"/></svg>`;
+    alertType = `alert-${alertType}`;
+
+    var html = 
+    `
+    <div id="alertNotification" class="alert ${alertType}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+        <span>
+            ${iconHTML}
+            ${message}
+        </span>
+    </div>
+    `;
+
+    // show pop up
+    $('#notification').append(html);
+    
+    duration *= 1000;
+    setTimeout(function ()
+    { // this will automatically close the alert in 2 secs
+        $("#alertNotification").remove();
+    }, duration);
+}
+
 function ready()
 {
     try 
@@ -1174,6 +1242,8 @@ function ready()
         .then(data => 
         {
             loadCartTotal(data['data']);
+
+            check_new_orders();
         });
     } catch (error)
     {
@@ -1188,3 +1258,4 @@ function ready()
         // console.log(error);
     }
 }
+
