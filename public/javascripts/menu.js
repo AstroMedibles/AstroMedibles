@@ -41,28 +41,30 @@ function loadMenuCards(data)
         // <div name="card" class="card  d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
         // <img class="card-img-top" src="../images/${name}.jpg"  alt="...">
 
+
+        // <div class="card-body" style="font-size: 0.75em; width: 100%;">
+        //     <p class="card-text">${description}</p>
+        // </div>
+
         card +=
             `
-            <div class="col-6 col-md-3 d-flex  text-center">
+            <div class="col-6 col-md-4 col-lg-3 d-flex  text-center">
+                <div name="card" class="card  d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
 
-            <div name="card" class="card  d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
-                <div class="card-header" style="width: 100%;">
-                    <h6 class="card-title" style="font-size: small;"><b>${name}</b></h6>
+                    <div class="card-header" style="width: 100%; height: 50px;">
+                        <h6 class="card-title" style="font-size: small;"><b>${name}</b></h6>
+                    </div>
+
+                    <img class="card-img-top" src="../images/temp.jpg"  alt="...">
+
+                    <div class="card-footer" style="width: 100%; height: 90px;">
+                        <h5 class="card-text">$${price.toFixed(2)}</h5>
+                        <!-- <p class="card-text" style="font-size: small;" >(%{stock}) in stock</p> -->
+                        
+                        <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill disabled" type="button" style="width: 100%;">Add to cart</button>
+                    </div>
+
                 </div>
-
-                <div class="card-body" style="font-size: 0.75em; width: 100%;">
-                    <p class="card-text">${description}</p>
-                </div>
-
-
-                <div class="card-footer" style="width: 100%;>
-                    <h5 class="card-text"><b>$${price.toFixed(2)}</b></h5>
-                    <!-- <p class="card-text" style="font-size: small;" >(%{stock}) in stock</p> -->
-                    
-                    <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill disabled" type="button" style="width: 100%;">Add to cart</button>
-                </div>
-            </div>
-
             </div>
         `;
         myform.append(card);
