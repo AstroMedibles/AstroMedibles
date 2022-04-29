@@ -55,7 +55,7 @@ function loadMenuCards(data)
                         <h6 class="card-title" style="font-size: small;"><b>${name}</b></h6>
                     </div>
 
-                    <img class="card-img-top" src="../images/temp.jpg"  alt="...">
+                    <img class="card-img-top" src="../images/${name}.jpg" alt="..." loading="lazy">
 
                     <div class="card-footer" style="width: 100%; height: 90px;">
                         <h5 class="card-text">$${price.toFixed(2)}</h5>
