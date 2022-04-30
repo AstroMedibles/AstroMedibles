@@ -166,7 +166,7 @@ function addToCartClicked(event)
 
             
             // Notification
-            const message = `(1) ${title} added to cart!`;
+            const message = `${title} added to cart`;
             const alertType     = 'success';
             const iconChoice    = 1;
             alertNotify(message, alertType, iconChoice, 2);
