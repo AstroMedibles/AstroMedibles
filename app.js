@@ -124,9 +124,8 @@ app.get('/account', (request, response) =>
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{
-		console.log('accountAttributes');
-		console.log(accountAttributes.isAdmin);
-		console.table(accountAttributes);
+		// console.log('accountAttributes');
+		// console.table(accountAttributes);
 
 		response.render('account',
 		{
@@ -397,11 +396,11 @@ app.get('/ThankYou', (request, response) =>
 		response.redirect('/login'); 
 	}); 
 }); 
- 
+
 // read 
-app.get('/getCartData', (request, response) => 
+app.get('/getUserData', (request, response) => 
 { 
-	// console.log("\n"+ "route(/getCartData) "); 
+	// console.log("\n"+ "route(/getUserData) "); 
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{ 
@@ -422,10 +421,8 @@ app.get('/getCartData', (request, response) =>
 		console.log("route(/) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	}); 
+});
 
-
-}); 
- 
 // read 
 app.get('/getUserOrders', (request, response) => 
 { 

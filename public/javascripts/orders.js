@@ -627,7 +627,7 @@ function buttonCancelOrder(event)
 function ready()
 {
     // get cart total
-    fetch(address + '/getCartData')
+    fetch(address + '/getUserData')
         .then(response => response.json())
         .then(data => 
         {

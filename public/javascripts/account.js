@@ -10,11 +10,17 @@ const address = 'https://www.astromedibles.com';
 function ready()
 {
     // get cart total
-    fetch(address + '/getCartData')
+    fetch(address + '/getUserData')
     .then(response => response.json())
     .then(data => 
     {
         loadCartTotal(data['data']);
+
+        // console.table(data);
+
+        $('#inputName').val(data['data'].name);
+        $('#inputEmail').val(data['data'].email);
+
     });
 }
 

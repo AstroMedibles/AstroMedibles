@@ -114,8 +114,6 @@ class DbService
                             if (password == decryptedText)
                             {
                                 // console.log('Login success!');
-                                // console.log("results[0]");
-                                // console.log(results[0]);
                                 resolve(results[0]);
                                 return;
                             }
