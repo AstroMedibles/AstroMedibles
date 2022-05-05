@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function ()
 
 const address = 'https://www.astromedibles.com';
 // const address = 'http://localhost:8080';
+
 var orders                  = null;
 var new_order_notification  = false;
 
@@ -121,7 +122,7 @@ function populateUserOrders()
             var statusText = status;
             var dropDownButton = '';
 
-            if (statusText === 'Payment Required')
+            if (status_id === 1) // === 'Payment Required'
             {
                 dropDownButton = 
                 `
@@ -135,7 +136,7 @@ function populateUserOrders()
                 <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
                 <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
                 `;
-            } else if (statusText === 'Preparing Order')
+            } else if (status_id === 2) // === 'Payment Required'
             {
                 dropDownButton = 
                 `
@@ -149,7 +150,7 @@ function populateUserOrders()
                 <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
                 <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
                 `;
-            } else if (statusText === 'Ready for Pickup')
+            } else if (status_id === 3) // === 'Ready for Pickup'
             {
                 dropDownButton = 
                 `
@@ -162,7 +163,7 @@ function populateUserOrders()
                 <button class="dropdown-item disabled">Ready for Pickup</button>
                 <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
                 `;
-            } else if (statusText === 'Complete')
+            } else if (status_id === 4) //  === 'Complete')
             {
                 dropDownButton = 
                 `
@@ -295,7 +296,7 @@ function searchOrderClick(event)
         &&  !order_id.toLowerCase().includes(searchText)  && !name.toLowerCase().includes(searchText)   
         &&  !email.toLowerCase().includes(searchText))
         {
-            console.log('TRUE THO');
+            // console.log('TRUE THO');
             continue;
         }
         else
@@ -677,13 +678,13 @@ function radioChartClick()
             // console.log(orders[i]);
 
             var userOrder = orders[i];
-
+            var status_id    = userOrder.status_id;
             var statusText      = userOrder.status;
             var cart        = JSON.parse(userOrder.cart).cart;
 
             // create chartMap
 
-            if (statusText === 'Payment Required')
+            if (status_id === 1) // === 'Payment Required')
             {
                 for (let j = 1; j < cart.length; j++)
                 {
@@ -708,7 +709,7 @@ function radioChartClick()
                         chartMapPaymentRequired.set(id, {quantity: cartElement[1], name: cartElement[2]});
                     }
                 }
-            } else if (statusText === 'Preparing Order')
+            } else if (status_id === 2) // === 'Preparing Order')
             {
                 for (let j = 1; j < cart.length; j++)
                 {
