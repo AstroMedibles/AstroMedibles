@@ -832,6 +832,185 @@ class DbService
         return response;
     }
 
+    // async adminEmailAllUsers()
+    // {
+    //     const response = new Promise((resolve, reject) =>
+    //     {
+    //         // console.log(order_id);
+    //         const db = DbService.getDbServiceInstance();
+    //         var html;
+
+
+    //         const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status_id = ? ORDER BY date_created DESC;";
+    //         const statusID = 3;
+    //         connection.query(sql, [statusID], (error, results) =>
+    //         {
+    //             if (error)
+    //             {
+    //                 reject(err.message);
+    //             }
+    //             else
+    //             {
+    //                 var county1 = 0;
+    //                 var county2 = 0;
+
+    //                 for (let i = 0; i < results.length; i++)
+    //                 {
+
+    //                         // status_id        : results[i].status_id,
+    //                         // status           : results[i].status,
+    //                         // order_id         : results[i].order_id,
+    //                         // name             : results[i].name,
+    //                         // email            : results[i].email,
+    //                         // status           : results[i].status,
+    //                         // cart             : results[i].cart,
+    //                         // total            : results[i].total,
+    //                         // date_created     : results[i].date_created,
+    //                         // pickup_scheduled : results[i].pickup_scheduled
+
+    //                     var subject = `Order ${results[i].order_id}, Status: ${results[i].status}`;
+
+
+    //                     var orderIdEmailSentAlready = 
+    //                     [
+    //                         '9GRST9', 'UOAX57', 'XY9MLE', '2L0F7K', 'J1IREU', '382OB3', '6ACYL5', '6O4TDD',
+    //                         'HDOM3K', '6PCGHT', 'GCYDCY', '4VLIQ1', 'PI9GN8', '2PBTCC', 'IJ4ADO', 'K2JL0S', 
+    //                         'K2GJ8L', '0EHOUX', '29MZKS', 'XJ9EBM', 'C9QFKO','9H2QCI', '3ZN6ZU', 'QYR2ND', 
+    //                         '5R3VU6', 'ZVKZRZ', 'OLTO0E', 
+    //                         'L5R8J2', 'JY2Q7E', 'CNRKIN', 'B3H8BE', 'M9SIAT', 'YOL4YN', 'X9TPVD', '0Z8THE',
+    //                         '8LG00A', 'FFX88Q', 'AG6CHS', '3SWMFY', 'FJYJQ6', '9MUIZA', 'QX5LYT', 'HEJ75H',
+    //                         'KFU5YY', '7HFQ6R', 'LB1V4L', 'BMBL5V'
+    //                     ];
+
+    //                     console.log('Remaining emails to be sent' + (results.length - orderIdEmailSentAlready.length));
+
+
+
+    //                     // console.log('results.order_id: ' + results[i].order_id);
+    //                     // console.log('orderIdEmailSentAlready');
+    //                     // console.log(orderIdEmailSentAlready);
+
+    //                     console.log('county1' + county1);
+    //                     county1 += 1;
+
+    //                     if (orderIdEmailSentAlready.includes(results[i].order_id))
+    //                     {
+    //                         console.log('order_id:' + results[i].order_id + "  SKIPPED");
+    //                         console.log('county2' + county2);
+    //                         county2 += 1;
+    //                         continue;
+    //                     }
+
+    //                     else
+    //                     {
+    //                         if (results[i].status_id === 1) // === 'Payment Required')
+    //                         {
+    //                             // console.log('Status Case: 1');
+        
+                                
+    //                         } else if (results[i].status_id === 2) //(status === 'Preparing Order')
+    //                         {
+    //                             // console.log('Status Case: 2');
+    //                             html = 
+    //                             `
+    //                             <h3>Your Order Status has been updated to ${results[i].status}</h3>
+    //                             <p>
+    //                             This means that we have confirmed your payment, and your order is being prepared.
+    //                             <br>
+    //                             You will recieve a notification once your order status has been updated to 'Ready for Pickup'.
+    //                             <br>
+    //                             When your order is Ready for Pickup, you will be able to select your scheduled pick up day & time. Along with directions and an address.
+    //                             <br>
+    //                             <br>
+    //                             Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
+    //                             <br>
+    //                             <br>
+    //                             This is an automated message.
+    //                             </p>
+    //                             `;
+    //                         } else if (results[i].status_id === 3) //(status === 'Ready for Pickup')
+    //                         {
+    //                             // console.log('Status Case: 3');
+        
+    //                             html = 
+    //                             `
+    //                             <h3>Step 1: Select Pickup Day & Time</h3>
+    //                             <p>
+    //                             First, confirm your pickup time & location at <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a>.
+    //                             <br>
+    //                             After you have selected your confirmed pickup time, follow these directions for pickup.
+    //                             </p>
+    //                             <br>
+    //                             <h3>Step 2: Pickup At Location</h3>
+    //                             <p>
+    //                             <b>Directions for Pickup 77504 (Lazy Daze)</b>
+    //                             <br>
+    //                             <a href="https://goo.gl/maps/yG57sXc9Mt3jaQMr8">4416 Fairmont Pkwy Ste 103, Pasadena, TX 77504</a>
+    //                             <br>
+    //                             Lazy Daze is avalible for pickup anytime within their business hours.
+    //                             <br><br>
+        
+    //                             <b>Directions for Pickup 77598 (Apartment)</b>
+    //                             <br>
+    //                             <a href="https://goo.gl/maps/jQcvTGmZJdWFp3q16">18833 Town Ridge Ln, Webster, TX 77598</a>
+    //                             <br>
+    //                             Do not enter the apartment complex. Please park on the side on the street, closer to Retail Rd. Park on any side of the street.
+    //                             <br>
+    //                             Let me know you have arrived.
+    //                             <br>
+        
+    //                             <br>
+    //                             Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter</a>
+    //                             <br>
+    //                             <br>
+    //                             Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
+    //                             <br>
+    //                             <br>
+    //                             This is an automated message.
+    //                             </p>
+    //                             `;
+        
+        
+    //                         } else if (results[i].status_id === 4) // (status === 'Complete')
+    //                         {
+    //                             // console.log('Status Case: 4');
+    //                             html = 
+    //                             `
+    //                             <p>
+    //                             We confirmed you have picked up your order, and we hope you enjoy! 🚀
+    //                             <br>
+    //                             <b>Thank you for choosing AstroMedibles! 👩‍🚀</b>
+    //                             <br>
+    //                             <br>
+    //                             If you have any concerns, you can ask us at our <a href="https://www.astromedibles.com/help">Help Desk</a>.
+    //                             <br>
+    //                             Or if you just wanted to give some feedback, you can do that at our <a href="https://www.astromedibles.com/feedback">Send Feedback</a> page. 👩
+    //                             <br>
+    //                             <br>
+    //                             This is an automated message.
+    //                             </p>
+    //                             `;
+    //                         }
+    //                         console.table([
+    //                             ['order_id',  results[i].order_id],
+    //                             ['status_id', results[i].status_id],
+    //                             ['name',      results[i].name],
+    //                             ['email',     results[i].email]]
+    //                             );
+    //                             db.sendEmail(results[i].email, subject, html);
+    //                             // console.log(html)
+    //                     }
+
+                        
+    //                 }
+    //             }
+    //             console.log('All Emails Sent');
+    //         });
+    //     });
+    //     return response;
+    // }
+
+
     async adminUpdateOrderStatus(orderId, status_id, status, userEmail)
     {
         const response = new Promise((resolve, reject) =>
@@ -1858,6 +2037,11 @@ class DbService
             //     cid: 'header' //same cid value as in the html img src
             // }]
         };
+        
+
+        // console.table([
+        //     ['AM_USER',     process.env.AM_USER],
+        //     ['AM_PASSWORD', process.env.AM_PASSWORD]]);
         
         transporter.sendMail(mailOptions, function (error, info)
         {

@@ -141,6 +141,42 @@ app.get('/account', (request, response) =>
 	});
 });
 
+
+// email all users
+// app.get('/emailAllUsers', (request, response) => 
+// { 
+// 	console.log("/emailAllUsers");
+// 	var loggedInResponse = checkIfLoggedIn(request); 
+// 	loggedInResponse.then((accountAttributes) => 
+// 	{
+// 		console.log("admin(/emailAllUsers) \tresult.then()"); 
+// 		if (accountAttributes.isAdmin === 1) 
+// 		{ 
+// 			console.log("/emailAllUsers ADMIN TRUE");
+// 			const db = dbService.getDbServiceInstance(); 
+// 			const result = db.adminEmailAllUsers(); 
+			
+// 			result.then(data =>  
+// 			{ 
+// 				response.json({ data: data });
+// 			}) 
+// 			.catch(err => console.log(err));			
+// 		} 
+// 		else 
+// 		{ 
+// 			console.log("/emailAllUsers ADMIN FALSE");
+// 			response.end();
+// 		} 
+// 	})
+// 	.catch(() => 
+// 	{
+// 		console.log("route(/emailAllUsers) \tresult.catch()"); 
+// 		console.log("route(/emailAllUsers) \tif loggedIn === false"); 
+// 		response.redirect('/login'); 
+// 	});
+// });
+
+
 app.patch('/forgotPasswordGenerateCode', function(request, response) 
 { 
 	console.log("\n" + "route(/forgotPasswordGenerateCode)");
@@ -1172,4 +1208,6 @@ function checkIfLoggedIn(request)
  
  
 // server listening to PORT 
-app.listen(process.env.PORT); 
+app.listen(process.env.PORT);
+
+
