@@ -292,12 +292,38 @@ app.get('/menu', function (request, response)
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
+		console.log("route(/menu) \tresult.catch()"); 
+		console.log("route(/menu) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	}); 
-}); 
- 
+});
+
+// render 
+// app.get('/rewards', function (request, response) 
+// { 
+// 	console.log("\n" + "route(/rewards)"); 
+// 	var loggedInResponse = checkIfLoggedIn(request); 
+// 	loggedInResponse.then((accountAttributes) => 
+// 	{
+// 		// console.log("accountAttributes.date_lastOrderPlaced");
+// 		// console.log(accountAttributes.date_lastOrderPlaced);
+
+// 		// console.log(accountAttributes);
+// 		// console.table(accountAttributes);
+
+// 		response.render('rewards',
+// 		{
+// 			dlop: accountAttributes.date_lastOrderPlaced
+// 		}); 
+// 	})
+// 	.catch(() => 
+// 	{ 
+// 		console.log("route(/rewards) \tresult.catch()"); 
+// 		console.log("route(/rewards) \tif loggedIn === false"); 
+// 		response.redirect('/login'); 
+// 	}); 
+// });
+
 app.post('/auth', function (request, response) 
 { 
 	console.log("\n" + "route(/auth)"); 
@@ -356,7 +382,7 @@ app.post('/auth', function (request, response)
 		response.redirect('/login'); 
 	}
 }); 
- 
+
 // read 
 app.get('/getMenuData', (request, response) => 
 { 
