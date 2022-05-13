@@ -58,7 +58,7 @@ function loadMenuCards(data)
                     <img class="card-img-top" src="../images/${name}.jpg" style="border-radius: 0%;" alt="..." loading="lazy" >
 
                     <div class="card-footer" style="width: 100%; height: 90px;">
-                        <h5 class="card-text">$${price.toFixed(2)}</h5>
+                        <h5 class="card-text user-select-none">$${price.toFixed(2)}</h5>
                         <!-- <p class="card-text" style="font-size: small;" >(%{stock}) in stock</p> -->
                         
                         <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill disabled" type="button" style="width: 100%;">Add to cart</button>
