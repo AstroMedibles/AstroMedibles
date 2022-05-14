@@ -1,23 +1,36 @@
-document.addEventListener('DOMContentLoaded', function () 
-{
-    // console.log("DOMContentLoaded");
-    fetch(address + '/getMenuData')
-    .then(response => response.json())
-    .then(data => loadMenuCards(data['data']))
-    .then(ready());
-});
-
 // const address = 'https://www.astromedibles.com';
 const address = 'http://localhost:8080';
 
+// user points
+var user_points = 0;
+
+document.addEventListener('DOMContentLoaded', function () 
+{
+    console.log("DOMContentLoaded");
+
+    // load user data
+    fetch(address + '/getUserData')
+        .then(response => response.json())
+        .then(data => loadCartTotal(data['data']))
+        .then(() => 
+        {
+            // load menu data
+            fetch(address + '/getMenuData')
+            .then(response => response.json())
+            .then(data => loadMenuCards(data['data']));
+        });
+
+});
 
 function loadMenuCards(data)
 {
+    console.log('/loadMenuCards');
     try
     {
+        // console.table(data);
         if (data.length === 0)
         {
-            // console.log("data.length === 0");
+            console.log("data.length === 0");
             return;
         }
     } catch (error)
@@ -35,7 +48,11 @@ function loadMenuCards(data)
         price = parseFloat(price);
         price_points = parseInt(price_points);
 
+        console.log('\nuser_points: ' + user_points);
         console.log('price_points: ' + price_points);
+
+        console.log(user_points >= price_points);
+
 
         let card = "";
         let dataAttributes = ` data-id="${id}"  data-name="${name}"  data-price="${price}"  data-price_points="${price_points}"`;
@@ -48,6 +65,13 @@ function loadMenuCards(data)
         // <div class="card-body" style="font-size: 0.75em; width: 100%;">
         //     <p class="card-text">${description}</p>
         // </div>
+
+        var enabledOrDisabled = 'disabled';
+        // if user has enough points to purchase item, enable selection
+        if (user_points >= price_points)
+        {
+            enabledOrDisabled = '';
+        }
 
         card +=
             `
@@ -64,7 +88,7 @@ function loadMenuCards(data)
                         <h5 class="card-text  user-select-none">${price_points} pts</h5>
                         <!-- <p class="card-text" style="font-size: small;" >(%{stock}) in stock</p> -->
                         
-                        <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill disabled" type="button" style="width: 100%;">Select</button>
+                        <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill ${enabledOrDisabled}" type="button" style="width: 100%;">Select</button>
                     </div>
 
                 </div>
@@ -104,7 +128,7 @@ function loadMenuCards(data)
 
 function loadCartTotal(data)
 {
-    // console.log("loadCartTotal() START");
+    console.log("/loadCartTotal");
 
     try
     {
@@ -117,9 +141,16 @@ function loadCartTotal(data)
             return;
         }
 
+
+        // set user cart total
         var cartQty = document.getElementById('cart-quantity');
         cartQty.dataset.quantity = cart;
         $("#cart-quantity").text(cart);
+
+        // display user points
+        user_points = parseInt(data.points);
+        $('#USER_POINTS').text(`Your Points: ${user_points.toLocaleString()}`);
+        console.log('user_points loaded: ' + user_points);
     }
     catch (error)
     {
@@ -180,14 +211,6 @@ function addToCartClicked(event)
         {
             console.log("addToCartClicked(event)  catch:" + error);
         }));
-}
-
-function ready()
-{
-    // get cart total
-    fetch(address + '/getUserData')
-        .then(response => response.json())
-        .then(data => loadCartTotal(data['data']));
 }
 
 
