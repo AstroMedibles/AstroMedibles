@@ -823,8 +823,8 @@ app.patch('/cartAddItem', (request, response) =>
 		console.log("route(/cartAddItem) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
-}); 
- 
+});
+
 // update 
 app.patch('/cartSubtractItem', (request, response) => 
 { 
@@ -859,7 +859,7 @@ app.patch('/cartRemoveAllItems', (request, response) =>
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{ 
-		console.log("\n"+ "route(/cartRemoveAllItems) "); 
+		// console.log("\n"+ "route(/cartRemoveAllItems) "); 
 		const email = request.cookies.email; 
 		const password = request.cookies.password; 
 		const db = dbService.getDbServiceInstance(); 
@@ -867,7 +867,7 @@ app.patch('/cartRemoveAllItems', (request, response) =>
 	
 		result.then(data => 
 		{ 
-			console.log("\n" + "route(/cartRemoveAllItems) \t RESULTS:"); 
+			// console.log("\n" + "route(/cartRemoveAllItems) \t RESULTS:"); 
 			response.json({ data: data }); 
 		}) 
 		.catch(err => console.log(err)); 
@@ -876,7 +876,72 @@ app.patch('/cartRemoveAllItems', (request, response) =>
 	{
 		// user is not logged in
 		console.log("route(/cartRemoveAllItems) \tresult.catch()"); 
-		console.log("route(/cartRemoveAllItems) \tif loggedIn === false"); 
+		// console.log("route(/cartRemoveAllItems) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+}); 
+
+// update 
+app.patch('/setCartPointsData', (request, response) => 
+{
+	// console.log("\n"+ "route(/setCartPointsData) ");
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		const email		= request.cookies.email; 
+		const password	= request.cookies.password; 
+		var { itemId }	= request.body;
+		var itemQty 	= 1;
+		const db = dbService.getDbServiceInstance(); 
+
+		// create user cart object
+		var cart = [[itemId, itemQty]];
+		var jsonObject =
+		{
+			cart: cart // jsonName : values
+		};
+		jsonObject = JSON.stringify(jsonObject);
+
+		const result = db.setCartPointsData(email, password, jsonObject); 
+		result.then(data => 
+		{ 
+			// console.log("\n" + "route(/setCartPointsData) \t RESULTS:"); 
+			response.json({ data: data }); 
+		}) 
+		.catch(err => console.log(err));
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/setCartPointsData) \tresult.catch()"); 
+		console.log("route(/setCartPointsData) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+}); 
+
+// patch 
+app.patch('/cartPointsRemoveAllItems', (request, response) => 
+{
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{ 
+		console.log("\n"+ "route(/cartPointsRemoveAllItems) "); 
+		const email = request.cookies.email; 
+		const password = request.cookies.password; 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.cartPointsRemoveAllItems(email, password); 
+	
+		result.then(data => 
+		{ 
+			console.log("\n" + "route(/cartPointsRemoveAllItems) \t RESULTS:"); 
+			response.json({ data: data }); 
+		}) 
+		.catch(err => console.log(err)); 
+	})
+	.catch(() => 
+	{
+		// user is not logged in
+		console.log("route(/cartPointsRemoveAllItems) \tresult.catch()"); 
+		console.log("route(/cartPointsRemoveAllItems) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
 }); 

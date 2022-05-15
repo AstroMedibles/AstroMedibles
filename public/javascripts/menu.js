@@ -1,10 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () 
 {
-    // console.log("DOMContentLoaded");
-    fetch(address + '/getMenuData')
-    .then(response => response.json())
-    .then(data => loadMenuCards(data['data']))
-    .then(ready());
+    // load user data
+    fetch(address + '/getUserData')
+        .then(response => response.json())
+        .then(data => loadCartTotal(data['data']))
+        .then(() => 
+        {
+            // load menu data
+            fetch(address + '/getMenuData')
+            .then(response => response.json())
+            .then(data => loadMenuCards(data['data']));
+        });
 });
 
 const address = 'https://www.astromedibles.com';
@@ -166,7 +172,7 @@ function addToCartClicked(event)
 
             
             // Notification
-            const message = `${title} added to cart`;
+            const message = `${title} added`;
             const alertType     = 'success';
             const iconChoice    = 1;
             alertNotify(message, alertType, iconChoice, 2);
@@ -177,15 +183,6 @@ function addToCartClicked(event)
             console.log("addToCartClicked(event)  catch:" + error);
         }));
 }
-
-function ready()
-{
-    // get cart total
-    fetch(address + '/getUserData')
-        .then(response => response.json())
-        .then(data => loadCartTotal(data['data']));
-}
-
 
 function alertNotify(message, alertType, iconChoice, duration)
 {

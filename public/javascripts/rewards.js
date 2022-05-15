@@ -6,7 +6,7 @@ var user_points = 0;
 
 document.addEventListener('DOMContentLoaded', function () 
 {
-    console.log("DOMContentLoaded");
+    // console.log("DOMContentLoaded");
 
     // load user data
     fetch(address + '/getUserData')
@@ -119,7 +119,7 @@ function loadMenuCards(data)
     {
         // console.log("button found!");
         var button = addToCartButtons[i];
-        button.addEventListener('click', addToCartClicked);
+        button.addEventListener('click', addToCartPointsClicked);
         // console.log("button " + i + " online!");
     }
     // console.log("shop-item-button Search End");
@@ -149,7 +149,7 @@ function loadCartTotal(data)
 
         // display user points
         user_points = parseInt(data.points);
-        $('#USER_POINTS').text(`Your Points: ${user_points.toLocaleString()}`);
+        $('#USER_POINTS').text(`You have: ${user_points.toLocaleString()} points`);
         console.log('user_points loaded: ' + user_points);
     }
     catch (error)
@@ -159,21 +159,16 @@ function loadCartTotal(data)
     // console.log("function: loadCartTotal END");
 }
 
-function addToCartClicked(event)
+function addToCartPointsClicked(event)
 {
-    // console.log("\n" + "addToCartClicked()");
+    // console.log("\n" + "addToCartPointsClicked()");
     var button = event.target;
     var id = parseInt(button.dataset.id);
     var title = button.dataset.name;
     var price = parseFloat(button.dataset.price);
     var price_points = parseFloat(button.dataset.price_points);
 
-    // console.log(shopItem.dataAttributes);
-    // console.log("id:\t" + id);
-    // console.log("title:\t" + title);
-    // console.log("price:\t" + price);
-
-    fetch(address + '/cartAddItem',
+    fetch(address + '/setCartPointsData',
         {
             credentials: "include",
             method: 'PATCH',
@@ -183,8 +178,7 @@ function addToCartClicked(event)
             },
             body: JSON.stringify(
                 {
-                    itemId: id,
-                    itemQty: 1
+                    itemId: id
                 })
         })
         .then(response => response.json())
@@ -201,15 +195,15 @@ function addToCartClicked(event)
 
             
             // Notification
-            const message = `${title} added to cart`;
+            const message = `${title} added`;
             const alertType     = 'success';
             const iconChoice    = 1;
             alertNotify(message, alertType, iconChoice, 2);
 
-            // console.log("addToCartClicked complete");
+            // console.log("addToCartPointsClicked complete");
         }).catch((error => 
         {
-            console.log("addToCartClicked(event)  catch:" + error);
+            console.log("addToCartPointsClicked(event)  catch:" + error);
         }));
 }
 
