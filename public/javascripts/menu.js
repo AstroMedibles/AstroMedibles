@@ -105,30 +105,32 @@ function loadMenuCards(data)
 
 }
 
+// Update Cart Quantity
 function loadCartTotal(data)
 {
-    // console.log("loadCartTotal() START");
-
     try
     {
-        var cart = data.cart.cart[0][1];
-        // console.log(cart);
+        // get total of items 
+        var cart        = data.cart.cart[0][1];
+        var cart_points = data.cart_points.cart[0][1];
+
+        var totalQty = cart + cart_points;
 
         if (data == null)
         {
-            console.log("data is undefined or null");
+            console.log('Error: No User Data');
             return;
         }
 
+        // navbar
         var cartQty = document.getElementById('cart-quantity');
-        cartQty.dataset.quantity = cart;
-        $("#cart-quantity").text(cart);
+        cartQty.dataset.quantity = totalQty;
+        $("#cart-quantity").text(totalQty);
     }
     catch (error)
     {
         console.log(error);
     }
-    // console.log("function: loadCartTotal END");
 }
 
 function addToCartClicked(event)
@@ -161,7 +163,7 @@ function addToCartClicked(event)
         .then(response => response.json())
         .then((data) => 
         {
-            var cart = data['data']['cart'];
+            var cart = data['data'].cart;
             var total = cart[0][1];
             // console.log(cart);
 

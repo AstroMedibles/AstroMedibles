@@ -8,24 +8,27 @@ const address = 'https://www.astromedibles.com';
 // const address = 'http://localhost:8080';
 var   avalibleDaysandTimes;
 
+// Update Cart Quantity
 function loadCartTotal(data)
 {
-    // console.log("function: loadCartTotal(data)");
     try
     {
-        var cart = data.cart.cart[0][1];
-        // console.log(cart);
+        // get total of items 
+        var cart        = data.cart.cart[0][1];
+        var cart_points = data.cart_points.cart[0][1];
+
+        var totalQty = cart + cart_points;
 
         if (data == null)
         {
-            // console.log("data is undefined or null");
+            console.log('Error: No User Data');
             return;
         }
 
-        // update navbar
+        // navbar
         var cartQty = document.getElementById('cart-quantity');
-        cartQty.dataset.quantity = cart;
-        $("#cart-quantity").text(cart);
+        cartQty.dataset.quantity = totalQty;
+        $("#cart-quantity").text(totalQty);
     }
     catch (error)
     {

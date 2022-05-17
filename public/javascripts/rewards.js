@@ -126,37 +126,39 @@ function loadMenuCards(data)
 
 }
 
+// Update Cart Quantity
 function loadCartTotal(data)
 {
-    console.log("/loadCartTotal");
-
     try
     {
-        var cart = data.cart.cart[0][1];
-        // console.log(cart);
+        // get total of items 
+        var cart        = data.cart.cart[0][1];
+        var cart_points = data.cart_points.cart[0][1];
+
+        var totalQty = cart + cart_points;
 
         if (data == null)
         {
-            console.log("data is undefined or null");
+            console.log('Error: No User Data');
             return;
         }
 
-
-        // set user cart total
+        // navbar
         var cartQty = document.getElementById('cart-quantity');
-        cartQty.dataset.quantity = cart;
-        $("#cart-quantity").text(cart);
+        cartQty.dataset.quantity = totalQty;
+        $("#cart-quantity").text(totalQty);
 
-        // display user points
-        user_points = parseInt(data.points);
-        $('#USER_POINTS').text(`You have: ${user_points.toLocaleString()} points`);
-        console.log('user_points loaded: ' + user_points);
+
+        // display user points 
+        user_points = parseInt(data.points); 
+        $('#USER_POINTS').text(`You have: ${user_points.toLocaleString()} points`); 
+        console.log('user_points loaded: ' + user_points); 
+        
     }
     catch (error)
     {
         console.log(error);
     }
-    // console.log("function: loadCartTotal END");
 }
 
 function addToCartPointsClicked(event)
@@ -195,8 +197,8 @@ function addToCartPointsClicked(event)
 
             
             // Notification
-            const message = `${title} added`;
-            const alertType     = 'success';
+            const message = `Reward ${title} selected`;
+            const alertType     = 'primary';
             const iconChoice    = 1;
             alertNotify(message, alertType, iconChoice, 2);
 

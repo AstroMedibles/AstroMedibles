@@ -253,6 +253,48 @@ class DbService
         return response;
     }
 
+    async setCartPointsData(email, password, cart)
+    {
+        const response = await new Promise((resolve, reject) =>
+        {
+            try
+            {
+                const query = "UPDATE " + process.env.TABLE_NAMES + " SET cart_points = ? WHERE email = ?;";
+                connection.query(query, [cart, email], (err, results) =>
+                {
+                    if (err) 
+                    {
+                        reject(new Error("dbService.js getUserData(email, password) ERROR\n" + err.message));
+                    }
+
+                    if (results.length > 0)
+                    {
+                        var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
+
+                        // console.log('OriginalText: ' + password);
+                        // console.log('decryptedText: ' + decryptedText);
+
+                        if (password == decryptedText)
+                        {
+                            // console.log('Login success!');
+                            resolve(results);
+                            return;
+                        }
+                    }
+                    results.affectedRows;     // Save SQL changes
+                    cart = JSON.parse(cart); // Return user's cart as JSON object
+                    resolve(cart);
+                    return;
+                });
+            } catch (error)
+            {
+                console.log(error);
+                reject(false);
+            }
+        });
+        return response;
+    }
+
     // Return's user's cart after action
     async cartAddItem(email, password, itemId, itemQty)
     {
@@ -418,6 +460,28 @@ class DbService
                 // If login credentials failed, display error
                 console.log("\n" + "async cartSubtractItem() " + " FAILED LOGIN");
                 reject(error);
+            });
+        });
+        return response;
+    }
+
+    async cartRemoveAllItems(email, password)
+    {
+        const db = DbService.getDbServiceInstance();
+        const response = await new Promise((resolve, reject) => 
+        {
+            var jsonObject =
+            {
+                cart: [[0, 0]] // jsonName : values
+            };
+            jsonObject = JSON.stringify(jsonObject);
+
+            // store user's cart JSON object into the database
+            var setCart = db.setCartData(email, password, jsonObject);
+            setCart.then(() => 
+            {
+                // user's cart is now saved
+                resolve(setCart);
             });
         });
         return response;

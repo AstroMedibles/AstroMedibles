@@ -853,6 +853,7 @@ app.patch('/cartSubtractItem', (request, response) =>
 	});
 }); 
 
+// removes all items from cart AND cart_points
 // patch 
 app.patch('/cartRemoveAllItems', (request, response) => 
 {
@@ -924,6 +925,34 @@ app.patch('/cartPointsRemoveAllItems', (request, response) =>
 	var loggedInResponse = checkIfLoggedIn(request); 
 	loggedInResponse.then((accountAttributes) => 
 	{ 
+		// console.log("\n"+ "route(/cartPointsRemoveAllItems) "); 
+		const email = request.cookies.email; 
+		const password = request.cookies.password; 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.cartPointsRemoveAllItems(email, password); 
+	
+		result.then(data => 
+		{ 
+			// console.log("\n" + "route(/cartPointsRemoveAllItems) \t RESULTS:"); 
+			response.json({ data: data }); 
+		}) 
+		.catch(err => console.log(err)); 
+	})
+	.catch(() => 
+	{
+		// user is not logged in
+		console.log("route(/cartPointsRemoveAllItems) \tresult.catch()"); 
+		// console.log("route(/cartPointsRemoveAllItems) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+}); 
+
+// patch 
+app.patch('/cartPointsRemoveAllItems', (request, response) => 
+{
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{ 
 		console.log("\n"+ "route(/cartPointsRemoveAllItems) "); 
 		const email = request.cookies.email; 
 		const password = request.cookies.password; 
@@ -944,7 +973,7 @@ app.patch('/cartPointsRemoveAllItems', (request, response) =>
 		console.log("route(/cartPointsRemoveAllItems) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
-}); 
+});
 
 app.patch('/adminUpdateOrderStatus', (request, response) =>
 {
@@ -1151,7 +1180,7 @@ app.post('/register', (request, response) =>
 		console.log(err) 
 		response.json(false); 
 	}); 
-}); 
+});
 
 app.post('/customerSupportEmailHelpDesk', (request, response) =>
 {
@@ -1255,7 +1284,7 @@ app.delete('/cancelOrder', (request, response) =>
 		console.log("route(/cancelOrder) \tresult.catch()"); 
 		response.redirect('/login'); 
 	});
-}); 
+});
  
  
 // check if user is logged in  
@@ -1295,7 +1324,7 @@ function checkIfLoggedIn(request)
 		});
 	});
 	return response; 
-} 
+}
  
  
 // server listening to PORT 
