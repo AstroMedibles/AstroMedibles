@@ -101,6 +101,8 @@ function startTime()
 
     preorderTimer.innerHTML =  `Next Sale 🚀 ${d1} days, ${h1} hrs, ${m1} min, ${s1} sec 🚀`;
 
+    $('#preorderNavbar2').removeAttr('hidden'); 
+
     preorderTimer2.innerHTML =  openForText;
     
     setTimeout(startTime, 500);

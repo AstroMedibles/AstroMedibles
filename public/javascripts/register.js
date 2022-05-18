@@ -18,10 +18,10 @@ function createUserAccount()
         email       = $.trim(email);
         password    = $.trim(password);
 
-        console.log(code);
-        console.log(name);
-        console.log(email);
-        console.log(password);
+        // console.log(code);
+        // console.log(name);
+        // console.log(email);
+        // console.log(password);
 
         if (code.length < 2 || name.length < 2 || email.length < 2 || password.length < 2)
         {
@@ -91,8 +91,8 @@ function createUserAccount()
         .then(response => response.json())
         .then((accountCreated) =>
         {
-            console.log("accountCreated:");
-            console.log(accountCreated);
+            // console.log("accountCreated:");
+            // console.log(accountCreated);
 
             // acountCreated!
             if (accountCreated)
@@ -152,8 +152,6 @@ function createUserAccount()
 
             }
         });
-
-
     } 
     catch (error)
     {
