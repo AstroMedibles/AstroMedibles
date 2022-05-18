@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function ()
 function startTime()
 {
   var todayDate = new Date();
-  var startDate = new Date('2022-04-30T05:00:00.000Z');
-  var endDate   = new Date('2022-05-02T05:00:00.000Z');
+  var startDate = new Date('2022-05-19T05:00:00.000Z');
+  var endDate   = new Date('2022-05-26T05:00:00.000Z');
 
   var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
   var Difference_In_Time2 = endDate.getTime() - todayDate.getTime();
@@ -51,7 +51,7 @@ function startTime()
     var m = Difference_In_Minutes;
     var s = Difference_In_Seconds;
 
-    preorderTimer.innerHTML =  'Next Sale 🚀 ' + d + " days  " + h + " hrs  " + m + " min  " + s + ' sec 🚀';
+    preorderTimer.innerHTML =  'Next Sale 🚀 ' + d + " day(s)  " + h + " hrs  " + m + " min  " + s + ' sec 🚀';
     setTimeout(startTime, 500);
   }
   // case 2 today date is after start date && today date is before end date

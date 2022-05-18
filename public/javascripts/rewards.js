@@ -131,6 +131,11 @@ function loadCartTotal(data)
 {
     try
     {
+        // navbar
+        var cartQty = document.getElementById('cart-quantity');
+        cartQty.dataset.quantity = totalQty;
+        $("#cart-quantity").text(totalQty);
+        
         // get total of items 
         var cart        = data.cart.cart[0][1];
         var cart_points = data.cart_points.cart[0][1];
@@ -142,11 +147,6 @@ function loadCartTotal(data)
             console.log('Error: No User Data');
             return;
         }
-
-        // navbar
-        var cartQty = document.getElementById('cart-quantity');
-        cartQty.dataset.quantity = totalQty;
-        $("#cart-quantity").text(totalQty);
 
 
         // display user points 
