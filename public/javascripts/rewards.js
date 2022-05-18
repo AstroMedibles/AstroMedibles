@@ -73,16 +73,28 @@ function loadMenuCards(data)
             enabledOrDisabled = '';
         }
 
+        // <div name="card" class="card  d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
+        // <img class="card-img-top" src="../images/${name}.jpg"  alt="...">
+
+
+        // <div class="card-body" style="font-size: 0.75em; width: 100%;">
+        //     <p class="card-text">${description}</p>
+        // </div>
+
         card +=
             `
             <div class="col-6 col-md-4 col-lg-3 d-flex  text-center">
-                <div name="card" class="card  d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
+                <div name="card" class="card w-100 d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
 
                     <div class="card-header" style="width: 100%; height: 50px;">
                         <h6 class="card-title" style="font-size: small;"><b>${name}</b></h6>
                     </div>
 
-                    <img class="card-img-top" src="../images/${name}.jpg" style="border-radius: 0%;" alt="..." loading="lazy" >
+                    <div class="card-body" style="font-size: 0.75em; width: 100%;">
+                        <p class="card-text">${description}</p>
+                    </div>
+
+                    <!-- <img class="card-img-top" src="../images/${name}.jpg" style="border-radius: 0%;" alt="..." loading="lazy" > -->
 
                     <div class="card-footer" style="width: 100%; height: 90px;">
                         <h5 class="card-text  user-select-none">${price_points} pts</h5>
@@ -94,6 +106,7 @@ function loadMenuCards(data)
                 </div>
             </div>
         `;
+
         myform.append(card);
     });
     // console.log("buttons created");

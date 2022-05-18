@@ -1,11 +1,16 @@
 var preorderTimer, preorderNavbar;
+var preorderTimer2, preorderNavbar2;
+
 var notifcationOrderPlacedSentAlready = false;
 
 document.addEventListener('DOMContentLoaded', function () 
 {
   preorderTimer  = document.getElementById('preorderTimer');
   preorderNavbar = document.getElementById('preorderNavbar');
-  
+
+  preorderTimer2  = document.getElementById('preorderTimer2');
+  preorderNavbar2 = document.getElementById('preorderNavbar2');
+
   startTime();
 });
 
@@ -18,6 +23,8 @@ function startTime()
   var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
   var Difference_In_Time2 = endDate.getTime() - todayDate.getTime();
   
+  var Difference_In_Time3 = endDate.getTime() - startDate.getTime();
+
   // var Difference_In_Time3 = endDate.getTime() - startDate.getTime();
   // console.log('Difference_In_Time3: ' + Difference_In_Time3);
   
@@ -31,27 +38,71 @@ function startTime()
     preorderNavbar.classList.add('bg-dark');
 
     // To calculate the no. of hours between two dates
-    var Difference_In_Days = parseInt(Difference_In_Time1 / (1000 * 60 * 60 * 24));
-    Difference_In_Time1 -= Difference_In_Days * (1000 * 60 * 60 * 24);
+    var Difference_In_Days1 = parseInt(Difference_In_Time1 / (1000 * 60 * 60 * 24));
+    Difference_In_Time1 -= Difference_In_Days1 * (1000 * 60 * 60 * 24);
 
     // To calculate the no. of hours between two dates
-    var Difference_In_Hours = parseInt(Difference_In_Time1 / (1000 * 60 * 60));
-    Difference_In_Time1 -= Difference_In_Hours * (1000 * 60 * 60);
+    var Difference_In_Hours1 = parseInt(Difference_In_Time1 / (1000 * 60 * 60));
+    Difference_In_Time1 -= Difference_In_Hours1 * (1000 * 60 * 60);
 
     // To calculate the no. of minutes between two dates
-    var Difference_In_Minutes = parseInt(Difference_In_Time1 / (1000 * 60));
-    Difference_In_Time1 -= Difference_In_Minutes * (1000 * 60);
+    var Difference_In_Minutes1 = parseInt(Difference_In_Time1 / (1000 * 60));
+    Difference_In_Time1 -= Difference_In_Minutes1 * (1000 * 60);
 
     // To calculate the no. of seconds between two dates
-    var Difference_In_Seconds = parseInt(Difference_In_Time1 / (1000));
-    Difference_In_Time1 -= Difference_In_Seconds * (1000);
+    var Difference_In_Seconds1 = parseInt(Difference_In_Time1 / (1000));
+    Difference_In_Time1 -= Difference_In_Seconds1 * (1000);
 
-    var d = Difference_In_Days;
-    var h = Difference_In_Hours;
-    var m = Difference_In_Minutes;
-    var s = Difference_In_Seconds;
+    var d1 = Difference_In_Days1;
+    var h1 = Difference_In_Hours1;
+    var m1 = Difference_In_Minutes1;
+    var s1 = Difference_In_Seconds1;
 
-    preorderTimer.innerHTML =  'Next Sale 🚀 ' + d + " day(s)  " + h + " hrs  " + m + " min  " + s + ' sec 🚀';
+
+    // Calculate how long the sale will go on for in total
+    var Difference_In_Days3 = parseInt(Difference_In_Time3 / (1000 * 60 * 60 * 24));
+    Difference_In_Time3 -= Difference_In_Days3 * (1000 * 60 * 60 * 24);
+
+    // To calculate the no. of hours between two dates
+    var Difference_In_Hours3 = parseInt(Difference_In_Time3 / (1000 * 60 * 60));
+    Difference_In_Time3 -= Difference_In_Hours3 * (1000 * 60 * 60);
+
+    // To calculate the no. of minutes between two dates
+    var Difference_In_Minutes3 = parseInt(Difference_In_Time3 / (1000 * 60));
+    Difference_In_Time3 -= Difference_In_Minutes3 * (1000 * 60);
+
+    // To calculate the no. of seconds between two dates
+    var Difference_In_Seconds3 = parseInt(Difference_In_Time3 / (1000));
+    Difference_In_Time3 -= Difference_In_Seconds3 * (1000);
+
+    var d3 = Difference_In_Days3;
+    var h3 = Difference_In_Hours3;
+    // var m3 = Difference_In_Minutes3;
+    // var s3 = Difference_In_Seconds3;
+
+    var openForText = 'Open for 🚀';
+    if (d3 > 0)
+    {
+      openForText += ` ${d3} days`;
+    }
+    if (h3 > 0)
+    {
+      openForText += `, ${h3} hrs`;
+    }
+    // if (m3 > 0)
+    // {
+    //   openForText += `, ${m3} min`;
+    // }
+    // if (s3 > 0)
+    // {
+    //   openForText += s3 + ' sec';
+    // }
+    openForText += ' 🚀';
+
+    preorderTimer.innerHTML =  `Next Sale 🚀 ${d1} days, ${h1} hrs, ${m1} min, ${s1} sec 🚀`;
+
+    preorderTimer2.innerHTML =  openForText;
+    
     setTimeout(startTime, 500);
   }
   // case 2 today date is after start date && today date is before end date
@@ -59,20 +110,20 @@ function startTime()
   {
     // console.log('case 2 today date is after start date && today date is before end date');
     // To calculate the no. of hours between two dates
-    var Difference_In_Hours = parseInt(Difference_In_Time2 / (1000 * 60 * 60));
-    Difference_In_Time2 -= Difference_In_Hours * (1000 * 60 * 60);
+    var Difference_In_Hours2 = parseInt(Difference_In_Time2 / (1000 * 60 * 60));
+    Difference_In_Time2 -= Difference_In_Hours2 * (1000 * 60 * 60);
 
     // To calculate the no. of minutes between two dates
-    var Difference_In_Minutes = parseInt(Difference_In_Time2 / (1000 * 60));
-    Difference_In_Time2 -= Difference_In_Minutes * (1000 * 60);
+    var Difference_In_Minutes2 = parseInt(Difference_In_Time2 / (1000 * 60));
+    Difference_In_Time2 -= Difference_In_Minutes2 * (1000 * 60);
 
     // To calculate the no. of seconds between two dates
-    var Difference_In_Seconds = parseInt(Difference_In_Time2 / (1000));
-    Difference_In_Time2 -= Difference_In_Seconds * (1000);
+    var Difference_In_Seconds2 = parseInt(Difference_In_Time2 / (1000));
+    Difference_In_Time2 -= Difference_In_Seconds2 * (1000);
 
-    var h = Difference_In_Hours;
-    var m = Difference_In_Minutes;
-    var s = Difference_In_Seconds;
+    var h = Difference_In_Hours2;
+    var m = Difference_In_Minutes2;
+    var s = Difference_In_Seconds2;
     //   h = checkTime(h);
     //   m = checkTime(m);
     //   s = checkTime(s);
