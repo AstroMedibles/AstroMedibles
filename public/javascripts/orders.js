@@ -15,9 +15,9 @@ function loadCartTotal(data)
     {
         // get total of items 
         var cart        = data.cart.cart[0][1];
-        var cart_points = data.cart_points.cart[0][1];
+        // var cart_points = data.cart_points.cart[0][1];
 
-        var totalQty = cart + cart_points;
+        var totalQty = cart;
 
         if (data == null)
         {
