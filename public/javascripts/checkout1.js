@@ -138,7 +138,7 @@ function getCartDetails(userCart, userCartPoints)
             });
         }
         // create card
-        myform.append(card_points);
+        // myform.append(card_points);
         
         // Update Summary: Subtotal, discount, shipping, total
         // total = subtotal - discount - shipping;
