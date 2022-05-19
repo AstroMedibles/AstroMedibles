@@ -106,35 +106,35 @@ function getCartDetails(userCart, userCartPoints)
                     // add to subtotal
                     subtotal += (userCartItemQTY * price);
                 }
-                else if (userCartPointsItemID == id)
-                {
-                    // create element in shopping cart
-                    card_points =
-                    `
-                    <div class="product">
-                        <div class="row justify-content-center align-items-center">
+                // else if (userCartPointsItemID == id)
+                // {
+                //     // create element in shopping cart
+                //     card_points =
+                //     `
+                //     <div class="product">
+                //         <div class="row justify-content-center align-items-center">
                         
-                            <div class="col-md-3">
-                                <div class="product-image"><img class="img-fluid d-block mx-auto image" src="../images/${name}.jpg"></div>
-                            </div>
-                            <div class="col-md-4 product-info"><h2 class="product-name">${name}</h2>
-                                <div class="product-specs">
-                                    <div><span>Price:&nbsp;</span><span class="value"><del>$${price.toFixed(2)}</del></span></div>
-                                    <div><span class="value">${description}</span></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 d-flex flex-row flex-grow-1 justify-content-between align-items-end flex-md-column flex-md-fill price" >
-                                <div class="d-flex flex-row" id="card-${userCartPointsItemID}"  data-itemname="${name}" data-itemid="${userCartPointsItemID}" data-itemprice="${price}"  data-itemqty="${userCartPointsItemQTY}" >
-                                    <button class="btn btn-primary   " type="button" style="width: 35px;" onclick="subtractItemPoints(event)">x</button>
-                                    <input type="text" value="${userCartPointsItemQTY}"  readonly=""   style=" width: 40px; text-align: center; border-width:0px;  border:none;  outline:none!important; margin: 0px 0px 4px 4px;"  id="labelqty${userCartPointsItemID}" value="${userCartPointsItemQTY}">
-                                    <div style="width: 35px;"></div>
-                                </div>
-                                <div class="d-flex flex-row" style="font-weight: normal;" >$0.00</div>
-                            </div>
-                        </div>
-                    </div>
-                    `;
-                }
+                //             <div class="col-md-3">
+                //                 <div class="product-image"><img class="img-fluid d-block mx-auto image" src="../images/${name}.jpg"></div>
+                //             </div>
+                //             <div class="col-md-4 product-info"><h2 class="product-name">${name}</h2>
+                //                 <div class="product-specs">
+                //                     <div><span>Price:&nbsp;</span><span class="value"><del>$${price.toFixed(2)}</del></span></div>
+                //                     <div><span class="value">${description}</span></div>
+                //                 </div>
+                //             </div>
+                //             <div class="col-md-3 d-flex flex-row flex-grow-1 justify-content-between align-items-end flex-md-column flex-md-fill price" >
+                //                 <div class="d-flex flex-row" id="card-${userCartPointsItemID}"  data-itemname="${name}" data-itemid="${userCartPointsItemID}" data-itemprice="${price}"  data-itemqty="${userCartPointsItemQTY}" >
+                //                     <button class="btn btn-primary   " type="button" style="width: 35px;" onclick="subtractItemPoints(event)">x</button>
+                //                     <input type="text" value="${userCartPointsItemQTY}"  readonly=""   style=" width: 40px; text-align: center; border-width:0px;  border:none;  outline:none!important; margin: 0px 0px 4px 4px;"  id="labelqty${userCartPointsItemID}" value="${userCartPointsItemQTY}">
+                //                     <div style="width: 35px;"></div>
+                //                 </div>
+                //                 <div class="d-flex flex-row" style="font-weight: normal;" >$0.00</div>
+                //             </div>
+                //         </div>
+                //     </div>
+                //     `;
+                // }
             });
         }
         // create card
