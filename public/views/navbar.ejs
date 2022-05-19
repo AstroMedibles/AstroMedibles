@@ -32,16 +32,20 @@
     </div>
 </nav>
 
-<br><br><br><br><br>
+<br><br><br><br>
 
 
-<nav id='preorderNavbar' class="navbar bg-primary navbar-expand-md " style="color: white;">
+<nav id='preorderNavbar' class="navbar bg-primary navbar-expand-md " style="color: white;  padding: 5px; max-height: 50px;">
     <div class="container" style="display: flex; justify-content: center;">
-
-        <!-- https://www.w3schools.com/js/tryit.asp?filename=tryjs_timing_clock -->
         <!-- Pre Order Timer -->
         <h8 id="preorderTimer"></h8>
+    </div>
+</nav>
 
+<nav hidden id='preorderNavbar2' class="navbar bg-dark navbar-expand-md " style="color: white;  padding: 5px; max-height: 50px;">
+    <div class="container" style="display: flex; justify-content: center;">
+        <!-- Pre Order Timer -->
+        <h8 id="preorderTimer2"></h8>
     </div>
 </nav>
 
@@ -61,3 +65,10 @@
 
     </div>
 </nav>
+
+<style>
+    .navbar
+    {
+      padding: 5px;
+    }
+</style>
