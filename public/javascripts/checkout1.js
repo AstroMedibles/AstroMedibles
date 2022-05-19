@@ -8,38 +8,38 @@ document.addEventListener('DOMContentLoaded', function ()
 const address = 'https://www.astromedibles.com';
 // const address = 'http://localhost:8080';
 
-// Update Cart Quantity
+
 function loadCartTotal(data)
 {
+    // console.log("function: loadCartTotal(data)");
     try
     {
-        // get total of items 
-        var cart        = data.cart.cart[0][1];
-        // var cart_points = data.cart_points.cart[0][1];
-
-        var totalQty = cart;
+        var cart = data.cart.cart[0][1];
+        // console.log(cart);
 
         if (data == null)
         {
-            console.log('Error: No User Data');
+            // console.log("data is undefined or null");
             return;
         }
 
         // navbar
         var cartQty = document.getElementById('cart-quantity');
-        cartQty.dataset.quantity = totalQty;
-        $("#cart-quantity").text(totalQty);
+        cartQty.dataset.quantity = cart;
+        $("#cart-quantity").text(cart);
 
         // load cards from cart
-        getCartDetails(data.cart.cart, '');
+        getCartDetails(data.cart.cart);
+
     }
     catch (error)
     {
-        console.log(error);
+        // console.log(error);
     }
+    // console.log("function: loadCartTotal END");
 }
 
-function getCartDetails(userCart, userCartPoints)
+function getCartDetails(userCart)
 {
 
     fetch(address + '/getMenuData')
@@ -48,25 +48,19 @@ function getCartDetails(userCart, userCartPoints)
     {
         var menuItems = Array.from(data['data']);
         var subtotal = discount = shipping = total = 0;
-        var myform = $('#cart-items');
-        var card        = '';
-        // var card_points = '';
-
 
         for (let i = 0; i < userCart.length; i++)
         {
-            var element                 = userCart[i];
-            const userCartItemID        = element[0];
-            const userCartItemQTY       = element[1];
-
-            // const userCartPointsItemID  = userCartPoints[0][0];
-            // const userCartPointsItemQTY = userCartPoints[0][1];
+            var element = userCart[i];
 
             // for each menu item
-            Array.from(menuItems).forEach(function ({id, name, price, description})
+
+            Array.from(menuItems).forEach(function ({ id, name, price, description })
             {
                 // console.log("id + name + price + description");
 
+                const userCartItemID = element[0];
+                const userCartItemQTY = element[1];
 
                 // console.log(userCartItemID + " = " + id);
                 if (userCartItemID == id)
@@ -74,16 +68,29 @@ function getCartDetails(userCart, userCartPoints)
                     // console.log("MATCH userCartItemID == id");
                     // console.log( id + "\t" + name + "\t" + price + "\t" + description);
 
+                    let card = "";
+
+                    let dropDownValue = "";
+                    dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + "0 (delete)" + "</a>";
+                    for (let index = 1; index < 11; index++)
+                    {
+                        dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + index + "</a>";
+                    }
+                    dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + "25" + "</a>";
+                    dropDownValue += "<a class=\"dropdown-item\" href=\"#\">" + "50" + "</a>";
+
+
+
                     // create element in shopping cart
                     card +=
-                     `
+                        `
                     <div class="product">
                         <div class="row justify-content-center align-items-center">
                          
-                            <!-- <div class="col-md-3">
-                                <div class="product-image"><img class="img-fluid d-block mx-auto image" src="../images/${name}.jpg"></div>
+                        <!-- <div class="col-md-3">
+                                 <div class="product-image"><img class="img-fluid d-block mx-auto image" src="../images/${name}.jpg"></div> 
                             </div> -->
-                            <div class="col-md-4 product-info"><h2 class="product-name">${name}</h2>
+                            <div class="col-md-4 product-info"><h2 class="product-name" >${name}</h2>
                                 <div class="product-specs">
                                     <div><span>Price:&nbsp;</span><span class="value">$${price.toFixed(2)}</span></div>
                                     <div><span class="value">${description}</span></div>
@@ -99,47 +106,17 @@ function getCartDetails(userCart, userCartPoints)
                             </div>
                         </div>
                     </div>
-                    `;
+                        `;
 
                     // create card
+                    var myform = $('#cart-items');
                     myform.append(card);
                     // add to subtotal
                     subtotal += (userCartItemQTY * price);
+
                 }
-                // else if (userCartPointsItemID == id)
-                // {
-                //     // create element in shopping cart
-                //     card_points =
-                //     `
-                //     <div class="product">
-                //         <div class="row justify-content-center align-items-center">
-                        
-                //             <div class="col-md-3">
-                //                 <div class="product-image"><img class="img-fluid d-block mx-auto image" src="../images/${name}.jpg"></div>
-                //             </div>
-                //             <div class="col-md-4 product-info"><h2 class="product-name">${name}</h2>
-                //                 <div class="product-specs">
-                //                     <div><span>Price:&nbsp;</span><span class="value"><del>$${price.toFixed(2)}</del></span></div>
-                //                     <div><span class="value">${description}</span></div>
-                //                 </div>
-                //             </div>
-                //             <div class="col-md-3 d-flex flex-row flex-grow-1 justify-content-between align-items-end flex-md-column flex-md-fill price" >
-                //                 <div class="d-flex flex-row" id="card-${userCartPointsItemID}"  data-itemname="${name}" data-itemid="${userCartPointsItemID}" data-itemprice="${price}"  data-itemqty="${userCartPointsItemQTY}" >
-                //                     <button class="btn btn-primary   " type="button" style="width: 35px;" onclick="subtractItemPoints(event)">x</button>
-                //                     <input type="text" value="${userCartPointsItemQTY}"  readonly=""   style=" width: 40px; text-align: center; border-width:0px;  border:none;  outline:none!important; margin: 0px 0px 4px 4px;"  id="labelqty${userCartPointsItemID}" value="${userCartPointsItemQTY}">
-                //                     <div style="width: 35px;"></div>
-                //                 </div>
-                //                 <div class="d-flex flex-row" style="font-weight: normal;" >$0.00</div>
-                //             </div>
-                //         </div>
-                //     </div>
-                //     `;
-                // }
             });
         }
-        // create card
-        // myform.append(card_points);
-        
         // Update Summary: Subtotal, discount, shipping, total
         // total = subtotal - discount - shipping;
         // $("#cart-subtotal").text("$" + parseFloat(subtotal).toFixed(2));
@@ -166,113 +143,85 @@ function subtractItem(event)
 
     // use itemId to remove "1" qty from cart
     fetch(address + '/cartSubtractItem',
-    {
-        credentials: "include",
-        method: 'PATCH',
-        headers:
         {
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify
-            ({
-                itemId: id,
-                itemQty: 1
-            })
-    })
-    .then(response => response.json())
-    .then((data) => 
-    {
-        // console.log("cartRemoveItem.then");
-        var cart = data['data']['cart'];
-        var total = cart[0][1];
-
-        // Update cart total on Navbar
-        var cartQty = document.getElementById('cart-quantity');
-        cartQty.dataset.quantity = total;
-        $("#cart-quantity").text(total);
-
-        // Update item Qty within Card
-
-        // console.log(cart);
-        let matchFound = false;
-        let labelName = "labelqty" + id;
-        const cardSubtotalLabel = "#card-subtotal-" + id;
-
-
-
-        for (let i = 0; i < cart.length; i++)
-        {
-            // console.log("id == cart[i][0]: " + id + " _ " + cart[i][0] + " i: " + i);
-            if (id == cart[i][0])
+            credentials: "include",
+            method: 'PATCH',
+            headers:
             {
-                // console.log("MATCH");
-                matchFound = true;
-                var itemQty = cart[i][1];
-                // console.log("itemQty: " + itemQty);
-                
-                // console.log("id: " + id);
-                // console.log("labelName: " + labelName);
-                // console.log("itemQty: " + itemQty);
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify
+                ({
+                    itemId: id,
+                    itemQty: 1
+                })
+        })
+        .then(response => response.json())
+        .then((data) => 
+        {
+            // console.log("cartRemoveItem.then");
+            var cart = data['data']['cart'];
+            var total = cart[0][1];
+
+            // Update cart total on Navbar
+            var cartQty = document.getElementById('cart-quantity');
+            cartQty.dataset.quantity = total;
+            $("#cart-quantity").text(total);
+
+            // Update item Qty within Card
+
+            // console.log(cart);
+            let matchFound = false;
+            let labelName = "labelqty" + id;
+            const cardSubtotalLabel = "#card-subtotal-" + id;
 
 
+
+            for (let i = 0; i < cart.length; i++)
+            {
+                // console.log("id == cart[i][0]: " + id + " _ " + cart[i][0] + " i: " + i);
+                if (id == cart[i][0])
+                {
+                    // console.log("MATCH");
+                    matchFound = true;
+                    var itemQty = cart[i][1];
+                    // console.log("itemQty: " + itemQty);
+                    
+                    // console.log("id: " + id);
+                    // console.log("labelName: " + labelName);
+                    // console.log("itemQty: " + itemQty);
+
+
+                    // Update card dataset QTY
+                    parentDiv.setAttribute("data-itemqty", itemQty);
+                    document.getElementById(labelName).value = itemQty;
+
+
+                    // Update card subtotal
+                    const cardSubtotalValue = "$" + (itemQty * price).toFixed(2);
+                    $(cardSubtotalLabel).text(cardSubtotalValue);
+                }
+            }
+
+
+            // Handle what happens if product goes to 0 QTY
+            if (matchFound == false)
+            {
                 // Update card dataset QTY
-                parentDiv.setAttribute("data-itemqty", itemQty);
-                document.getElementById(labelName).value = itemQty;
-
+                parentDiv.setAttribute("data-itemqty", 0);
+                document.getElementById(labelName).value = 0;
 
                 // Update card subtotal
-                const cardSubtotalValue = "$" + (itemQty * price).toFixed(2);
-                $(cardSubtotalLabel).text(cardSubtotalValue);
+                $(cardSubtotalLabel).text("$" + (0).toFixed(2));
             }
-        }
 
-
-        // Handle what happens if product goes to 0 QTY
-        if (matchFound == false)
+            // Update Summary
+            updateSummary(cart);
+            // console.log("cartRemoveItem complete");
+        }).catch((error => 
         {
-            // Update card dataset QTY
-            parentDiv.setAttribute("data-itemqty", 0);
-            document.getElementById(labelName).value = 0;
-
-            // Update card subtotal
-            $(cardSubtotalLabel).text("$" + (0).toFixed(2));
-        }
-
-        // Update Summary
-        updateSummary(cart);
-        // console.log("cartRemoveItem complete");
-    }).catch((error => 
-    {
-        console.log("subtractItem(event)  catch:" + error);
-    }));
-}
-
-function subtractItemPoints(event)
-{
-    var parentDiv = event.currentTarget.parentNode.parentNode.parentNode.parentNode;
-
-    fetch(address + '/cartPointsRemoveAllItems',
-    {
-        credentials: "include",
-        method: 'PATCH',
-        headers:
-        {
-            'Content-type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then((response) =>
-    {
-        // update cart total
-        $("#cart-quantity").text($("#cart-quantity").text() - 1);
-
-        // remove parent node
-        parentDiv.remove();
-    })
-    .catch((error => 
-    {
-        console.log("subtractItem(event)  catch:" + error);
-    }));
+            console.log("subtractItem(event)  catch:" + error);
+        }));
 }
 
 function addItem(event)
@@ -480,9 +429,11 @@ function ready()
 {
     // get cart total
     fetch(address + '/getUserData')
-    .then(response => response.json())
-    .then(data => 
-    {
-        loadCartTotal(data['data']);
-    });
+        .then(response => response.json())
+        .then(data => 
+        {
+            loadCartTotal(data['data']);
+
+
+        });
 }
