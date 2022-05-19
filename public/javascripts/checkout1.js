@@ -15,9 +15,9 @@ function loadCartTotal(data)
     {
         // get total of items 
         var cart        = data.cart.cart[0][1];
-        var cart_points = data.cart_points.cart[0][1];
+        // var cart_points = data.cart_points.cart[0][1];
 
-        var totalQty = cart + cart_points;
+        var totalQty = cart;
 
         if (data == null)
         {
@@ -31,7 +31,7 @@ function loadCartTotal(data)
         $("#cart-quantity").text(totalQty);
 
         // load cards from cart
-        getCartDetails(data.cart.cart, data.cart_points.cart);
+        getCartDetails(data.cart.cart, '');
     }
     catch (error)
     {
@@ -50,7 +50,7 @@ function getCartDetails(userCart, userCartPoints)
         var subtotal = discount = shipping = total = 0;
         var myform = $('#cart-items');
         var card        = '';
-        var card_points = '';
+        // var card_points = '';
 
 
         for (let i = 0; i < userCart.length; i++)
@@ -59,8 +59,8 @@ function getCartDetails(userCart, userCartPoints)
             const userCartItemID        = element[0];
             const userCartItemQTY       = element[1];
 
-            const userCartPointsItemID  = userCartPoints[0][0];
-            const userCartPointsItemQTY = userCartPoints[0][1];
+            // const userCartPointsItemID  = userCartPoints[0][0];
+            // const userCartPointsItemQTY = userCartPoints[0][1];
 
             // for each menu item
             Array.from(menuItems).forEach(function ({id, name, price, description})
