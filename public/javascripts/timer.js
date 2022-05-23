@@ -148,8 +148,8 @@ function startTime()
     
             // console.log('Difference_In_Time1: ' + Difference_In_Time1);
             // console.log();
-            // if order is in past 3 days or 259200000 ms
-            if (Difference_In_Time1 > 259200000 || isNaN(Difference_In_Time1))
+            // if order is in past 7 days or 518400000 ms
+            if (Difference_In_Time1 > 604800000 || isNaN(Difference_In_Time1))
             {
               // console.log('Purchase is old enough, new one valid');
               var button = addToCartButtons[i];

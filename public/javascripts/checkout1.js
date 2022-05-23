@@ -28,6 +28,11 @@ function loadCartTotal(data)
         cartQty.dataset.quantity = cart;
         $("#cart-quantity").text(cart);
 
+        if (parseInt(cart) > 0)
+        {
+            $('buttonPlaceOrder').removeClass('disabled');
+        }
+
         // load cards from cart
         getCartDetails(data.cart.cart);
 
