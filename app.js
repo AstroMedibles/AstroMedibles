@@ -605,8 +605,6 @@ app.patch('/ordersCustomerGetPickupDaysAndTimes', (request, response) =>
 	})
 	.catch(() => 
 	{
-		console.log("route(/ordersCustomerGetPickupDaysAndTimes) \tresult.catch(error)"); 
-		console.log(error) 
 		console.log("route(/ordersCustomerGetPickupDaysAndTimes) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
