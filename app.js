@@ -628,8 +628,6 @@ app.get('/getPickupAvailabilityDays', (request, response) =>
 	})
 	.catch(() => 
 	{
-		console.log("route(/getPickupAvailabilityDays) \tresult.catch(error)"); 
-		console.log(error) 
 		console.log("route(/getPickupAvailabilityDays) \tif loggedIn === false"); 
 		response.redirect('/login'); 
 	});
