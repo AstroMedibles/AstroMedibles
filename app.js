@@ -981,12 +981,12 @@ app.patch('/adminUpdateOrderStatus', (request, response) =>
 		console.log("adminUpdateOrderStatus(/) \tresult.then()"); 
 		if (accountAttributes.isAdmin === 1) 
 		{
-			const { orderId, status_id, status, email } = request.body; 
+			const { orderId, status_id, status, user_id } = request.body; 
 			const db = dbService.getDbServiceInstance(); 
-			const result = db.adminUpdateOrderStatus(orderId, status_id, status, email); 
+			const result = db.adminUpdateOrderStatus(orderId, status_id, status, user_id); 
 		 
 			result.then((data) => 
-			{ 
+			{
 				console.log("\n" + "route(/adminUpdateOrderStatus) \t RESULTS:"); 
 				response.json({ data: data }); 
 			}).catch(err => console.log(err));
