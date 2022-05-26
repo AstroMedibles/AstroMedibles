@@ -95,6 +95,7 @@ function populateUserOrders()
             var userOrder = orders[i];
 
             var status_id       = userOrder.status_id;
+            var user_id         = userOrder.user_id; 
             var status          = userOrder.status;
             var order_id        = userOrder.order_id;
             var name            = userOrder.name;
@@ -114,7 +115,7 @@ function populateUserOrders()
 
             };
             var dataAttributes = 
-            `data-order_id="${order_id}" data-status_id="${status_id}"  data-status="${status}" data-name="${name}" data-email="${email}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`;
+            `data-order_id="${order_id}" data-status_id="${status_id}"  data-status="${status}" data-name="${name}" data-user_id="${user_id}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`; 
 
             date_created = date_created.toLocaleString('en-us', options);
 
@@ -520,7 +521,7 @@ function dropDownUpdateOrderStatus(event)
     event = event.currentTarget;
     var parentDiv   = event.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
     var orderId     = $(parentDiv).attr("data-order_id");
-    var email       = $(parentDiv).attr("data-email");
+    var user_id       = $(parentDiv).attr("data-user_id");
     var status_id   = null;
     // var status_id   = $(parentDiv).attr("data-status_id");
     // console.log(orderId);
@@ -578,7 +579,7 @@ function dropDownUpdateOrderStatus(event)
                 orderId:    orderId,
                 status_id:  status_id,
                 status:     newSelectedStatus,
-                email:      email
+                user_id:    user_id
             })
     })
     .then(response => response.json())
@@ -596,7 +597,7 @@ function dropDownUpdateOrderStatus(event)
         // console.log("status.includes('complete')");
         // console.log(status.includes('complete'));
 
-        console.log('New Status ID: ' + status_id);
+        // console.log('New Status ID: ' + status_id);
 
         // if 'Preparing Order'
         if (status_id === 2)
@@ -624,10 +625,10 @@ function dropDownUpdateOrderStatus(event)
         }
 
         // console.log("dropDownUpdateOrderStatus(event) complete");
-    }).catch((error => 
+    }).catch((error) => 
     {
-        // console.log("dropDownUpdateOrderStatus(event)  catch:" + error);
-    }));
+        console.log("dropDownUpdateOrderStatus(event) ERROR catch:" + error);
+    });
 }
 
 function radioOrdersClick()
