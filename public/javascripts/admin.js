@@ -94,18 +94,16 @@ function populateUserOrders()
 
             var userOrder = orders[i];
 
-            var status_id    = userOrder.status_id;
-            var user_id    = userOrder.user_id;
+            var status_id       = userOrder.status_id;
+            var status          = userOrder.status;
+            var order_id        = userOrder.order_id;
+            var name            = userOrder.name;
+            var email           = userOrder.email;
+            var cart            = JSON.parse(userOrder.cart).cart;
+            var total           = userOrder.total;
+            var date_created    = new Date(userOrder.date_created);
+            var pickup_scheduled = new Date(userOrder.pickup_scheduled);
 
-            // console.table(userOrder);
-
-            var status       = userOrder.status;
-            var order_id     = userOrder.order_id;
-            var name         = userOrder.name;
-            var email        = userOrder.email;
-            var cart         = JSON.parse(userOrder.cart).cart;
-            var total        = userOrder.total;
-            var date_created = new Date(userOrder.date_created);
             var options =
             {
                 hour: '2-digit',
@@ -116,7 +114,7 @@ function populateUserOrders()
 
             };
             var dataAttributes = 
-            `data-order_id="${order_id}" data-status_id="${status_id}"  data-status="${status}" data-name="${name}" data-user_id="${user_id}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`;
+            `data-order_id="${order_id}" data-status_id="${status_id}"  data-status="${status}" data-name="${name}" data-email="${email}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`;
 
             date_created = date_created.toLocaleString('en-us', options);
 
@@ -127,6 +125,7 @@ function populateUserOrders()
 
 
             var statusText = status;
+            var pickup_text = '';
             var dropDownButton = '';
 
             if (status_id === 1) // === 'Payment Required'
@@ -163,6 +162,21 @@ function populateUserOrders()
                 `
                 <button  id="selected-${order_id}" class="btn btn-warning btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
                 `;
+
+                try 
+                {
+                    if (userOrder.pickup_scheduled != null)
+                    {
+                        console.log(pickup_scheduled.toISOString());
+                        pickup_text = `<span>*Pickup Selected*</span>`;
+                    }
+                } 
+                catch (error)
+                {
+                    console.log(error);    
+                }
+                // console.log(pickup_text);
+
                 status = 
                 `
                 <button class="dropdown-item disabled">Payment Required</button>
@@ -212,6 +226,7 @@ function populateUserOrders()
                                     ${status}
                                     </div>
                                 </div>
+                                ${pickup_text}
                             </div>
 
                             <div style="padding: 0px 0px 15px 0px; text-align: center;">
@@ -298,6 +313,8 @@ function searchOrderClick(event)
         var cart         = JSON.parse(userOrder.cart).cart;
         var total        = userOrder.total;
         var date_created = new Date(userOrder.date_created);
+        var pickup_scheduled = new Date(userOrder.pickup_scheduled);
+
 
         if (!status_id.toLowerCase().includes(searchText) && !status.toLowerCase().includes(searchText) 
         &&  !order_id.toLowerCase().includes(searchText)  && !name.toLowerCase().includes(searchText)   
@@ -332,6 +349,8 @@ function searchOrderClick(event)
 
 
         var statusText = status;
+        var pickup_text = '';
+
         var dropDownButton = '';
 
         if (statusText === 'Payment Required')
@@ -368,6 +387,21 @@ function searchOrderClick(event)
             `
             <button  id="selected-${order_id}" class="btn btn-warning btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
             `;
+
+            try 
+            {
+                if (userOrder.pickup_scheduled != null)
+                {
+                    console.log(pickup_scheduled.toISOString());
+                    pickup_text = `<span>*Pickup Selected*</span>`;
+                }
+            } 
+            catch (error)
+            {
+                console.log(error);    
+            }
+            // console.log(pickup_text);
+
             status = 
             `
             <button class="dropdown-item disabled">Payment Required</button>
@@ -417,6 +451,7 @@ function searchOrderClick(event)
                                 ${status}
                                 </div>
                             </div>
+                            ${pickup_text}
                         </div>
 
                         <div style="padding: 0px 0px 15px 0px; text-align: center;">
@@ -485,7 +520,7 @@ function dropDownUpdateOrderStatus(event)
     event = event.currentTarget;
     var parentDiv   = event.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
     var orderId     = $(parentDiv).attr("data-order_id");
-    var user_id       = $(parentDiv).attr("data-user_id");
+    var email       = $(parentDiv).attr("data-email");
     var status_id   = null;
     // var status_id   = $(parentDiv).attr("data-status_id");
     // console.log(orderId);
@@ -543,7 +578,7 @@ function dropDownUpdateOrderStatus(event)
                 orderId:    orderId,
                 status_id:  status_id,
                 status:     newSelectedStatus,
-                user_id:    user_id
+                email:      email
             })
     })
     .then(response => response.json())
@@ -561,7 +596,7 @@ function dropDownUpdateOrderStatus(event)
         // console.log("status.includes('complete')");
         // console.log(status.includes('complete'));
 
-        // console.log('New Status ID: ' + status_id);
+        console.log('New Status ID: ' + status_id);
 
         // if 'Preparing Order'
         if (status_id === 2)
@@ -589,10 +624,10 @@ function dropDownUpdateOrderStatus(event)
         }
 
         // console.log("dropDownUpdateOrderStatus(event) complete");
-    }).catch((error) => 
+    }).catch((error => 
     {
-        console.log("dropDownUpdateOrderStatus(event) ERROR catch:" + error);
-    });
+        // console.log("dropDownUpdateOrderStatus(event)  catch:" + error);
+    }));
 }
 
 function radioOrdersClick()
@@ -959,7 +994,7 @@ function radioPickupsClick()
                 <td class="table" style="width: 40%;" >${timeString}</td>
                 <td class="table" style="width: 20%;" >${pickups[i].name}</td>
                 <td class="table" style="width: 20%;" >${pickups[i].order_id}</td>
-                <td class="table" style="width: 20%;" >${pickups[i].pickup_location}</td>
+                <td class="table" style="width: 20%;" >${pickups[i].pickup_scheduled}</td>
             </tr>
             `
         }
