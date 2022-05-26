@@ -995,7 +995,7 @@ function radioPickupsClick()
                 <td class="table" style="width: 40%;" >${timeString}</td>
                 <td class="table" style="width: 20%;" >${pickups[i].name}</td>
                 <td class="table" style="width: 20%;" >${pickups[i].order_id}</td>
-                <td class="table" style="width: 20%;" >${pickups[i].pickup_scheduled}</td>
+                <td class="table" style="width: 20%;" >${pickups[i].pickup_location}</td>
             </tr>
             `
         }
