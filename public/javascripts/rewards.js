@@ -97,7 +97,7 @@ function loadMenuCards(data)
                         <h5 class="card-text  user-select-none">${price_points} pts</h5>
                         <!-- <p class="card-text" style="font-size: small;" >(%{stock}) in stock</p> -->
                         
-                        <button name="shop-item-button" ${dataAttributes} class="btn btn-primary rounded-pill ${enabledOrDisabled}" type="button" style="width: 100%;">Select</button>
+                        <button ${dataAttributes} class="btn btn-primary rounded-pill ${enabledOrDisabled}" type="button" onClick="addToCartPointsClicked(event)" style="width: 100%;">Select</button>
                     </div>
 
                 </div>
@@ -106,19 +106,6 @@ function loadMenuCards(data)
 
         myform.append(card);
     });
-    // console.log("buttons created");
-
-    // create menu buttons
-
-    var addToCartButtons = document.getElementsByName('shop-item-button');
-    for (var i = 0; i < addToCartButtons.length; i++)
-    {
-        // console.log("button found!");
-        var button = addToCartButtons[i];
-        button.addEventListener('click', addToCartPointsClicked);
-        // console.log("button " + i + " online!");
-    }
-    // console.log("shop-item-button Search End");
 
 }
 
@@ -184,15 +171,30 @@ function addToCartPointsClicked(event)
         {
             var cart = data['data']['cart'];
             var total = cart[0][1];
-            // console.log(cart);
 
-            // console.log(cart.data.cart);
+            // If there is a previously existing selection, remove that selection
+            var previous_selected_button = document.querySelector('[data-selected~="true"]');            
+            if (previous_selected_button != null) 
+            {
+                previous_selected_button.classList.remove('btn-outline-primary');
+                previous_selected_button.classList.add('btn-primary');
+                previous_selected_button.dataset.selected = 'false';
+                previous_selected_button.innerHTML = 'Select';
+            }
+            
+            // Add styling to new selection
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-primary');
+            button.innerHTML = 'Selected';
+            button.dataset.selected = 'true';
+
+            // Update Cart Total
             var cartQty = document.getElementById('cart-quantity');
             cartQty.dataset.quantity = total;
             $("#cart-quantity").text(total);
-
             
-            // Notification
+
+            // Notify user of new selection
             const message = `Reward ${title} selected`;
             const alertType     = 'primary';
             const iconChoice    = 1;
