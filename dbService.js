@@ -1165,11 +1165,11 @@ class DbService
                         else
                         {
                             result2 = result2[0];
-                            console.table(result2);
+                            // console.table(result2);
 
                             console.log(`Order ${orderId} : Statis is now ${status}!`);
                             var userEmail = result2.email;
-                            console.table(['userEmail', userEmail]);
+                            // console.table(['userEmail', userEmail]);
 
                             var subject = `Order ${orderId}, Status: ${status}`;
                             var html = 

@@ -39,19 +39,16 @@ function loadMenuCards(data)
     }
 
     var myform = $('#myform');
-    // Array.from(data).forEach(function ({ id, name, price, description, stock })
     Array.from(data).forEach(function ({ id, name, price, price_points, description})
     {
-        // console.log(id + "\t" + name + "\t" + price + "\t" + description);
-
         id = parseInt(id);
         price = parseFloat(price);
         price_points = parseInt(price_points);
 
-        console.log('\nuser_points: ' + user_points);
-        console.log('price_points: ' + price_points);
+        // console.log('\nuser_points: ' + user_points);
+        // console.log('price_points: ' + price_points);
 
-        console.log(user_points >= price_points);
+        // console.log(user_points >= price_points);
 
 
         let card = "";
@@ -112,21 +109,7 @@ function loadMenuCards(data)
     // console.log("buttons created");
 
     // create menu buttons
-    var removeCartItemButtons = document.getElementsByClassName('btn-danger');
-    for (var i = 0; i < removeCartItemButtons.length; i++)
-    {
-        var button = removeCartItemButtons[i];
-        button.addEventListener('click', removeCartItem);
-    }
 
-    var quantityInputs = document.getElementsByClassName('cart-quantity-input');
-    for (var i = 0; i < quantityInputs.length; i++)
-    {
-        var input = quantityInputs[i];
-        input.addEventListener('change', quantityChanged);
-    }
-
-    // console.log("shop-item-button Search Start");
     var addToCartButtons = document.getElementsByName('shop-item-button');
     for (var i = 0; i < addToCartButtons.length; i++)
     {
