@@ -129,7 +129,7 @@ class DbService
                             return;
                         }
                     } 
-                    catch
+                    catch (error)
                     {
                         reject('/getUserData(email, password) - DATABASE ERROR');
                         return;
@@ -1145,141 +1145,155 @@ class DbService
             // console.log(order_id);
             const db = DbService.getDbServiceInstance();
 
-            const query = "UPDATE " + process.env.TABLE_ORDERS + " SET status_id = ?, status = ? WHERE order_id = ?;";
-            connection.query(query, [status_id, status, orderId], (err, result) =>
+            try
             {
-                if (err)
+                const query = "UPDATE " + process.env.TABLE_ORDERS + " SET status_id = ?, status = ? WHERE order_id = ?;";
+                connection.query(query, [status_id, status, orderId], (err, result) =>
                 {
-                    reject(err.message);
-                }
-                else
-                {
-                    // get user info ~ incomplete
-                    const query2 = "SELECT * FROM " + process.env.TABLE_NAMES + " WHERE id = ?;";
-                    connection.query(query2, [user_id], (err, result2) =>
+                    if (err)
                     {
-                        if (err) 
+                        reject(err.message);
+                    }
+                    else
+                    {
+                        // get user info ~ incomplete
+                        const query2 = "SELECT * FROM " + process.env.TABLE_NAMES + " WHERE id = ?;";
+                        connection.query(query2, [user_id], (err, result2) =>
                         {
-                            reject(err);
-                        }
-                        else
-                        {
-                            result2 = result2[0];
-                            // console.table(result2);
-
-                            console.log(`Order ${orderId} : Statis is now ${status}!`);
-                            var userEmail = result2.email;
-                            // console.table(['userEmail', userEmail]);
-
-                            var subject = `Order ${orderId}, Status: ${status}`;
-                            var html = 
-                            `
-                            <h3>Your Order Status has been updated to ${status}</h3>
-                            <p>
-                            Visit <a href="https://www.astromedibles.com/orders">this link</a> to see your order status.
-                            <br>
-                            This is an automated message.
-                            </p>
-                            `;
-        
-        
-                            if (status === 'Payment Required')
+                            if (err) 
                             {
-                                // console.log('Status Case: 1');
-        
-                                
-                            } else if (status === 'Preparing Order')
+                                reject(err);
+                            }
+                            else
                             {
-                                // console.log('Status Case: 2');
-                                html = 
+                                result2 = result2[0];
+                                // console.table(result2);
+    
+                                console.log(`Order ${orderId} : Statis is now ${status}!`);
+                                var userEmail = result2.email;
+                                // console.table(['userEmail', userEmail]);
+    
+                                var subject = `Order ${orderId}, Status: ${status}`;
+                                var html = 
                                 `
                                 <h3>Your Order Status has been updated to ${status}</h3>
                                 <p>
-                                This means that we have confirmed your payment, and your order is being prepared.
-                                <br>
-                                You will recieve a notification once your order status has been updated to 'Ready for Pickup'.
-                                <br>
-                                When your order is Ready for Pickup, you will be able to select your scheduled pick up day & time. Along with directions and an address.
-                                <br>
-                                <br>
-                                Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
-                                <br>
+                                Visit <a href="https://www.astromedibles.com/orders">this link</a> to see your order status.
                                 <br>
                                 This is an automated message.
                                 </p>
                                 `;
-                            } else if (status === 'Ready for Pickup')
-                            {
-                                // console.log('Status Case: 3');
-        
-                                html = 
-                                `
-                                <h3>Step 1: Select Pickup Day & Time</h3>
-                                <p>
-                                First, confirm your pickup time & location at <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a>.
-                                <br>
-                                After you have selected your confirmed pickup time, follow these directions for pickup.
-                                </p>
-                                <br>
-                                <h3>Step 2: Pickup At Location</h3>
-                                <p>
-                                <b>Directions for Pickup 77504 (Lazy Daze)</b>
-                                <br>
-                                <a href="https://goo.gl/maps/yG57sXc9Mt3jaQMr8">4416 Fairmont Pkwy Ste 103, Pasadena, TX 77504</a>
-                                <br>
-                                Lazy Daze is avalible for pickup anytime within their business hours.
-                                <br><br>
-        
-                                <b>Directions for Pickup 77598 (Apartment)</b>
-                                <br>
-                                <a href="https://goo.gl/maps/jQcvTGmZJdWFp3q16">18833 Town Ridge Ln, Webster, TX 77598</a>
-                                <br>
-                                Do not enter the apartment complex. Please park on the side on the street, closer to Retail Rd. Park on any side of the street.
-                                <br>
-                                Let me know you have arrived.
-                                <br>
-        
-                                <br>
-                                Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter</a>
-                                <br>
-                                <br>
-                                Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
-                                <br>
-                                <br>
-                                This is an automated message.
-                                </p>
-                                `;
-        
-        
-                            } else if (status === 'Complete')
-                            {
-                                // console.log('Status Case: 4');
-                                html = 
-                                `
-                                <p>
-                                We confirmed you have picked up your order, and we hope you enjoy! 🚀
-                                <br>
-                                <b>Thank you for choosing AstroMedibles! 👩‍🚀</b>
-                                <br>
-                                <br>
-                                If you have any concerns, you can ask us at our <a href="https://www.astromedibles.com/help">Help Desk</a>.
-                                <br>
-                                Or if you just wanted to give some feedback, you can do that at our <a href="https://www.astromedibles.com/feedback">Send Feedback</a> page. 👩
-                                <br>
-                                <br>
-                                This is an automated message.
-                                </p>
-                                `;
+            
+            
+                                if (status === 'Payment Required')
+                                {
+                                    // console.log('Status Case: 1');
+            
+                                    
+                                } else if (status === 'Preparing Order')
+                                {
+                                    // console.log('Status Case: 2');
+                                    html = 
+                                    `
+                                    <h3>Your Order Status has been updated to ${status}</h3>
+                                    <p>
+                                    This means that we have confirmed your payment, and your order is being prepared.
+                                    <br>
+                                    You will recieve a notification once your order status has been updated to 'Ready for Pickup'.
+                                    <br>
+                                    When your order is Ready for Pickup, you will be able to select your scheduled pick up day & time. Along with directions and an address.
+                                    <br>
+                                    <br>
+                                    Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
+                                    <br>
+                                    <br>
+                                    This is an automated message.
+                                    </p>
+                                    `;
+                                } else if (status === 'Ready for Pickup')
+                                {
+                                    // console.log('Status Case: 3');
+            
+                                    html = 
+                                    `
+                                    <h3>Step 1: Select Pickup Day & Time</h3>
+                                    <p>
+                                    First, confirm your pickup time & location at <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a>.
+                                    <br>
+                                    After you have selected your confirmed pickup time, follow these directions for pickup.
+                                    </p>
+                                    <br>
+                                    <h3>Step 2: Pickup At Location</h3>
+                                    <p>
+                                    <b>Directions for Pickup 77504 (Lazy Daze)</b>
+                                    <br>
+                                    <a href="https://goo.gl/maps/yG57sXc9Mt3jaQMr8">4416 Fairmont Pkwy Ste 103, Pasadena, TX 77504</a>
+                                    <br>
+                                    Lazy Daze is avalible for pickup anytime within their business hours.
+                                    <br><br>
+            
+                                    <b>Directions for Pickup 77598 (Apartment)</b>
+                                    <br>
+                                    <a href="https://goo.gl/maps/jQcvTGmZJdWFp3q16">18833 Town Ridge Ln, Webster, TX 77598</a>
+                                    <br>
+                                    Do not enter the apartment complex. Please park on the side on the street, closer to Retail Rd. Park on any side of the street.
+                                    <br>
+                                    Let me know you have arrived.
+                                    <br>
+            
+                                    <br>
+                                    Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter</a>
+                                    <br>
+                                    <br>
+                                    Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
+                                    <br>
+                                    <br>
+                                    This is an automated message.
+                                    </p>
+                                    `;
+            
+            
+                                } else if (status === 'Complete')
+                                {
+                                    // console.log('Status Case: 4');
+                                    html = 
+                                    `
+                                    <p>
+                                    We confirmed you have picked up your order, and we hope you enjoy! 🚀
+                                    <br>
+                                    <b>Thank you for choosing AstroMedibles! 👩‍🚀</b>
+                                    <br>
+                                    <br>
+                                    If you have any concerns, you can ask us at our <a href="https://www.astromedibles.com/help">Help Desk</a>.
+                                    <br>
+                                    Or if you just wanted to give some feedback, you can do that at our <a href="https://www.astromedibles.com/feedback">Send Feedback</a> page. 👩
+                                    <br>
+                                    <br>
+                                    This is an automated message.
+                                    </p>
+                                    `;
+                                }
+                                db.sendEmail(userEmail, subject, html);
+            
+                                resolve(result.affectedRows);
                             }
-                            db.sendEmail(userEmail, subject, html);
-        
-                            resolve(result.affectedRows);                        }
-                    });
-
-
-                }
-            })
+                        });
+                    }
+                })
+            } catch (error)
+            {
+                // Send Dev Error
+                var subject = 'DB.SERVICE ERROR - /adminUpdateOrderStatus';
+                var html    = `<p>
+                ${error.message}
+                <br><br>
+                ${error.stack}
+                </p>`;
+                const db = DbService.getDbServiceInstance();
+                db.sendEmail(process.env.AM_USER_DEV01, subject, html);
+            }
         });
+
         return response;
     }
 
@@ -2046,6 +2060,7 @@ class DbService
             catch (error)
             {
                 console.log(error);
+
                 reject(error);
             }
         });
@@ -2195,6 +2210,7 @@ class DbService
             if (error)
             {
                 console.log(error);
+                
             } else
             {
                 console.log('Email sent: ' + info.response);
