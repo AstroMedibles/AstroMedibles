@@ -169,7 +169,7 @@ function populateUserOrders()
                     if (userOrder.pickup_scheduled != null)
                     {
                         console.log(pickup_scheduled.toISOString());
-                        pickup_text = `<span>*Pickup Selected*</span>`;
+                        pickup_text = `<p style="font-weight: normal;">*Pickup Selected*</p>`;
                     }
                 } 
                 catch (error)
@@ -204,7 +204,7 @@ function populateUserOrders()
             for (let j = 1; j < cart.length; j++)
             {
                 var cartElement = cart[j];
-                cartText += "(" + cartElement[1] + ") " + cartElement[2] + "<br>";
+                cartText += "<b>[" + cartElement[1] + "]</b> " + cartElement[2] + "<br>";
             }
 
             let card = "";
@@ -394,7 +394,7 @@ function searchOrderClick(event)
                 if (userOrder.pickup_scheduled != null)
                 {
                     console.log(pickup_scheduled.toISOString());
-                    pickup_text = `<span>*Pickup Selected*</span>`;
+                    pickup_text = `<p style="font-weight: normal;">*Pickup Selected*</p>`;
                 }
             } 
             catch (error)
