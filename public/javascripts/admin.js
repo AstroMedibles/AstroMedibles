@@ -139,6 +139,7 @@ function populateUserOrders()
                 status = 
                 `
                 <button class="dropdown-item disabled">Payment Required</button>
+                <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
                 <button name="Preparing Order"  class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Preparing Order</button>
                 <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
                 <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
@@ -152,6 +153,7 @@ function populateUserOrders()
 
                 status = 
                 `
+                <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
                 <button class="dropdown-item disabled">Payment Required</button>
                 <button class="dropdown-item disabled">Preparing Order</button>
                 <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
@@ -180,6 +182,7 @@ function populateUserOrders()
 
                 status = 
                 `
+                <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
                 <button class="dropdown-item disabled">Payment Required</button>
                 <button class="dropdown-item disabled">Preparing Order</button>
                 <button class="dropdown-item disabled">Ready for Pickup</button>
@@ -193,6 +196,7 @@ function populateUserOrders()
                 `;
                 status = 
                 `
+                <button class="dropdown-item disabled">Cancel Order</button>
                 <button class="dropdown-item disabled">Payment Required</button>
                 <button class="dropdown-item disabled">Preparing Order</button>
                 <button class="dropdown-item disabled">Ready for Pickup</button>
@@ -518,42 +522,37 @@ function dropDownUpdateOrderStatus(event)
 {
     // console.log('start dropDownUpdateOrderStatus(event)');
 
-    event = event.currentTarget;
-    var parentDiv   = event.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
-    var orderId     = $(parentDiv).attr("data-order_id");
-    var user_id       = $(parentDiv).attr("data-user_id");
-    var status_id   = null;
-    // var status_id   = $(parentDiv).attr("data-status_id");
-    // console.log(orderId);
-
+    event                 = event.currentTarget;
+    var parentDiv         = event.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+    var orderId           = $(parentDiv).attr("data-order_id");
+    var user_id           = $(parentDiv).attr("data-user_id");
+    var status_id         = null;
     var newSelectedStatus = $(event).attr("name");
+
     console.log('attr name: ' + newSelectedStatus);
     // console.log('attr data-status_id: ' + status_id);
-
 
     var dropDownSubElementID = $(`#selected-${orderId}`); 
     // console.log(dropDownSubElementID);
 
 
-
     if (confirm('Are you sure you want to update this order status?\nThis user will be notified.\nThis action cannot be undone'))
     {
-        // 
         // console.log('Update order pressed.');
     } 
     else
     {
-        // 
         // console.log('Cancel action pressed.');
         return;
     }
 
     // $(dropDownSubElementID).text(status);
-
-    // console.log("status.includes('complete')");
-    // console.log(status.includes('complete'));
-
-    if (newSelectedStatus === 'Preparing Order')
+    
+    if (newSelectedStatus === 'Cancel Order')
+    {
+        status_id = 0;
+    }
+    else if (newSelectedStatus === 'Preparing Order')
     {
         status_id = 2;
     } 
@@ -599,8 +598,20 @@ function dropDownUpdateOrderStatus(event)
 
         // console.log('New Status ID: ' + status_id);
 
+
+        // if 'Cancel Order'
+        if (status_id === 0)
+        {
+            dropDownSubElementID.removeClass("btn-danger");
+            dropDownSubElementID.removeClass("btn-primary");
+            dropDownSubElementID.removeClass("btn-warning");
+            dropDownSubElementID.addClass("btn-dark");
+            dropDownSubElementID.addClass("disabled");
+            $(dropDownSubElementID).empty();
+            $(dropDownSubElementID).text('Order Canceled');
+        }
         // if 'Preparing Order'
-        if (status_id === 2)
+        else if (status_id === 2)
         {
             // console.log(1);
             dropDownSubElementID.removeClass("btn-danger");
