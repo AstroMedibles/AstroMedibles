@@ -138,8 +138,8 @@ function populateUserOrders()
 
                 status = 
                 `
-                <button class="dropdown-item disabled">Payment Required</button>
                 <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
+                <button class="dropdown-item disabled">Payment Required</button>
                 <button name="Preparing Order"  class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Preparing Order</button>
                 <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
                 <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
