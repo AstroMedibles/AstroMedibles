@@ -649,14 +649,8 @@ class DbService
         {
             console.log(`/generateAccessCodes(${code})`);
 
-            // console.log(code);
-            code = [code];
-            values.push(code);
-
-            // console.log("values");
-            // console.log(values);
             const sql = "INSERT INTO " + process.env.TABLE_CODES + " (code) VALUES ?";
-            connection.query(sql, [values], (err, result) =>
+            connection.query(sql, [code], (err, result) =>
             {
                 if (err) 
                 {
