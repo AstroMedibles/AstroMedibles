@@ -144,67 +144,117 @@ function loadCartTotal(data)
     }
 }
 
+function addToCartPointsClickedRemove(event)
+{
+    var button       = event.target;
+    var id           = parseInt(button.dataset.id);
+    var title        = button.dataset.name;
+    var price        = parseFloat(button.dataset.price);
+    var price_points = parseFloat(button.dataset.price_points);
+
+    fetch(address + '/setCartPointsDataRemove',
+    {
+        credentials: "include",
+        method: 'PATCH',
+        headers:
+        {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(
+        {
+
+        })
+    })
+    .then(response => response.json())
+    .then((data) => 
+    {
+        var cart = data['data']['cart'];
+        var total = cart[0][1];
+
+        // Add styling to new selection
+        button.classList.remove('btn-outline-primary');
+        button.classList.add('btn-primary');
+        button.innerHTML = 'Select';
+        button.dataset.selected = 'false';
+        // button.removeEventListener('onclick', addToCartPointsClickedRemove); 
+        // button.addEventListener('onclick', addToCartPointsClicked); 
+
+        // Update Cart Total
+        var cartQty = document.getElementById('cart-quantity');
+        cartQty.dataset.quantity = total;
+        $("#cart-quantity").text(total);
+
+        // Notify user of new selection
+        const message = `Reward ${title} removed`;
+        const alertType     = 'secondary';
+        const iconChoice    = 1;
+        alertNotify(message, alertType, iconChoice, 2);
+    }).catch((error => 
+    {
+        console.log("addToCartPointsClickedRemove(event)  catch:" + error);
+    }));
+}
+
 function addToCartPointsClicked(event)
 {
-    // console.log("\n" + "addToCartPointsClicked()");
-    var button = event.target;
-    var id = parseInt(button.dataset.id);
-    var title = button.dataset.name;
-    var price = parseFloat(button.dataset.price);
+    var button       = event.target;
+    var id           = parseInt(button.dataset.id);
+    var title        = button.dataset.name;
+    var price        = parseFloat(button.dataset.price);
     var price_points = parseFloat(button.dataset.price_points);
 
     fetch(address + '/setCartPointsData',
+    {
+        credentials: "include",
+        method: 'PATCH',
+        headers:
         {
-            credentials: "include",
-            method: 'PATCH',
-            headers:
-            {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(
-                {
-                    itemId: id
-                })
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(
+        {
+            itemId: id
         })
-        .then(response => response.json())
-        .then((data) => 
+    })
+    .then(response => response.json())
+    .then((data) => 
+    {
+        var cart = data['data']['cart'];
+        var total = cart[0][1];
+
+        // If there is a previously existing selection, remove that selection
+        var previous_selected_button = document.querySelector('[data-selected~="true"]');            
+        if (previous_selected_button != null) 
         {
-            var cart = data['data']['cart'];
-            var total = cart[0][1];
+            previous_selected_button.classList.remove('btn-outline-primary');
+            previous_selected_button.classList.add('btn-primary');
+            previous_selected_button.dataset.selected = 'false';
+            previous_selected_button.innerHTML = 'Select';
+        }
+        
+        // Add styling to new selection
+        button.classList.remove('btn-primary');
+        button.classList.add('btn-outline-primary');
+        button.innerHTML = 'Selected';
+        button.dataset.selected = 'true';
+        // button.removeEventListener('onclick', addToCartPointsClicked(event)); 
+        // button.addEventListener('onclick', addToCartPointsClickedRemove);
+        console.log('WORKING123');
 
-            // If there is a previously existing selection, remove that selection
-            var previous_selected_button = document.querySelector('[data-selected~="true"]');            
-            if (previous_selected_button != null) 
-            {
-                previous_selected_button.classList.remove('btn-outline-primary');
-                previous_selected_button.classList.add('btn-primary');
-                previous_selected_button.dataset.selected = 'false';
-                previous_selected_button.innerHTML = 'Select';
-            }
-            
-            // Add styling to new selection
-            button.classList.remove('btn-primary');
-            button.classList.add('btn-outline-primary');
-            button.innerHTML = 'Selected';
-            button.dataset.selected = 'true';
-
-            // Update Cart Total
-            var cartQty = document.getElementById('cart-quantity');
-            cartQty.dataset.quantity = total;
-            $("#cart-quantity").text(total);
-            
-
-            // Notify user of new selection
-            const message = `Reward ${title} selected`;
-            const alertType     = 'primary';
-            const iconChoice    = 1;
-            alertNotify(message, alertType, iconChoice, 2);
-
-            // console.log("addToCartPointsClicked complete");
-        }).catch((error => 
-        {
-            console.log("addToCartPointsClicked(event)  catch:" + error);
-        }));
+        // Update Cart Total
+        var cartQty = document.getElementById('cart-quantity');
+        cartQty.dataset.quantity = total;
+        $("#cart-quantity").text(total);
+        
+        // Notify user of new selection
+        const message = `Reward ${title} selected`;
+        const alertType     = 'primary';
+        const iconChoice    = 1;
+        alertNotify(message, alertType, iconChoice, 2);
+    }).catch((error =>
+    {
+        console.log("addToCartPointsClicked(event)  catch:" + error);
+    }));
 }
 
 
