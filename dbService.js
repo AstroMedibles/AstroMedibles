@@ -253,18 +253,18 @@ class DbService
         return response;
     }
 
-    async setCartPointsData(email, password, cart)
+    async setCartPointsDataRemove(email, password)
     {
         const response = await new Promise((resolve, reject) =>
         {
             try
             {
                 const query = "UPDATE " + process.env.TABLE_NAMES + " SET cart_points = ? WHERE email = ?;";
-                connection.query(query, [cart, email], (err, results) =>
+                connection.query(query, ['', email], (err, results) =>
                 {
                     if (err) 
                     {
-                        reject(new Error("dbService.js setCartPointsData(email, password) ERROR\n" + err.message));
+                        reject(new Error("dbService.js setCartPointsDataRemove(email, password) ERROR\n" + err.message));
                     }
 
                     if (results.length > 0)
@@ -277,13 +277,12 @@ class DbService
                         if (password == decryptedText)
                         {
                             // console.log('Login success!');
-                            resolve(results);
+                            resolve(true);
                             return;
                         }
                     }
                     results.affectedRows;     // Save SQL changes
-                    cart = JSON.parse(cart); // Return user's cart as JSON object
-                    resolve(cart);
+                    resolve(true);
                     return;
                 });
             } catch (error)
