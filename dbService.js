@@ -1281,7 +1281,6 @@ class DbService
                                         var subject = 'DB.SERVICE ERROR - /adminUpdateOrderStatus';
                                         console.log(subject);
                                         console.log(error2);
-                                        console.log(error2.stack);
 
 
                                         // Send Dev Error
