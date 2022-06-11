@@ -985,6 +985,8 @@ app.patch('/adminUpdateOrderStatus', (request, response) =>
 			const db = dbService.getDbServiceInstance(); 
 			const result = db.adminUpdateOrderStatus(orderId, status_id, status, user_id); 
 		 
+			console.table(request.body);
+
 			result.then((data) => 
 			{
 				console.log("\n" + "route(/adminUpdateOrderStatus) \t RESULTS:"); 

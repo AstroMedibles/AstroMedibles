@@ -1163,7 +1163,7 @@ class DbService
                                 else
                                 {
                                     result2 = result2[0];
-                                    // console.table(result2);
+                                    console.table(result2);
         
                                     console.log(`Order ${orderId} : Statis is now ${status}!`);
                                     
