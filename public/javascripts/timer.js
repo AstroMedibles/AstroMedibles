@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function ()
 function startTime()
 {
   var todayDate = new Date();
-  var startDate = new Date('2022-06-03T05:00:00.000Z');
-  var endDate   = new Date('2022-06-09T05:00:00.000Z');
+  var startDate = new Date('2022-06-15T05:00:00.000Z');
+  var endDate   = new Date('2022-06-19T05:00:00.000Z');
 
   var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
   var Difference_In_Time2 = endDate.getTime() - todayDate.getTime();
