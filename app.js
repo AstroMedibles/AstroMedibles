@@ -9,6 +9,9 @@ dotenv.config();
 const cookieParser = require('cookie-parser'); 
 const { Console } = require('console'); 
 const dbService = require('./dbService'); 
+// no cache saving
+const nocache = require('nocache');
+
  
 // express object 
 var app = express(); 
@@ -41,7 +44,10 @@ app.use(session(
  
 // setup cookieparser 
 app.use(cookieParser("MY SECRET")); 
- 
+
+// no cache
+app.use(nocache());
+
 // view engine setup 
 app.set('views', path.join(__dirname,'/public/views')); 
 app.set('view engine', 'ejs'); 
