@@ -8,31 +8,31 @@
 // var date2 = new Date(dbDateString);
 
 // var todayDate = new Date();
-var startDate    = new Date('2022-03-30T05:00:00.000Z');
-var endDate      = new Date('2022-04-01T05:00:00.000Z');
+var startDate    = new Date('2022-06-17T05:00:00.000Z');
+// var endDate      = new Date('2022-04-01T05:00:00.000Z');
 
-var dlop         = new Date('2022-03-28T05:00:00.000Z');
+var dlop         = new Date('2022-06-16T05:44:21.157Z');
 
 var Difference_In_Time1 = startDate.getTime() - dlop.getTime();
 
 
-// console.log('Difference_In_Time1: ' + Difference_In_Time1);
+console.log('Difference_In_Time1: ' + Difference_In_Time1);
 // console.log();
-if (Difference_In_Time1 > 259200000)
+if (Difference_In_Time1 > 1)
 {
-    // console.log('Purchase is old enough, new one valid');
+    console.log('Purchase is old enough, new one valid');
 }
 else
 {
-    // console.log('Purchase too recent, cannot place additional one')
+    console.log('Purchase too recent, cannot place additional one')
 }
 
 
 
-var date1 = new Date('2022-04-07T00:42:00.000Z');
+// var date1 = new Date('2022-04-07T00:42:00.000Z');
 // var date1 = new Date();
 
-date1.setHours('5');
+// date1.setHours('5');
 
 // var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
 // var Difference_In_Time2 = endDate.getTime() - todayDate.getTime();
@@ -65,20 +65,20 @@ date1.setHours('5');
 
 
 
-console.log('date1');
-console.log('ISO: \t\t\t' + date1.toISOString());
-console.log('Locale String: \t\t' + date1.toLocaleString("en-US", {timeZone: "America/Chicago"}));
-console.log('toLocaleDateString: \t' + date1.toLocaleDateString("en-US", {timeZone: "America/Chicago"}));
-console.log('toLocaleTimeString: \t' + date1.toLocaleTimeString("en-US", {timeZone: "America/Chicago"}));
+// console.log('date1');
+// console.log('ISO: \t\t\t' + date1.toISOString());
+// console.log('Locale String: \t\t' + date1.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+// console.log('toLocaleDateString: \t' + date1.toLocaleDateString("en-US", {timeZone: "America/Chicago"}));
+// console.log('toLocaleTimeString: \t' + date1.toLocaleTimeString("en-US", {timeZone: "America/Chicago"}));
 
-console.log('Locale String: \t\t' + date1.toLocaleString());
-console.log('toLocaleDateString: \t' + date1.toLocaleDateString());
-console.log('toLocaleTimeString: \t' + date1.toLocaleTimeString());
+// console.log('Locale String: \t\t' + date1.toLocaleString());
+// console.log('toLocaleDateString: \t' + date1.toLocaleDateString());
+// console.log('toLocaleTimeString: \t' + date1.toLocaleTimeString());
 
-console.log('toString: \t\t\t\t' + date1.toString());
-console.log('toTimeString: \t\t\t' + date1.toTimeString());
-console.log('toUTCString: \t\t\t' + date1.toUTCString());
-console.log('valueOf: \t\t\t\t' + date1.valueOf());
+// console.log('toString: \t\t\t\t' + date1.toString());
+// console.log('toTimeString: \t\t\t' + date1.toTimeString());
+// console.log('toUTCString: \t\t\t' + date1.toUTCString());
+// console.log('valueOf: \t\t\t\t' + date1.valueOf());
 
 console.log('\n');
 

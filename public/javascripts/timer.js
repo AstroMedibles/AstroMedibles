@@ -111,6 +111,11 @@ function startTime()
   else if (Difference_In_Time1 <= 0 && Difference_In_Time2 >= 0)
   {
     // console.log('case 2 today date is after start date && today date is before end date');
+    
+    // To calculate the no. of days between two dates
+    var Difference_In_Days2 = parseInt(Difference_In_Time2 / (1000 * 60 * 60 * 24));
+    Difference_In_Time2 -= Difference_In_Days2 * (1000 * 60 * 60 * 24);
+    
     // To calculate the no. of hours between two dates
     var Difference_In_Hours2 = parseInt(Difference_In_Time2 / (1000 * 60 * 60));
     Difference_In_Time2 -= Difference_In_Hours2 * (1000 * 60 * 60);
@@ -123,6 +128,7 @@ function startTime()
     var Difference_In_Seconds2 = parseInt(Difference_In_Time2 / (1000));
     Difference_In_Time2 -= Difference_In_Seconds2 * (1000);
 
+    var d = Difference_In_Days2;
     var h = Difference_In_Hours2;
     var m = Difference_In_Minutes2;
     var s = Difference_In_Seconds2;
@@ -148,8 +154,11 @@ function startTime()
     
             // console.log('Difference_In_Time1: ' + Difference_In_Time1);
             // console.log();
-            // if order is in past 7 days or 518400000 ms
-            if (Difference_In_Time1 > 604800000 || isNaN(Difference_In_Time1))
+
+
+
+            // if DLOP is before the start of the new sale, allow purchase
+            if (Difference_In_Time1 > 1 || isNaN(Difference_In_Time1))
             {
               // console.log('Purchase is old enough, new one valid');
               var button = addToCartButtons[i];
@@ -175,7 +184,8 @@ function startTime()
           console.log(error);
         } 
     }
-    preorderTimer.innerHTML =  'Pre-Order Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
+    preorderTimer.innerHTML =  `Pre-Order Sale 🚀 ${d} days, ${h} hrs, ${m} min, ${s} sec 🚀`;
+
     setTimeout(startTime, 500);
   }
   // case 3 today date is after start date && today date is after end date
