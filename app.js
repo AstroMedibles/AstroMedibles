@@ -47,6 +47,8 @@ app.use(cookieParser("MY SECRET"));
 
 // no cache
 app.use(nocache());
+// no ETag
+app.set('etag', false);
 
 // view engine setup 
 app.set('views', path.join(__dirname,'/public/views')); 
