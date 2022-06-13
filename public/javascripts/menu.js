@@ -57,7 +57,7 @@ function loadMenuCards(data)
             <div class="col-6 col-md-4 col-lg-3 d-flex  text-center">
                 <div name="card" class="card w-100 d-flex align-items-start flex-column " ${dataAttributes} style="max-width: 304px" >
 
-                    <div class="card-header" style="width: 100%; height: 50px;">
+                    <div class="card-header" style="width: 100%; height: 60px;">
                         <h6 class="card-title" style="font-size: small;"><b>${name}</b></h6>
                     </div>
 
