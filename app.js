@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 const { Console } = require('console'); 
 const dbService = require('./dbService'); 
 // no cache saving
-const nocache = require('nocache');
+// const nocache = require('nocache');
 
  
 // express object 
@@ -46,7 +46,7 @@ app.use(session(
 app.use(cookieParser("MY SECRET")); 
 
 // no cache
-app.use(nocache());
+// app.use(nocache());
 
 // view engine setup 
 app.set('views', path.join(__dirname,'/public/views')); 
