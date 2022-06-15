@@ -184,7 +184,7 @@ function startTime()
           console.log(error);
         } 
     }
-    preorderTimer.innerHTML =  `Pre-Order Sale 🚀 ${d} days, ${h} hrs, ${m} min, ${s} sec 🚀`;
+    preorderTimer.innerHTML =  `Pre Order Sale 🚀 ${d} days, ${h} hrs, ${m} min, ${s} sec 🚀`;
 
     setTimeout(startTime, 500);
   }
@@ -206,7 +206,7 @@ function startTime()
     preorderNavbar.classList.remove('bg-primary');
     preorderNavbar.classList.add('bg-dark');
     // preorderTimer.innerHTML =  'Pre-Order Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
-    preorderTimer.innerHTML =  'Pre-Order Sale Over: See your order status at <a href="/orders">My Orders</a>'
+    preorderTimer.innerHTML =  'Pre Order Sale Over 🚀 See your <a href="/orders">Order Status</a> 🚀'
     
     // console.log('Difference_In_Time: ' + Difference_In_Time / (1000 * 60 * 60));
     // if user logs in less than one hour after sale has ended, place their order
