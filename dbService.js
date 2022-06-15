@@ -755,7 +755,7 @@ class DbService
                         {
                             var cartElement = userData.cart.cart[j];
                             var itemQty     = cartElement[1];
-                            cartText += `(${itemQty}) ${name} ($${price} per) <br>`;
+                            cartText += `<b>[${itemQty}]</b> ${name} ($${price} per) <br>`;
                         }
                     });
 

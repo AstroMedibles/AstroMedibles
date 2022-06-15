@@ -40,7 +40,7 @@ function populateUserOrders()
 {
     // get pickup schedule info
 
-    console.log('Attempting Connection...');
+    // console.log('Attempting Connection...');
 
     var newDate1 = new Date();
     newDate1.setSeconds(0);
@@ -276,7 +276,7 @@ function populateUserOrders()
                 for (let j = 1; j < cart.length; j++)
                 {
                     var cartElement = cart[j];
-                    cartText += "(" + cartElement[1] + ") " + cartElement[2] + "<br>";
+                    cartText += "<b>[" + cartElement[1] + "]</b> " + cartElement[2] + "<br>";
                 }
 
                 let card = "";
