@@ -1148,6 +1148,7 @@ class DbService
                     {
                         if (err)
                         {
+                            console.log('Tried to search info from user_id:' + user_id);
                             reject(err.message);
                         }
                         else
@@ -1281,7 +1282,7 @@ class DbService
                                         var subject = 'DB.SERVICE ERROR - /adminUpdateOrderStatus';
                                         console.log(subject);
                                         console.log(error2);
-
+                                        console.log('Tried to search info from user_id:' + user_id);
 
                                         // Send Dev Error
                                         var subject = 'DB.SERVICE ERROR - /adminUpdateOrderStatus';
@@ -1289,6 +1290,8 @@ class DbService
                                         ${error2.message}
                                         <br><br>
                                         ${error2.stack}
+                                        <b><b>
+                                        Tried to search info from user_id: ${user_id}
                                         </p>`;
                                         const db = DbService.getDbServiceInstance();
                                         db.sendEmail(process.env.AM_USER_DEV01, subject, html);
