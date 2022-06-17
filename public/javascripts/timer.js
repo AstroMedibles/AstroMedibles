@@ -3,6 +3,12 @@ var preorderTimer2, preorderNavbar2;
 
 var notifcationOrderPlacedSentAlready = false;
 
+var startDate = new Date('2022-06-15T05:00:00.000Z');
+var endDate   = new Date('2022-06-19T05:00:00.000Z');
+
+var dlop, dlov, date_dlop, date_dlov;
+
+
 document.addEventListener('DOMContentLoaded', function () 
 {
   preorderTimer  = document.getElementById('preorderTimer');
@@ -11,14 +17,46 @@ document.addEventListener('DOMContentLoaded', function ()
   preorderTimer2  = document.getElementById('preorderTimer2');
   preorderNavbar2 = document.getElementById('preorderNavbar2');
 
+  dlop = String($('#myform').attr('data-dlop'));
+  date_dlop = new Date(dlop);
+
+  try
+  {
+    dlov = String($('#myform').attr('data-dlov'));
+  
+    date_dlov = new Date(dlov);
+  
+    console.table(['date_dlov', date_dlov.toISOString()]);
+
+    var startDate_dlov_difference = startDate.getTime() - date_dlov.getTime();
+
+    // if the last time the user visited was before the current sale, reset their cart
+    if (startDate_dlov_difference > 0)
+    {
+      console.log('Reseting cart');
+      cartRemoveAllItems();
+      // update dlov to now
+      update_date_of_last_visit();
+    }
+    else
+    {
+      console.log('Cart good');
+    }
+  } catch (error)
+  {
+    console.log(error + "(DLOV)");
+    // update dlov to now
+    update_date_of_last_visit();
+    cartRemoveAllItems();
+  }
+
+
   startTime();
 });
 
 function startTime()
 {
   var todayDate = new Date();
-  var startDate = new Date('2022-06-15T05:00:00.000Z');
-  var endDate   = new Date('2022-06-19T05:00:00.000Z');
 
   var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
   var Difference_In_Time2 = endDate.getTime() - todayDate.getTime();
@@ -145,8 +183,6 @@ function startTime()
           // console.log('notifcationOrderPlacedSentAlready: ' + notifcationOrderPlacedSentAlready);
           if (!notifcationOrderPlacedSentAlready)
           {
-            var dlop = $('#myform').attr('data-dlop');
-            var date_dlop = new Date(dlop);
             // console.log('dlop: ' + dlop);
     
             var Difference_In_Time1 = startDate.getTime() - date_dlop.getTime();
@@ -158,7 +194,7 @@ function startTime()
 
 
             // if DLOP is before the start of the new sale, allow purchase
-            if (Difference_In_Time1 > 1 || isNaN(Difference_In_Time1))
+            if (isNaN(Difference_In_Time1) || Difference_In_Time1 > 1 )
             {
               // console.log('Purchase is old enough, new one valid');
               var button = addToCartButtons[i];
@@ -295,7 +331,34 @@ function cartRemoveAllItems()
   {
     $("#cart-quantity").text(0);
     // console.log('remove complete');
+  });
+}
+
+function update_date_of_last_visit()
+{
+  console.log('route/update_date_of_last_visit()');
+  fetch(address + '/update_date_of_last_visit',
+  {
+      credentials: "include",
+      method: 'PATCH',
+      headers:
+      {
+          'Content-type': 'application/json'
+      },
+      body: JSON.stringify(
+      {
+          new_DLOV:    new Date()
+      })
   })
+  .then(response => response.json())
+  .then((data) => 
+  {
+    console.log('DLOV Updated')
+      // console.log("dropDownUpdateOrderStatus(event) complete");
+  }).catch((error) => 
+  {
+      console.log("update_date_of_last_visit() ERROR: \n" + error);
+  });
 }
 
 function alertNotify(message, alertType, iconChoice, duration)

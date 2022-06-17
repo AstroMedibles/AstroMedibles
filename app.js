@@ -295,8 +295,9 @@ app.get('/menu', function (request, response)
 
 		response.render('menu',
 		{
-			dlop: accountAttributes.date_lastOrderPlaced
-		}); 
+			dlop: accountAttributes.date_lastOrderPlaced,
+			dlov: accountAttributes.date_last_visited
+		});
 	})
 	.catch(() => 
 	{ 
@@ -978,6 +979,34 @@ app.patch('/cartPointsRemoveAllItems', (request, response) =>
 		response.redirect('/login'); 
 	});
 });
+
+app.patch('/update_date_of_last_visit', (request, response) =>
+{
+	console.log("\n"+ "route(/update_date_of_last_visit) "); 
+	var loggedInResponse = checkIfLoggedIn(request); 
+	loggedInResponse.then((accountAttributes) => 
+	{
+		console.log("update_date_of_last_visit(/) \tresult.then()"); 
+
+		const { new_DLOV } = request.body; 
+		const db = dbService.getDbServiceInstance(); 
+		const result = db.update_date_of_last_visit(accountAttributes.id, new_DLOV); 
+		
+		console.table(request.body);
+		result.then((data) => 
+		{
+			console.log("\n" + "route(/update_date_of_last_visit) \t new_DLOV Update Success:"); 
+			response.json({ data: data }); 
+		}).catch(err => console.log(err));
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/) \tresult.catch()"); 
+		console.log("route(/) \tif loggedIn === false"); 
+		response.redirect('/login'); 
+	});
+});
+
 
 app.patch('/adminUpdateOrderStatus', (request, response) =>
 {

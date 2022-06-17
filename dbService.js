@@ -1130,6 +1130,46 @@ class DbService
     //     return response;
     // }
 
+    async update_date_of_last_visit(user_id, new_DLOV)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+
+            try
+            {
+                const query = "UPDATE " + process.env.TABLE_NAMES + " SET date_last_visited = ? WHERE id = ?;";
+                connection.query(query, [new_DLOV, user_id], (err, result) =>
+                {
+                    if (err)
+                    {
+                        reject(err.message);
+                    }
+                    else
+                    {
+                        console.log("new_DLOV Update Success"); 
+                        resolve(result.affectedRows);
+                    }
+                });
+            } catch (error)
+            {
+                // Send Dev Error
+                var subject = 'DB.SERVICE ERROR - /update_date_of_last_visit';
+                console.log(subject);
+                console.log(error);
+                console.log(error.stack);
+
+                var html    = `<p>
+                ${error.message}
+                <br><br>
+                ${error.stack}
+                </p>`;
+                const db = DbService.getDbServiceInstance();
+                db.sendEmail(process.env.AM_USER_DEV01, subject, html);
+            }
+        });
+        return response;
+    }
+
 
     async adminUpdateOrderStatus(orderId, status_id, status, user_id)
     {
@@ -1336,7 +1376,6 @@ class DbService
                 db.sendEmail(process.env.AM_USER_DEV01, subject, html);
             }
         });
-
         return response;
     }
 
