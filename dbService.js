@@ -1148,7 +1148,6 @@ class DbService
                     {
                         if (err)
                         {
-                            console.log('Tried to search info from user_id:' + user_id);
                             reject(err.message);
                         }
                         else
@@ -1159,6 +1158,7 @@ class DbService
                             {
                                 if (err) 
                                 {
+                                    console.log('Tried to search info from user_id:' + user_id);
                                     reject(err);
                                 }
                                 else

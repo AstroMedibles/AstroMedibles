@@ -73,6 +73,7 @@ function loadCartTotal(data)
     }
 }
 
+// if you change code here, dont forget to update searchOrderClick(event)
 function populateUserOrders()
 {
     // reset notification flag
@@ -296,6 +297,7 @@ function populateUserOrders()
     });
 }
 
+// if you change code here, dont forget to update populateUserOrders()
 function searchOrderClick(event)
 {
     // Filter results
@@ -306,11 +308,10 @@ function searchOrderClick(event)
 
     for (let i = 0; i < orders.length; i++)
     {
-        
-
         var userOrder = orders[i];
 
         var status_id    = userOrder.status_id.toString();
+        var user_id      = userOrder.user_id; 
         var status       = userOrder.status.toString();
         var order_id     = userOrder.order_id.toString();
         var name         = userOrder.name.toString();
@@ -319,7 +320,6 @@ function searchOrderClick(event)
         var total        = userOrder.total;
         var date_created = new Date(userOrder.date_created);
         var pickup_scheduled = new Date(userOrder.pickup_scheduled);
-
 
         if (!status_id.toLowerCase().includes(searchText) && !status.toLowerCase().includes(searchText) 
         &&  !order_id.toLowerCase().includes(searchText)  && !name.toLowerCase().includes(searchText)   
@@ -343,7 +343,7 @@ function searchOrderClick(event)
 
         };
         var dataAttributes = 
-        `data-order_id="${order_id}" data-status_id="${status_id}"  data-status="${status}" data-name="${name}" data-email="${email}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`;
+        `data-order_id="${order_id}" data-status_id="${status_id}"  data-status="${status}" data-name="${name}" data-user_id="${user_id}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`; 
 
         date_created = date_created.toLocaleString('en-us', options);
 
@@ -355,10 +355,9 @@ function searchOrderClick(event)
 
         var statusText = status;
         var pickup_text = '';
-
         var dropDownButton = '';
 
-        if (statusText === 'Payment Required')
+        if (status_id === 1) // === 'Payment Required'
         {
             dropDownButton = 
             `
@@ -367,12 +366,13 @@ function searchOrderClick(event)
 
             status = 
             `
+            <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
             <button class="dropdown-item disabled">Payment Required</button>
             <button name="Preparing Order"  class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Preparing Order</button>
             <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
             <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
             `;
-        } else if (statusText === 'Preparing Order')
+        } else if (status_id === 2) // === 'Payment Required'
         {
             dropDownButton = 
             `
@@ -381,12 +381,13 @@ function searchOrderClick(event)
 
             status = 
             `
+            <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
             <button class="dropdown-item disabled">Payment Required</button>
             <button class="dropdown-item disabled">Preparing Order</button>
             <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
             <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
             `;
-        } else if (statusText === 'Ready for Pickup')
+        } else if (status_id === 3) // === 'Ready for Pickup'
         {
             dropDownButton = 
             `
@@ -409,12 +410,13 @@ function searchOrderClick(event)
 
             status = 
             `
+            <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
             <button class="dropdown-item disabled">Payment Required</button>
             <button class="dropdown-item disabled">Preparing Order</button>
             <button class="dropdown-item disabled">Ready for Pickup</button>
             <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
             `;
-        } else if (statusText === 'Complete')
+        } else if (status_id === 4) //  === 'Complete')
         {
             dropDownButton = 
             `
@@ -422,6 +424,7 @@ function searchOrderClick(event)
             `;
             status = 
             `
+            <button class="dropdown-item disabled">Cancel Order</button>
             <button class="dropdown-item disabled">Payment Required</button>
             <button class="dropdown-item disabled">Preparing Order</button>
             <button class="dropdown-item disabled">Ready for Pickup</button>
@@ -433,7 +436,7 @@ function searchOrderClick(event)
         for (let j = 1; j < cart.length; j++)
         {
             var cartElement = cart[j];
-            cartText += "(" + cartElement[1] + ") " + cartElement[2] + "<br>";
+            cartText += "<b>[" + cartElement[1] + "]</b> " + cartElement[2] + "<br>";
         }
 
         let card = "";
