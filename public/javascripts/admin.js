@@ -306,218 +306,231 @@ function searchOrderClick(event)
     var searchText = $('#inputSearchOrders').val().trim().toLowerCase();
     var counter = 0;
 
-    for (let i = 0; i < orders.length; i++)
+    // populate page with new user orders
+    fetch(address + '/adminGetUserOrders')
+    .then(response => response.json())
+    .then(data =>  
     {
-        var userOrder = orders[i];
+        orders = Array.from(data['data']);
+        document.getElementById("orders-items").innerHTML = '';
 
-        var status_id    = userOrder.status_id;
-        var user_id      = userOrder.user_id; 
-        var status       = userOrder.status.toString();
-        var order_id     = userOrder.order_id.toString();
-        var name         = userOrder.name.toString();
-        var email        = userOrder.email.toString();
-        var cart         = JSON.parse(userOrder.cart).cart;
-        var total        = userOrder.total;
-        var date_created = new Date(userOrder.date_created);
-        var pickup_scheduled = new Date(userOrder.pickup_scheduled);
 
-        if (!status.toLowerCase().includes(searchText) && !order_id.toLowerCase().includes(searchText) 
-        && !name.toLowerCase().includes(searchText)    &&  !email.toLowerCase().includes(searchText))
+
+        for (let i = 0; i < orders.length; i++)
         {
-            // console.log('TRUE THO');
-            continue;
-        }
-        else
-        {
-            counter += 1;
-        }
-
-        var options =
-        {
-            hour: '2-digit',
-            minute: '2-digit',
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit"
-
-        };
-        var dataAttributes = 
-        `data-order_id="${order_id}" data-status_id="${status_id}"  data-status="${status}" data-name="${name}" data-user_id="${user_id}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`; 
-
-        date_created = date_created.toLocaleString('en-us', options);
-
-        // Payment Required - Order will not be made until this is paid.
-        // Preparing Order - Order is in queue to be baked.
-        // Ready for Pickup - Order has been made, and waiting for pickup.
-        // Complete - Order has been delivered.
-
-
-        var statusText = status;
-        var pickup_text = '';
-        var dropDownButton = '';
-
-        if (status_id === 1) // === 'Payment Required'
-        {
-            dropDownButton = 
-            `
-            <button  id="selected-${order_id}" class="btn btn-danger btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
-            `;
-
-            status = 
-            `
-            <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
-            <button class="dropdown-item disabled">Payment Required</button>
-            <button name="Preparing Order"  class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Preparing Order</button>
-            <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
-            <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
-            `;
-        } else if (status_id === 2) // === 'Payment Required'
-        {
-            dropDownButton = 
-            `
-            <button  id="selected-${order_id}" class="btn btn-primary btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
-            `;
-
-            status = 
-            `
-            <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
-            <button class="dropdown-item disabled">Payment Required</button>
-            <button class="dropdown-item disabled">Preparing Order</button>
-            <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
-            <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
-            `;
-        } else if (status_id === 3) // === 'Ready for Pickup'
-        {
-            dropDownButton = 
-            `
-            <button  id="selected-${order_id}" class="btn btn-warning btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
-            `;
-
-            try 
+            var userOrder = orders[i];
+    
+            var status_id    = userOrder.status_id;
+            var user_id      = userOrder.user_id; 
+            var status       = userOrder.status.toString();
+            var order_id     = userOrder.order_id.toString();
+            var name         = userOrder.name.toString();
+            var email        = userOrder.email.toString();
+            var cart         = JSON.parse(userOrder.cart).cart;
+            var total        = userOrder.total;
+            var date_created = new Date(userOrder.date_created);
+            var pickup_scheduled = new Date(userOrder.pickup_scheduled);
+    
+            if (!status.toLowerCase().includes(searchText) && !order_id.toLowerCase().includes(searchText) 
+            && !name.toLowerCase().includes(searchText)    &&  !email.toLowerCase().includes(searchText))
             {
-                if (userOrder.pickup_scheduled != null)
-                {
-                    console.log(pickup_scheduled.toISOString());
-                    pickup_text = `<p style="font-weight: normal;">*Pickup Selected*</p>`;
-                }
-            } 
-            catch (error)
-            {
-                console.log(error);    
+                // console.log('TRUE THO');
+                continue;
             }
-            // console.log(pickup_text);
-
-            status = 
+            else
+            {
+                counter += 1;
+            }
+    
+            var options =
+            {
+                hour: '2-digit',
+                minute: '2-digit',
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit"
+    
+            };
+            var dataAttributes = 
+            `data-order_id="${order_id}" data-status_id="${status_id}"  data-status="${status}" data-name="${name}" data-user_id="${user_id}" data-total="${total}" data-date_created="${new Date(date_created).toISOString()} "`; 
+    
+            date_created = date_created.toLocaleString('en-us', options);
+    
+            // Payment Required - Order will not be made until this is paid.
+            // Preparing Order - Order is in queue to be baked.
+            // Ready for Pickup - Order has been made, and waiting for pickup.
+            // Complete - Order has been delivered.
+    
+    
+            var statusText = status;
+            var pickup_text = '';
+            var dropDownButton = '';
+    
+            if (status_id === 1) // === 'Payment Required'
+            {
+                dropDownButton = 
+                `
+                <button  id="selected-${order_id}" class="btn btn-danger btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
+                `;
+    
+                status = 
+                `
+                <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
+                <button class="dropdown-item disabled">Payment Required</button>
+                <button name="Preparing Order"  class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Preparing Order</button>
+                <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
+                <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
+                `;
+            } else if (status_id === 2) // === 'Payment Required'
+            {
+                dropDownButton = 
+                `
+                <button  id="selected-${order_id}" class="btn btn-primary btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
+                `;
+    
+                status = 
+                `
+                <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
+                <button class="dropdown-item disabled">Payment Required</button>
+                <button class="dropdown-item disabled">Preparing Order</button>
+                <button name="Ready for Pickup" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Ready for Pickup</button>
+                <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
+                `;
+            } else if (status_id === 3) // === 'Ready for Pickup'
+            {
+                dropDownButton = 
+                `
+                <button  id="selected-${order_id}" class="btn btn-warning btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
+                `;
+    
+                try 
+                {
+                    if (userOrder.pickup_scheduled != null)
+                    {
+                        console.log(pickup_scheduled.toISOString());
+                        pickup_text = `<p style="font-weight: normal;">*Pickup Selected*</p>`;
+                    }
+                } 
+                catch (error)
+                {
+                    console.log(error);    
+                }
+                // console.log(pickup_text);
+    
+                status = 
+                `
+                <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
+                <button class="dropdown-item disabled">Payment Required</button>
+                <button class="dropdown-item disabled">Preparing Order</button>
+                <button class="dropdown-item disabled">Ready for Pickup</button>
+                <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
+                `;
+            } else if (status_id === 4) //  === 'Complete')
+            {
+                dropDownButton = 
+                `
+                <button  id="selected-${order_id}" class="btn btn-success btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
+                `;
+                status = 
+                `
+                <button class="dropdown-item disabled">Cancel Order</button>
+                <button class="dropdown-item disabled">Payment Required</button>
+                <button class="dropdown-item disabled">Preparing Order</button>
+                <button class="dropdown-item disabled">Ready for Pickup</button>
+                <button class="dropdown-item disabled">Complete</button>
+                `;
+            }
+    
+            var cartText = "";
+            for (let j = 1; j < cart.length; j++)
+            {
+                var cartElement = cart[j];
+                cartText += "<b>[" + cartElement[1] + "]</b> " + cartElement[2] + "<br>";
+            }
+    
+            let card = "";
+    
+            // create element in shopping cart
+    
+            card +=
             `
-            <button name="Cancel Order" class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Cancel Order</button>
-            <button class="dropdown-item disabled">Payment Required</button>
-            <button class="dropdown-item disabled">Preparing Order</button>
-            <button class="dropdown-item disabled">Ready for Pickup</button>
-            <button name="Complete"         class="dropdown-item" type="button" onClick="dropDownUpdateOrderStatus(event);">Complete</button>
-            `;
-        } else if (status_id === 4) //  === 'Complete')
-        {
-            dropDownButton = 
-            `
-            <button  id="selected-${order_id}" class="btn btn-success btn-sm dropdown-toggle rounded-pill w-100" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="max-width: 225px;" >${statusText}</button>
-            `;
-            status = 
-            `
-            <button class="dropdown-item disabled">Cancel Order</button>
-            <button class="dropdown-item disabled">Payment Required</button>
-            <button class="dropdown-item disabled">Preparing Order</button>
-            <button class="dropdown-item disabled">Ready for Pickup</button>
-            <button class="dropdown-item disabled">Complete</button>
-            `;
-        }
-
-        var cartText = "";
-        for (let j = 1; j < cart.length; j++)
-        {
-            var cartElement = cart[j];
-            cartText += "<b>[" + cartElement[1] + "]</b> " + cartElement[2] + "<br>";
-        }
-
-        let card = "";
-
-        // create element in shopping cart
-
-        card +=
-        `
-        <div class="product">
-            <div class="row product-image d-flex justify-content-between align-items-start" ${dataAttributes} >
-
-                <div class="col-md-4 product-info">
-                    <div class="product-specs d-flex flex-column  align-items-center">
-                        <div class="w-100" style="padding: 0px 0px 15px 0px; text-align: center;">
-                            <span>Status</span>
-                            <br>
-                            <div class="dropdown w-100" >
-                                ${dropDownButton}
-                                <div class="dropdown-menu w-100" name="${order_id}">
-                                ${status}
+            <div class="product">
+                <div class="row product-image d-flex justify-content-between align-items-start" ${dataAttributes} >
+    
+                    <div class="col-md-4 product-info">
+                        <div class="product-specs d-flex flex-column  align-items-center">
+                            <div class="w-100" style="padding: 0px 0px 15px 0px; text-align: center;">
+                                <span>Status</span>
+                                <br>
+                                <div class="dropdown w-100" >
+                                    ${dropDownButton}
+                                    <div class="dropdown-menu w-100" name="${order_id}">
+                                    ${status}
+                                    </div>
                                 </div>
+                                ${pickup_text}
                             </div>
-                            ${pickup_text}
-                        </div>
-
-                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                            <span>Order ID</span>
-                            <br>
-                            <span class="value">${order_id}</span>
-                        </div>
-
-                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                            <span>Total</span>
-                            <br>
-                            <span class="value">$${total}</span>
-                        </div>
-                        
-                    </div>
-                </div>
-
-                <div class="col-md-4 product-info">
-                    <div class="product-specs d-flex flex-column  align-items-center">
-                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                            <span>Items</span>
-                            <br>
-                            <span class="value">${cartText}</span>
+    
+                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                <span>Order ID</span>
+                                <br>
+                                <span class="value">${order_id}</span>
+                            </div>
+    
+                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                <span>Total</span>
+                                <br>
+                                <span class="value">$${total}</span>
+                            </div>
+                            
                         </div>
                     </div>
-                </div>
-
-
-                <div class="col-md-4 product-info ">
-                    <div class="product-specs d-flex flex-column  align-items-center">
-                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                            <span>Date Created</span>
-                            <br>
-                            <span class="value">${date_created}</span>
+    
+                    <div class="col-md-4 product-info">
+                        <div class="product-specs d-flex flex-column  align-items-center">
+                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                <span>Items</span>
+                                <br>
+                                <span class="value">${cartText}</span>
+                            </div>
                         </div>
-
-
-                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                            <span>Name</span>
-                            <br>
-                            <span class="value">${name}</span>
-                        </div>
-
-                        <div style="padding: 0px 0px 15px 0px; text-align: center;">
-                        <span>Email</span>
-                        <br>
-                        <span class="value">${email}</span>
                     </div>
-
+    
+    
+                    <div class="col-md-4 product-info ">
+                        <div class="product-specs d-flex flex-column  align-items-center">
+                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                <span>Date Created</span>
+                                <br>
+                                <span class="value">${date_created}</span>
+                            </div>
+    
+    
+                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                <span>Name</span>
+                                <br>
+                                <span class="value">${name}</span>
+                            </div>
+    
+                            <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                            <span>Email</span>
+                            <br>
+                            <span class="value">${email}</span>
+                        </div>
+    
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        `;
-        // create card
-        var ordersHTML = $('#orders-items');
-        ordersHTML.append(card);
-    }
-    $('#inputSearchLabel').text(`(${counter})`);
+            `;
+            // create card
+            var ordersHTML = $('#orders-items');
+            ordersHTML.append(card);
+        }
+        $('#inputSearchLabel').text(`(${counter})`);
+    });
+
+    
 }
 
 function dropDownUpdateOrderStatus(event)
