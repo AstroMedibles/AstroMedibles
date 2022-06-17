@@ -761,7 +761,7 @@ class DbService
 
                 }
 
-                var subject = "Strap in " + user_name + ". We're blasting off! 🚀";
+                var subject = `Strap in ${user_name}. We're blasting off! 🚀 (${order_id})`;
                 var html = 
                 `
                 <h3>Your order has been submitted!</h3>
