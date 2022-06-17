@@ -39,7 +39,7 @@ function loadCartTotal(data)
     }
     catch (error)
     {
-        // console.log(error);
+        console.log(error);
     }
     // console.log("function: loadCartTotal END");
 }
@@ -429,16 +429,45 @@ function alertNotify(message, alertType, iconChoice, duration)
     }, duration);
 }
 
+// check every ten seconds
+// if user does not have items in their cart, send them to /menu
+function checkCart()
+{
+    // console.log('working');
+    fetch(address + '/getUserData')
+    .then(response => response.json())
+    .then(data => 
+    {
+        try
+        {
+            var cart = data['data'].cart.cart[0][1];
+            console.log(cart);
+
+            if (parseInt(cart) <= 0)
+            {
+                window.location.replace(address + "/menu");
+            }
+        }
+        catch (error)
+        {
+            console.log(error);
+            window.location.replace(address + "/menu");
+        }
+    });
+    // console.log("function: loadCartTotal(data)");
+    setTimeout(checkCart, 10000);
+}
 
 function ready()
 {
     // get cart total
     fetch(address + '/getUserData')
-        .then(response => response.json())
-        .then(data => 
-        {
-            loadCartTotal(data['data']);
-
-
-        });
+    .then(response => response.json())
+    .then(data => 
+    {
+        // console.log('working1');
+        loadCartTotal(data['data']);
+        checkCart();
+        // console.log('working2');
+    });
 }
