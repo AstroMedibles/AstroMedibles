@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function ()
         if (startDate_dlov_difference > 0)
         {
           console.log('Reseting cart');
-          // cartRemoveAllItems();
+          cartRemoveAllItems();
           // update dlov to now
           update_date_of_last_visit();
         }
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function ()
         console.log(error + "(DLOV)");
         // update dlov to now
         update_date_of_last_visit();
-        // cartRemoveAllItems();
+        cartRemoveAllItems();
       }
 
 
