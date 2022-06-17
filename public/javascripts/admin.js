@@ -310,7 +310,7 @@ function searchOrderClick(event)
     {
         var userOrder = orders[i];
 
-        var status_id    = userOrder.status_id.toString();
+        var status_id    = userOrder.status_id;
         var user_id      = userOrder.user_id; 
         var status       = userOrder.status.toString();
         var order_id     = userOrder.order_id.toString();
@@ -321,7 +321,7 @@ function searchOrderClick(event)
         var date_created = new Date(userOrder.date_created);
         var pickup_scheduled = new Date(userOrder.pickup_scheduled);
 
-        if (!status_id.toLowerCase().includes(searchText) && !status.toLowerCase().includes(searchText) 
+        if (!status_id.toString().toLowerCase().includes(searchText) && !status.toLowerCase().includes(searchText) 
         &&  !order_id.toLowerCase().includes(searchText)  && !name.toLowerCase().includes(searchText)   
         &&  !email.toLowerCase().includes(searchText))
         {
