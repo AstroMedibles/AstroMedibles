@@ -17,41 +17,49 @@ document.addEventListener('DOMContentLoaded', function ()
   preorderTimer2  = document.getElementById('preorderTimer2');
   preorderNavbar2 = document.getElementById('preorderNavbar2');
 
-  dlop = String($('#myform').attr('data-dlop'));
-  date_dlop = new Date(dlop);
 
-  try
+  // get user attributes
+  fetch(address + '/getUserData')
+  .then(response => response.json())
+  .then(data => 
   {
-    dlov = String($('#myform').attr('data-dlov'));
-  
-    date_dlov = new Date(dlov);
-  
-    console.table(['date_dlov', date_dlov.toISOString()]);
-
-    var startDate_dlov_difference = startDate.getTime() - date_dlov.getTime();
-
-    // if the last time the user visited was before the current sale, reset their cart
-    if (startDate_dlov_difference > 0)
-    {
-      console.log('Reseting cart');
-      // cartRemoveAllItems();
-      // update dlov to now
-      update_date_of_last_visit();
-    }
-    else
-    {
-      console.log('Cart good');
-    }
-  } catch (error)
-  {
-    console.log(error + "(DLOV)");
-    // update dlov to now
-    update_date_of_last_visit();
-    // cartRemoveAllItems();
-  }
+      dlop = String(data['data'].date_lastOrderPlaced);
+      dlov = String(data['data'].date_last_visited);
 
 
-  startTime();
+      date_dlop = new Date(dlop);
+
+      try
+      {
+        date_dlov = new Date(dlov);
+      
+        console.table(['date_dlov', date_dlov.toISOString()]);
+
+        var startDate_dlov_difference = startDate.getTime() - date_dlov.getTime();
+
+        // if the last time the user visited was before the current sale, reset their cart
+        if (startDate_dlov_difference > 0)
+        {
+          console.log('Reseting cart');
+          // cartRemoveAllItems();
+          // update dlov to now
+          update_date_of_last_visit();
+        }
+        else
+        {
+          console.log('Cart good');
+        }
+      } catch (error)
+      {
+        console.log(error + "(DLOV)");
+        // update dlov to now
+        update_date_of_last_visit();
+        // cartRemoveAllItems();
+      }
+
+
+      startTime();
+      });
 });
 
 function startTime()
