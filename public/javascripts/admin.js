@@ -321,9 +321,8 @@ function searchOrderClick(event)
         var date_created = new Date(userOrder.date_created);
         var pickup_scheduled = new Date(userOrder.pickup_scheduled);
 
-        if (!status_id.toString().toLowerCase().includes(searchText) && !status.toLowerCase().includes(searchText) 
-        &&  !order_id.toLowerCase().includes(searchText)  && !name.toLowerCase().includes(searchText)   
-        &&  !email.toLowerCase().includes(searchText))
+        if (!status.toLowerCase().includes(searchText) && !order_id.toLowerCase().includes(searchText) 
+        && !name.toLowerCase().includes(searchText)    &&  !email.toLowerCase().includes(searchText))
         {
             // console.log('TRUE THO');
             continue;
