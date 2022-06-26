@@ -3,8 +3,8 @@ var preorderTimer2, preorderNavbar2;
 
 var notifcationOrderPlacedSentAlready = false;
 
-var startDate = new Date('2022-06-15T05:00:00.000Z');
-var endDate   = new Date('2022-06-19T05:00:00.000Z');
+var startDate = new Date('2022-06-27T05:00:00.000Z');
+var endDate   = new Date('2022-06-30T05:00:00.000Z');
 
 var dlop, dlov, date_dlop, date_dlov;
 
