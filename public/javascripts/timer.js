@@ -216,7 +216,7 @@ function startTime()
               const message = "Order already placed";
               const alertType     = 'info';
               const iconChoice    = 2;
-              alertNotify(message, alertType, iconChoice, 3);
+              alertNotify(message, alertType, iconChoice, 9999);
               notifcationOrderPlacedSentAlready = true;
             }
           }
