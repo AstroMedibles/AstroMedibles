@@ -1,29 +1,8 @@
 
-const address = 'https://www.astromedibles.com';
-// const address = 'http://localhost:8080';
+// const address = 'https://www.astromedibles.com';
+const address = 'http://localhost:8080';
 
-const passwordInput = document.getElementById('inputPassword');
-const togglePasswordButton = document.getElementById('toggle-password');
-
-togglePasswordButton.addEventListener('click', togglePassword);
-
-function togglePassword()
-{
-    if (passwordInput.type == 'password') {
-      passwordInput.type = 'text';
-      togglePasswordButton.textContent = 'Hide';
-      togglePasswordButton.setAttribute('aria-label',
-        'Hide password.');
-    } else {
-      passwordInput.type = 'password';
-      togglePasswordButton.textContent = 'Show';
-      togglePasswordButton.setAttribute('aria-label',
-        'Show password as plain text. ' +
-        'Warning: this will display your password on the screen.');
-    }
-}
-
-
+var passwordInput = document.getElementById('inputPassword');
 
 function forgotPassword()
 {

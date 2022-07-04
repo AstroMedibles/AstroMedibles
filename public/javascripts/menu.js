@@ -13,17 +13,17 @@ document.addEventListener('DOMContentLoaded', function ()
         });
 });
 
-const address = 'https://www.astromedibles.com';
-// const address = 'http://localhost:8080';
+// const address = 'https://www.astromedibles.com';
+const address = 'http://localhost:8080';
 
 
 function loadMenuCards(data)
 {
     try
     {
-        if (data.length === 0)
+        if (data.length == 0)
         {
-            // console.log("data.length === 0");
+            // console.log("data.length == 0");
             return;
         }
     } catch (error)

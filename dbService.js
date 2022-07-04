@@ -2,6 +2,7 @@ const CryptoJS = require("crypto-js");
 const dotenv = require('dotenv');
 const mysql = require('mysql2');
 const nodemailer = require('nodemailer');
+const { resolve } = require("path");
 
 
 var instance = null;
@@ -1023,12 +1024,12 @@ class DbService
 
     //                     else
     //                     {
-    //                         if (results[i].status_id === 1) // === 'Payment Required')
+    //                         if (results[i].status_id == 1) // == 'Payment Required')
     //                         {
     //                             // console.log('Status Case: 1');
         
                                 
-    //                         } else if (results[i].status_id === 2) //(status === 'Preparing Order')
+    //                         } else if (results[i].status_id == 2) //(status == 'Preparing Order')
     //                         {
     //                             // console.log('Status Case: 2');
     //                             html = 
@@ -1048,7 +1049,7 @@ class DbService
     //                             This is an automated message.
     //                             </p>
     //                             `;
-    //                         } else if (results[i].status_id === 3) //(status === 'Ready for Pickup')
+    //                         } else if (results[i].status_id == 3) //(status == 'Ready for Pickup')
     //                         {
     //                             // console.log('Status Case: 3');
         
@@ -1091,7 +1092,7 @@ class DbService
     //                             `;
         
         
-    //                         } else if (results[i].status_id === 4) // (status === 'Complete')
+    //                         } else if (results[i].status_id == 4) // (status == 'Complete')
     //                         {
     //                             // console.log('Status Case: 4');
     //                             html = 
@@ -1227,12 +1228,12 @@ class DbService
                                         `;
                     
                     
-                                        if (status === 'Payment Required')
+                                        if (status == 'Payment Required')
                                         {
                                             // console.log('Status Case: 1');
                     
                                             
-                                        } else if (status === 'Preparing Order')
+                                        } else if (status == 'Preparing Order')
                                         {
                                             // console.log('Status Case: 2');
                                             html = 
@@ -1252,7 +1253,7 @@ class DbService
                                             This is an automated message.
                                             </p>
                                             `;
-                                        } else if (status === 'Ready for Pickup')
+                                        } else if (status == 'Ready for Pickup')
                                         {
                                             // console.log('Status Case: 3');
                     
@@ -1295,7 +1296,7 @@ class DbService
                                             `;
                     
                     
-                                        } else if (status === 'Complete')
+                                        } else if (status == 'Complete')
                                         {
                                             // console.log('Status Case: 4');
                                             html = 
@@ -1343,7 +1344,7 @@ class DbService
                         }
                     });
                 }
-                else // status_id === 0 for delete
+                else // status_id == 0 for delete
                 {
                     const query = "DELETE FROM " + process.env.TABLE_ORDERS + " WHERE (order_id = ?);";
                     connection.query(query, [orderId], (err, result1) =>
@@ -1698,7 +1699,7 @@ class DbService
                         var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + i);
 
                         // if suggested day is not available on admin options, skip
-                        if (pickupDays[suggestedDate.getDay()].available === 0)
+                        if (pickupDays[suggestedDate.getDay()].available == 0)
                         {
                             continue;
                         }
@@ -1711,7 +1712,7 @@ class DbService
                         for (var j = 0; j < pickupTimes.length; j++)
                         {
                             // if suggested time is not available on admin options, skip
-                            if (pickupTimes[j].available === 0)
+                            if (pickupTimes[j].available == 0)
                             {
                                 continue;
                             }
@@ -1815,9 +1816,9 @@ class DbService
                                 // console.log('element2:');
                                 // console.log(element2.toISOString());
 
-                                var isSameDay =   (element1.getDate()     === element2.getDate() 
-                                                && element1.getMonth()    === element2.getMonth()
-                                                && element1.getFullYear() === element2.getFullYear());
+                                var isSameDay =   (element1.getDate()     == element2.getDate() 
+                                                && element1.getMonth()    == element2.getMonth()
+                                                && element1.getFullYear() == element2.getFullYear());
 
                                 if (isSameDay)
                                 {
@@ -1827,7 +1828,7 @@ class DbService
                                         var element3 = avalibleDaysandTimes[i][k]; // [locale string, AvalibleYesOrNo, date]
                                         var element3Date = new Date(element3[2]);
 
-                                        var isSameTime = (element3Date.getHours() === element2.getHours());
+                                        var isSameTime = (element3Date.getHours() == element2.getHours());
 
                                         if (isSameTime)
                                         {
@@ -2109,7 +2110,6 @@ class DbService
                                     reject(new Error("dbService.js getUserData(email, password) ERROR\n" + err.message));
                                 }
 
-                                resolve(results2.affectedRows);
                                 console.log(`UpdateAccountAttributes Email: ${newEmail} : Name: ${name} user account update sent!`);
                                 var subject = 'Updated Account Information';
                                 var html = 
@@ -2123,6 +2123,7 @@ class DbService
                                 const db = DbService.getDbServiceInstance();
                                 db.sendEmail(newEmail, subject, html);
                                 console.log('Account Update Success!');
+                                resolve(results2.affectedRows);
                                 return;
                             });
                         }
@@ -2223,16 +2224,18 @@ class DbService
         return response;
     }
 
-    async customerSupportEmailHelpDesk(userEmail, orderId, description)
+    async customerSupportEmailHelpDesk(account_attributes, order_id, description)
     {
         const response = new Promise((resolve, reject) =>
         {
             try
             {
                 // send to both astromedibles@gmail, and user email
-                var toEmail = `${process.env.AM_USER}, ${userEmail}`;
+                // var toEmail = `${process.env.AM_USER_DEV01}, ${account_attributes.email}`;
+                var toEmail = `${account_attributes.email}`;
 
-                var subject = `[Help Desk] Order: ${orderId}`;
+
+                var subject = `[Help Desk] Order: ${order_id}`;
                 var html = 
                 `
                 <h3>Help Desk Response:</h3>
@@ -2245,13 +2248,126 @@ class DbService
                 
                 // Send email
                 const db = DbService.getDbServiceInstance();
-                db.sendEmail(toEmail, subject, html);
-                resolve(true);
+                var send_email_result = db.sendEmail2(account_attributes, toEmail, subject, html);
+                send_email_result.then((result) => 
+                {
+                    console.table(result);
+                    console.table(result.response);
+                    resolve(result);
+                })
+                .catch((result) =>
+                {
+                    console.log('Email Delivery Failed');
+                    console.log(result);
+                    reject(result);
+                });
 
             } catch (error)
             {
                 reject(error);
             }
+        });
+        return response;
+    }
+
+    /*
+    sendEmail(user_id, toEmail, subject, html, error_email_delivery)
+        try
+            send email
+
+            if error_email_delivery != 0
+                error_email_delivery = 0
+        
+        catch(error)
+            mysql_setEmailDeliveryFalse(user_id)
+        
+        woohoo
+    */
+
+    async sendEmail2(account_attributes, toEmail, subject, html)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            // console.table(account_attributes);
+
+            var transporter = nodemailer.createTransport(
+            {
+                service: 'gmail',
+                auth:
+                {
+                    user: process.env.AM_USER,
+                    pass: process.env.AM_PASSWORD
+                }
+            });
+            
+            var mailOptions =
+            {
+                from:    process.env.AM_USER,
+                to:      toEmail,
+                subject: subject,
+                html:    html
+                // attachments:
+                // [{
+                //     filename: 'header.png',
+                //     path: __dirname +'/public/images/email/header.png', 
+                //     cid: 'header' //same cid value as in the html img src
+                // }]
+            };
+            
+            // console.table([
+            //     ['AM_USER',     process.env.AM_USER],
+            //     ['AM_PASSWORD', process.env.AM_PASSWORD]]);
+            
+            transporter.sendMail(mailOptions, function (error, info)
+            {
+                // if error, set email delivery status on user account to failed (error_email_delivery = 1)
+                if (error)
+                {
+                    // console.log(error);
+                    console.log('Error: 111');
+
+                    const query = "UPDATE " + process.env.TABLE_NAMES + " SET error_email_delivery = ? WHERE id = ?;";
+                    connection.query(query, [1, account_attributes.id], (err, results) =>
+                    {
+                        if (err) 
+                        {
+                            console.log('Error: 222');
+                            console.log('async sendEmail2(account_attributes, toEmail, subject, html) SQL ERROR \n' + err);
+                            reject();
+                        }
+                        else
+                        {
+                            console.log('Rows affected 1:', results.affectedRows);
+                            reject();
+                        }
+                    });
+                }
+                else
+                {
+                    // console.log('Email sent: ' + info.response);
+                    // console.table(info);
+
+
+                    if (account_attributes.error_email_delivery != 0)
+                    {
+                        const query = "UPDATE " + process.env.TABLE_NAMES + " SET error_email_delivery = ? WHERE id = ?;";
+                        connection.query(query, [0, account_attributes.id], (err, results) =>
+                        {
+                            if (err) 
+                            {
+                                console.log('Error: 444');
+                                console.log('async sendEmail2(account_attributes, toEmail, subject, html) SQL ERROR \n' + err);
+                            }
+                            else
+                            {
+                                console.log('Rows affected 2:', results.affectedRows);
+                                results.affectedRows;     // Save SQL changes
+                            }
+                        });
+                    }
+                    resolve(info);
+                }
+            });
         });
         return response;
     }

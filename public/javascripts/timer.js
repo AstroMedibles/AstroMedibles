@@ -18,6 +18,24 @@ document.addEventListener('DOMContentLoaded', function ()
   preorderNavbar2 = document.getElementById('preorderNavbar2');
 
 
+
+
+    // get account attributes
+    var div_account_attributes  = document.getElementById('div_account_attributes');
+    var account_attributes      = JSON.parse(div_account_attributes.getAttribute('data-account_attributes'));
+    // var error_email_delivery    = account_attributes.error_email_delivery;
+
+    // console.table(account_attributes);
+    // console.log(account_attributes.error_email_delivery);
+
+    // if email delivery failure is true
+    // if (error_email_delivery != 0)
+    // {
+    //   $('#errorNavbar').removeAttr('hidden'); 
+    // }
+
+
+  // rewrite this to use accont_attributes
   // get user attributes
   fetch(address + '/getUserData')
   .then(response => response.json())
@@ -64,6 +82,8 @@ document.addEventListener('DOMContentLoaded', function ()
 
 function startTime()
 {
+  $('#preorderNavbar').removeAttr('hidden'); 
+
   var todayDate = new Date();
 
   var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
@@ -147,8 +167,7 @@ function startTime()
 
     preorderTimer.innerHTML =  `Next Sale 🚀 ${d1} days, ${h1} hrs, ${m1} min, ${s1} sec 🚀`;
 
-    $('#preorderNavbar2').removeAttr('hidden'); 
-
+    $('#preorderNavbar2').removeAttr('hidden');
     preorderTimer2.innerHTML =  openForText;
     
     setTimeout(startTime, 500);

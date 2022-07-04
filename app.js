@@ -1,25 +1,24 @@
  
 const cors = require('cors');
-var express = require('express'); 
-var session = require('express-session'); 
-// var bodyParser = require('body-parser'); 
-var path = require('path'); 
-var dotenv = require('dotenv'); 
-dotenv.config(); 
-const cookieParser = require('cookie-parser'); 
-const { Console } = require('console'); 
-const dbService = require('./dbService'); 
+var express = require('express');
+var session = require('express-session');
+// var bodyParser = require('body-parser');
+var path = require('path');
+var dotenv = require('dotenv');
+dotenv.config();
+const cookieParser = require('cookie-parser');
+const dbService = require('./dbService');
 // no cache saving
 const nocache = require('nocache');
 
  
 // express object 
-var app = express(); 
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: false })); 
+var app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
  
 // set public folder as root 
-app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(express.static(path.join(__dirname, 'public')));
  
 // setup Cross-Origin Resource Sharing (CORS) 
 // origin: allow data from anywhere 
@@ -32,7 +31,7 @@ app.use(
 			credentials: true 
 		} 
 	) 
-); 
+);
  
 // session config 
 app.use(session( 
@@ -40,10 +39,10 @@ app.use(session(
 		secret: 'secret', 
 		resave: true, 
 		saveUninitialized: true 
-	})); 
+	}));
  
 // setup cookieparser 
-app.use(cookieParser("MY SECRET")); 
+app.use(cookieParser("MY SECRET"));
 
 // no cache
 app.use(nocache());
@@ -51,13 +50,13 @@ app.use(nocache());
 app.set('etag', false);
 
 // view engine setup 
-app.set('views', path.join(__dirname,'/public/views')); 
-app.set('view engine', 'ejs'); 
+app.set('views', path.join(__dirname,'/public/views'));
+app.set('view engine', 'ejs');
  
 // website root index route  
 app.get('/', function (request, response) 
 { 
-	console.log("\n" + "route(/) "); 
+	console.log("\n" + "route(/) ");
 	// read cookies 
 	// Cookies that have not been signed 
 	console.log("Cookies: ", request.cookies) 
@@ -65,30 +64,34 @@ app.get('/', function (request, response)
 	// Cookies that have been signed 
 	console.log("Signed Cookies: ", request.signedCookies) 
  
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		if (accountAttributes.isAdmin === 1)
+		if (account_attributes.error_email_delivery != 0)
 		{
-			response.redirect('admin'); 
-		} 
+			response.redirect('verification');
+		}
+		else if (account_attributes.isAdmin == 1)
+		{
+			response.redirect('admin');
+		}
 		else 
 		{ 
-			response.redirect('menu'); 
+			response.redirect('menu');
 		}
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
-	}); 
-}); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
  
 // Route to Login Page 
 app.get('/login', (request, response) => 
 { 
-	console.log("\n" + "route(/login)"); 
+	console.log("\n" + "route(/login)");
  
 	// expire the cookies 
 	var options = 
@@ -102,13 +105,20 @@ app.get('/login', (request, response) =>
 	response.cookie('email', "", options) // options is optional 
 	response.cookie('password', "", options) // options is optional 
  
-	response.render('login'); 
+	response.render('login');
+});
+
+// Route to register Page 
+app.get('/register', (request, response) => 
+{ 
+	console.log("\n" + "route(/register)");
+	response.render('register');
 });
 
 // Route to ForgotPassword Page 
 app.get('/forgotPassword', (request, response) => 
 { 
-	console.log("\n" + "route(/forgot-password)"); 
+	console.log("\n" + "route(/forgot-password)");
  
 	// expire the cookies 
 	var options = 
@@ -122,30 +132,67 @@ app.get('/forgotPassword', (request, response) =>
 	response.cookie('email', "", options) // options is optional 
 	response.cookie('password', "", options) // options is optional 
  
-	response.render('forgot-password'); 
+	response.render('forgot-password');
+});
+
+// Route to verification Page 
+app.get('/verification', (request, response) => 
+{ 
+	console.log("\n" + "route(/verification)");
+ 
+	// expire the cookies 
+	var options = 
+	{ 
+		maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
+		httpOnly: false, // The cookie only accessible by the web server 
+		signed: false // Indicates if the cookie should be signed 
+	} 
+ 
+	// Set cookie 
+	response.cookie('email', "", options) // options is optional 
+	response.cookie('password', "", options) // options is optional 
+ 
+	response.render('verification');
 });
 
 // Route to account Page 
 app.get('/account', (request, response) => 
-{ 
-	console.log("\n" + "route(/account) "); 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+{
+	console.log("\n" + "route(/account) ");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		// console.log('accountAttributes');
-		// console.table(accountAttributes);
-
-		response.render('account',
+		if (account_attributes.error_email_delivery != 0)
 		{
-			accountAttributes: accountAttributes
-		});
+			response.redirect('verification');
+		}
+		else
+		{
+			// console.log('account_attributes');
+			// console.table(account_attributes);
+
+			// only send basic attributes
+			account_attributes = 
+			{
+				name: 					account_attributes.name,
+				cart:					account_attributes.cart,
+				cart_points:			account_attributes.cart_points,
+				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+				date_last_visited:		account_attributes.date_last_visited,
+				error_email_delivery:	account_attributes.error_email_delivery
+			};
+			response.render('account',
+			{
+				account_attributes: JSON.stringify(account_attributes)
+			});
+		}
 	})
 	.catch((error) =>
 	{
 		// console.log("route(/account) \tresult.catch()");
-		// console.log("route(/account) \tif loggedIn === false");
+		// console.log("route(/account) \tif loggedIn == false");
 		// console.log(error);
-		response.redirect('/login'); 
+		response.redirect('/login');
 	});
 });
 
@@ -154,15 +201,15 @@ app.get('/account', (request, response) =>
 // app.get('/emailAllUsers', (request, response) => 
 // { 
 // 	console.log("/emailAllUsers");
-// 	var loggedInResponse = checkIfLoggedIn(request); 
-// 	loggedInResponse.then((accountAttributes) => 
+// 	var loggedInResponse = checkIfLoggedIn(request);
+// 	loggedInResponse.then((account_attributes) => 
 // 	{
-// 		console.log("admin(/emailAllUsers) \tresult.then()"); 
-// 		if (accountAttributes.isAdmin === 1) 
+// 		console.log("admin(/emailAllUsers) \tresult.then()");
+// 		if (account_attributes.isAdmin == 1) 
 // 		{ 
 // 			console.log("/emailAllUsers ADMIN TRUE");
-// 			const db = dbService.getDbServiceInstance(); 
-// 			const result = db.adminEmailAllUsers(); 
+// 			const db = dbService.getDbServiceInstance();
+// 			const result = db.adminEmailAllUsers();
 			
 // 			result.then(data =>  
 // 			{ 
@@ -178,9 +225,9 @@ app.get('/account', (request, response) =>
 // 	})
 // 	.catch(() => 
 // 	{
-// 		console.log("route(/emailAllUsers) \tresult.catch()"); 
-// 		console.log("route(/emailAllUsers) \tif loggedIn === false"); 
-// 		response.redirect('/login'); 
+// 		console.log("route(/emailAllUsers) \tresult.catch()");
+// 		console.log("route(/emailAllUsers) \tif loggedIn == false");
+// 		response.redirect('/login');
 // 	});
 // });
 
@@ -208,10 +255,10 @@ app.patch('/forgotPasswordGenerateCode', function(request, response)
 app.patch('/updateAccountAttributes', function(request, response) 
 { 
 	console.log("\n" + "route(/updateAccountAttributes)");
-	const currentEmail 		= request.cookies.email; 
-	const password 			= request.cookies.password; 
+	const currentEmail 		= request.cookies.email;
+	const password 			= request.cookies.password;
 
-	const newEmail 			= request.body.email; 
+	const newEmail 			= request.body.email;
 	const name 				= request.body.name;
 
     console.log(currentEmail);
@@ -220,8 +267,8 @@ app.patch('/updateAccountAttributes', function(request, response)
 	console.log('***');
     console.log(name);
 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.updateAccountAttributes(currentEmail, newEmail, password, name); 
+	const db = dbService.getDbServiceInstance();
+	const result = db.updateAccountAttributes(currentEmail, newEmail, password, name);
  
 	result.then(data =>
 	{
@@ -241,8 +288,8 @@ app.patch('/updateAccountAttributes', function(request, response)
 	})
 	.catch((error) => 
 	{
-		console.log("route(/updateAccountAttributes) \tresult.catch()"); 
-		console.log(error); 
+		console.log("route(/updateAccountAttributes) \tresult.catch()");
+		console.log(error);
 		response.json(error);
 	});
 });
@@ -250,16 +297,16 @@ app.patch('/updateAccountAttributes', function(request, response)
 app.patch('/updatePassword', function(request, response) 
 { 
 	console.log("\n" + "route(/updatePassword)");
-	const email 			= request.body.email; 
-	const password 			= request.body.password; 
-	const verificationCode 	= request.body.verificationCode; 
+	const email 			= request.body.email;
+	const password 			= request.body.password;
+	const verificationCode 	= request.body.verificationCode;
 
     console.log(email);
     console.log(password);
     console.log(verificationCode);
 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.updatePassword(email, password, verificationCode); 
+	const db = dbService.getDbServiceInstance();
+	const result = db.updatePassword(email, password, verificationCode);
  
 	result.then(data =>
 	{
@@ -267,88 +314,110 @@ app.patch('/updatePassword', function(request, response)
 	})
 	.catch((error) => 
 	{
-		console.log("route(/updatePassword) \tresult.catch()"); 
-		console.log(error); 
+		console.log("route(/updatePassword) \tresult.catch()");
+		console.log(error);
 		response.json(false);
 	});
 });
-
-// render 
-app.get('/register', (request, response) => 
-{ 
-	console.log("\n" + "route(/register)"); 
-	response.render('register'); 
-}); 
  
 // render 
 app.get('/menu', function (request, response) 
 { 
-	console.log("\n" + "route(/menu)"); 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	console.log("\n" + "route(/menu)");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		// console.log("accountAttributes.date_lastOrderPlaced");
-		// console.log(accountAttributes.date_lastOrderPlaced);
-
-		// console.log(accountAttributes);
-		// console.table(accountAttributes);
-
-		response.render('menu',
+		if (account_attributes.error_email_delivery != 0)
 		{
-			dlop: accountAttributes.date_lastOrderPlaced,
-			dlov: accountAttributes.date_last_visited
-		});
+			response.redirect('verification');
+		}
+		else
+		{
+			// console.log(account_attributes);
+			// console.table(account_attributes);
+
+			// only send basic attributes
+			account_attributes = 
+			{
+				name: 					account_attributes.name,
+				cart:					account_attributes.cart,
+				cart_points:			account_attributes.cart_points,
+				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+				date_last_visited:		account_attributes.date_last_visited,
+				error_email_delivery:	account_attributes.error_email_delivery
+			};
+			response.render('menu',
+			{
+				account_attributes: JSON.stringify(account_attributes)
+			});
+		}
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/menu) \tresult.catch()"); 
-		console.log("route(/menu) \tif loggedIn === false"); 
-		response.redirect('/login'); 
-	}); 
+		console.log("route(/menu) \tresult.catch()");
+		console.log("route(/menu) \tif loggedIn == false");
+		response.redirect('/login');
+	});
 });
 
 // render 
 // app.get('/rewards', function (request, response) 
 // { 
-// 	console.log("\n" + "route(/rewards)"); 
-// 	var loggedInResponse = checkIfLoggedIn(request); 
-// 	loggedInResponse.then((accountAttributes) => 
+// 	console.log("\n" + "route(/rewards)");
+// 	var loggedInResponse = checkIfLoggedIn(request);
+// 	loggedInResponse.then((account_attributes) => 
 // 	{
-// 		// console.log("accountAttributes.date_lastOrderPlaced");
-// 		// console.log(accountAttributes.date_lastOrderPlaced);
+	// if (account_attributes.error_email_delivery != 0)
+	// {
+	// 	response.redirect('verification');
+	// }
+	// else
+	// {
 
-// 		// console.log(accountAttributes);
-// 		// console.table(accountAttributes);
+	// 		// console.log(account_attributes);
+	// 		// console.table(account_attributes);
 
-// 		response.render('rewards',
-// 		{
-// 			dlop: accountAttributes.date_lastOrderPlaced
-// 		}); 
+
+			// // only send basic attributes
+			// account_attributes = 
+			// {
+			// 	name: 					account_attributes.name,
+			// 	cart:					account_attributes.cart,
+			// 	cart_points:			account_attributes.cart_points,
+			// 	date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+			// 	date_last_visited:		account_attributes.date_last_visited,
+			// 	error_email_delivery:	account_attributes.error_email_delivery
+			// };
+			// response.render('rewards',
+			// {
+			// 	account_attributes: JSON.stringify(account_attributes)
+			// });
+	// }
 // 	})
 // 	.catch(() => 
 // 	{ 
-// 		console.log("route(/rewards) \tresult.catch()"); 
-// 		console.log("route(/rewards) \tif loggedIn === false"); 
-// 		response.redirect('/login'); 
-// 	}); 
+// 		console.log("route(/rewards) \tresult.catch()");
+// 		console.log("route(/rewards) \tif loggedIn == false");
+// 		response.redirect('/login');
+// 	});
 // });
 
 app.post('/auth', function (request, response) 
 { 
-	console.log("\n" + "route(/auth)"); 
+	console.log("\n" + "route(/auth)");
  
 	try 
 	{ 
 		// check  
-		const email = request.body.email; 
-		const password = request.body.password; 
+		const email = request.body.email;
+		const password = request.body.password;
  
-		// console.log("email, password: "); 
-		// console.log(email); 
-		// console.log(password); 
+		// console.log("email, password: ");
+		// console.log(email);
+		// console.log(password);
  
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.getUserData(email, password); 
+		const db = dbService.getDbServiceInstance();
+		const result = db.getUserData(email, password);
 		var loggedIn = false;
 		// console.log(1111);
 		result.then(results => 
@@ -364,14 +433,14 @@ app.post('/auth', function (request, response)
 			response.cookie('email', email, options) // options is optional 
 			response.cookie('password', password, options) // options is optional 
 
-			// console.log("Cookies created: email, password"); 
-			// response.redirect('/menu'); 
-			response.json(true); 
+			// console.log("Cookies created: email, password");
+			// response.redirect('/menu');
+			response.json(true);
  
 		}).catch((dataResult) => 
 		{ 
-			console.log("route(/auth) \tresult.catch()"); 
-			console.log(dataResult); 
+			console.log("route(/auth) \tresult.catch()");
+			console.log(dataResult);
 			var options = 
 			{
 				maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
@@ -382,103 +451,126 @@ app.post('/auth', function (request, response)
 			// Set cookie 
 			response.cookie('email', email, options) // options is optional 
 			response.cookie('password', password, options) // options is optional 
-			response.json(false); 			
-		}); 
+			response.json(false);			
+		});
 	} 
 	catch (error)  
 	{ 
-		console.log("route(/auth) \tError:" + error); 
-		response.redirect('/login'); 
+		console.log("route(/auth) \tError:" + error);
+		response.redirect('/login');
 	}
-}); 
+});
 
 // read 
 app.get('/getMenuData', (request, response) => 
 { 
-	// console.log("\n" + "route(/getMenuData) "); 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.getMenuData(); 
+	// console.log("\n" + "route(/getMenuData) ");
+	const db = dbService.getDbServiceInstance();
+	const result = db.getMenuData();
  
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{ 
 		result.then(data =>  
 		{ 
-			// console.log(data); 
+			// console.log(data);
 			response.json({ data: data });
 		})
-		.catch(err => console.log(err)); 
+		.catch(err => console.log(err));
 	}) 
 	.catch(() => 
 	{ 
-		console.log("route(/getMenuData) \tresult.catch()"); 
-		console.log("route(/getMenuData) \tif loggedIn === false"); 
-		response.redirect('/login'); 
-	}); 
+		console.log("route(/getMenuData) \tresult.catch()");
+		console.log("route(/getMenuData) \tif loggedIn == false");
+		response.redirect('/login');
+	});
 });
 
 // render 
 app.get('/checkout', (request, response) => 
 { 
-	console.log("\n" + "route(/checkout)"); 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
-	{ 
-		response.render('checkout'); 
-	}) 
+	console.log("\n" + "route(/checkout)");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
+	{
+		if (account_attributes.error_email_delivery != 0)
+		{
+			response.redirect('verification');
+		}
+		else
+		{
+			// only send basic attributes
+			account_attributes = 
+			{
+				name: 					account_attributes.name,
+				cart:					account_attributes.cart,
+				cart_points:			account_attributes.cart_points,
+				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+				date_last_visited:		account_attributes.date_last_visited,
+				error_email_delivery:	account_attributes.error_email_delivery
+			};
+			response.render('checkout',
+			{
+				account_attributes: JSON.stringify(account_attributes)
+			});
+		}
+	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
-	}); 
-}); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
  
 // render 
 app.get('/orders', (request, response) => 
 { 
-	console.log("\n" + "route(/orders)"); 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
-	{ 
-		response.render('orders'); 
+	console.log("\n" + "route(/orders)");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
+	{
+		if (account_attributes.error_email_delivery != 0)
+		{
+			response.redirect('verification');
+		}
+		else
+		{
+			// only send basic attributes
+			account_attributes = 
+			{
+				name: 					account_attributes.name,
+				cart:					account_attributes.cart,
+				cart_points:			account_attributes.cart_points,
+				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+				date_last_visited:		account_attributes.date_last_visited,
+				error_email_delivery:	account_attributes.error_email_delivery
+			};
+			response.render('orders',
+			{
+				account_attributes: JSON.stringify(account_attributes)
+			});
+		}
 	}) 
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
-	}); 
-}); 
- 
-// render 
-app.get('/ThankYou', (request, response) => 
-{ 
-	console.log("\n" + "route(/ThankYou)"); 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
-	{ 
-		response.render('ThankYou'); 
-	}) 
-	.catch(() => 
-	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
-	}); 
-}); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
 
 // read 
 app.get('/getUserData', (request, response) => 
 { 
-	// console.log("\n"+ "route(/getUserData) "); 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	// console.log("\n"+ "route(/getUserData) ");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{ 
-		const email = request.cookies.email; 
-		const password = request.cookies.password; 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.getUserData(email, password); 
+		const email = request.cookies.email;
+		const password = request.cookies.password;
+		const db = dbService.getDbServiceInstance();
+		const result = db.getUserData(email, password);
 		result 
 		.then(data =>  
 		{ 
@@ -488,23 +580,23 @@ app.get('/getUserData', (request, response) =>
 	}) 
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
-	}); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
+	});
 });
 
 // read 
 app.get('/getUserOrders', (request, response) => 
 { 
-	// console.log("\n"+ "route(/getUserOrders) "); 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	// console.log("\n"+ "route(/getUserOrders) ");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		const email = request.cookies.email; 
-		const password = request.cookies.password; 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.getUserOrders0(email, password); 
+		const email = request.cookies.email;
+		const password = request.cookies.password;
+		const db = dbService.getDbServiceInstance();
+		const result = db.getUserOrders0(email, password);
 	 
 		result.then(data =>  
 		{ 
@@ -518,25 +610,25 @@ app.get('/getUserOrders', (request, response) =>
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
-	}); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
+	});
 });
 
 // read  
 app.get('/adminGetUserOrders', (request, response) => 
 {
 	console.log("/adminGetUserOrders");
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		console.log("admin(/) \tresult.then()"); 
-		if (accountAttributes.isAdmin === 1) 
+		console.log("admin(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
 		{ 
 			console.log("/adminGetUserOrders ADMIN TRUE");
-			const db = dbService.getDbServiceInstance(); 
-			const result = db.adminGetUserOrders(); 
+			const db = dbService.getDbServiceInstance();
+			const result = db.adminGetUserOrders();
 			
 			result.then(data =>  
 			{ 
@@ -552,9 +644,9 @@ app.get('/adminGetUserOrders', (request, response) =>
 	})
 	.catch(() => 
 	{
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
@@ -562,15 +654,15 @@ app.get('/adminGetUserOrders', (request, response) =>
 app.get('/adminGetUserPickups', (request, response) => 
 {
 	console.log("/adminGetUserPickups");
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		console.log("admin(/) \tresult.then()"); 
-		if (accountAttributes.isAdmin === 1) 
+		console.log("admin(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
 		{ 
 			console.log("/adminGetUserPickups ADMIN TRUE");
-			const db = dbService.getDbServiceInstance(); 
-			const result = db.adminGetUserPickups(); 
+			const db = dbService.getDbServiceInstance();
+			const result = db.adminGetUserPickups();
 			
 			result.then(data =>  
 			{ 
@@ -586,9 +678,9 @@ app.get('/adminGetUserPickups', (request, response) =>
 	})
 	.catch(() => 
 	{
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
@@ -596,13 +688,13 @@ app.get('/adminGetUserPickups', (request, response) =>
 app.patch('/ordersCustomerGetPickupDaysAndTimes', (request, response) => 
 {
 	console.log("/ordersCustomerGetPickupDaysAndTimes");
-	const { customerDate } = request.body; 
+	const { customerDate } = request.body;
 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.ordersCustomerGetPickupDaysAndTimes(customerDate); 
+		const db = dbService.getDbServiceInstance();
+		const result = db.ordersCustomerGetPickupDaysAndTimes(customerDate);
 		
 		result.then(data =>  
 		{
@@ -614,8 +706,8 @@ app.patch('/ordersCustomerGetPickupDaysAndTimes', (request, response) =>
 	})
 	.catch(() => 
 	{
-		console.log("route(/ordersCustomerGetPickupDaysAndTimes) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/ordersCustomerGetPickupDaysAndTimes) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
@@ -623,11 +715,11 @@ app.patch('/ordersCustomerGetPickupDaysAndTimes', (request, response) =>
 app.get('/getPickupAvailabilityDays', (request, response) => 
 {
 	console.log("/getPickupAvailabilityDays");
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.getPickupAvailabilityDays(); 
+		const db = dbService.getDbServiceInstance();
+		const result = db.getPickupAvailabilityDays();
 		
 		result.then(data =>  
 		{
@@ -637,8 +729,8 @@ app.get('/getPickupAvailabilityDays', (request, response) =>
 	})
 	.catch(() => 
 	{
-		console.log("route(/getPickupAvailabilityDays) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/getPickupAvailabilityDays) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
@@ -646,12 +738,12 @@ app.get('/getPickupAvailabilityDays', (request, response) =>
 app.get('/getPickupAvailabilityTimes', (request, response) => 
 {
 	console.log("/getPickupAvailabilityTimes");
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		console.log("admin(/) \tresult.then()"); 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.getPickupAvailabilityTimes(); 
+		console.log("admin(/) \tresult.then()");
+		const db = dbService.getDbServiceInstance();
+		const result = db.getPickupAvailabilityTimes();
 		
 		result.then(data =>  
 		{ 
@@ -662,10 +754,10 @@ app.get('/getPickupAvailabilityTimes', (request, response) =>
 	})
 	.catch((error) => 
 	{
-		console.log("route(/getPickupAvailabilityTimes) \tresult.catch(error)"); 
+		console.log("route(/getPickupAvailabilityTimes) \tresult.catch(error)");
 		console.log(error)
-		console.log("route(/getPickupAvailabilityTimes) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/getPickupAvailabilityTimes) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
@@ -673,15 +765,15 @@ app.get('/getPickupAvailabilityTimes', (request, response) =>
 app.get('/adminGetAccessCodes', (request, response) => 
 {  
 	console.log("/adminGetAccessCodes");
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		console.log("admin(/) \tresult.then()"); 
-		if (accountAttributes.isAdmin === 1) 
+		console.log("admin(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
 		{ 
 			console.log("/adminGetAccessCodes ADMIN TRUE");
-			const db = dbService.getDbServiceInstance(); 
-			const result = db.adminGetAccessCodes(); 
+			const db = dbService.getDbServiceInstance();
+			const result = db.adminGetAccessCodes();
 			
 			result.then(data =>  
 			{
@@ -692,14 +784,14 @@ app.get('/adminGetAccessCodes', (request, response) =>
 		else 
 		{ 
 			console.log("/adminGetAccessCodes ADMIN FALSE");
-			response.end(); 
+			response.end();
 		} 
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
@@ -708,15 +800,15 @@ app.get('/adminGetAccessCodes', (request, response) =>
 app.post('/generateAccessCodes', (request, response) => 
 {  
 	console.log("/generateAccessCodes");
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		console.log("admin(/) \tresult.then()"); 
-		if (accountAttributes.isAdmin === 1) 
+		console.log("admin(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
 		{ 
 			console.log("/generateAccessCodes ADMIN TRUE");
-			const db = dbService.getDbServiceInstance(); 
-			const result = db.generateAccessCodes(10); 
+			const db = dbService.getDbServiceInstance();
+			const result = db.generateAccessCodes(10);
 			
 			result.then(data =>  
 			{
@@ -727,78 +819,139 @@ app.post('/generateAccessCodes', (request, response) =>
 		else 
 		{ 
 			console.log("/generateAccessCodes ADMIN FALSE");
-			response.end(); 
+			response.end();
 		} 
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
  
-// read 
+// render 
 app.get('/admin', (request, response) => 
 { 
-	console.log("\n" + "route(/admin) "); 
+	console.log("\n" + "route(/admin) ");
  
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
-	{ 
-		console.log("admin(/) \tresult.then()"); 
-		if (accountAttributes.isAdmin === 1) 
-		{ 
-			response.render('admin'); 
-		} 
-		else 
-		{ 
-			response.redirect('/'); 
-		} 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
+	{
+		if (account_attributes.error_email_delivery != 0)
+		{
+			response.redirect('verification');
+		}
+		else
+		{
+			console.log("admin(/) \tresult.then()");
+			if (account_attributes.isAdmin == 1) 
+			{ 
+				// only send basic attributes
+				account_attributes = 
+				{
+					name: 					account_attributes.name,
+					cart:					account_attributes.cart,
+					cart_points:			account_attributes.cart_points,
+					date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+					date_last_visited:		account_attributes.date_last_visited,
+					error_email_delivery:	account_attributes.error_email_delivery
+				};
+				response.render('admin',
+				{
+					account_attributes: JSON.stringify(account_attributes)
+				});
+			} 
+			else 
+			{ 
+				response.redirect('/');
+			}
+		}
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
 // read 
 app.get('/help', (request, response) => 
 { 
-	console.log("\n" + "route(/help) "); 
+	console.log("\n" + "route(/help) ");
  
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{ 
-		console.log("help(/) \tresult.then()"); 
-		response.render('help');
+		console.log("help(/) \tresult.then()");
+		if (account_attributes.error_email_delivery != 0)
+		{
+			response.redirect('verification');
+		}
+		else
+		{
+			// only send basic attributes
+			account_attributes = 
+			{
+				name: 					account_attributes.name,
+				cart:					account_attributes.cart,
+				cart_points:			account_attributes.cart_points,
+				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+				date_last_visited:		account_attributes.date_last_visited,
+				error_email_delivery:	account_attributes.error_email_delivery
+			};
+			response.render('help',
+			{
+				account_attributes: JSON.stringify(account_attributes)
+			});
+		}
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
 // read 
 app.get('/feedback', (request, response) => 
 { 
-	console.log("\n" + "route(/feedback) "); 
- 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
-	{ 
-		console.log("feedback(/) \tresult.then()"); 
-		response.render('feedback');
+	console.log("\n" + "route(/feedback) ");
+
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) =>
+	{
+		console.log("feedback(/) \tresult.then()");
+
+		if (account_attributes.error_email_delivery != 0)
+		{
+			response.redirect('verification');
+		}
+		else
+		{
+			// only send basic attributes
+			account_attributes = 
+			{
+				name: 					account_attributes.name,
+				cart:					account_attributes.cart,
+				cart_points:			account_attributes.cart_points,
+				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+				date_last_visited:		account_attributes.date_last_visited,
+				error_email_delivery:	account_attributes.error_email_delivery
+			};
+			response.render('feedback',
+			{
+				account_attributes: JSON.stringify(account_attributes)
+			});
+		}
 	})
-	.catch(() => 
-	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+	.catch(() =>
+	{
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
  
@@ -806,27 +959,27 @@ app.get('/feedback', (request, response) =>
 app.patch('/cartAddItem', (request, response) => 
 {
 	// console.log("\n"+ "route(/cartAddItem) ");
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		const email = request.cookies.email; 
-		const password = request.cookies.password; 
-		const { itemId, itemQty } = request.body; 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.cartAddItem(email, password, itemId, itemQty); 
+		const email = request.cookies.email;
+		const password = request.cookies.password;
+		const { itemId, itemQty } = request.body;
+		const db = dbService.getDbServiceInstance();
+		const result = db.cartAddItem(email, password, itemId, itemQty);
 	 
 		result.then(data => 
 		{ 
-			console.log("\n" + "route(/cartAddItem) \t RESULTS:"); 
-			response.json({ data: data }); 
+			console.log("\n" + "route(/cartAddItem) \t RESULTS:");
+			response.json({ data: data });
 		}) 
 		.catch(err => console.log(err));
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/cartAddItem) \tresult.catch()"); 
-		console.log("route(/cartAddItem) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/cartAddItem) \tresult.catch()");
+		console.log("route(/cartAddItem) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
@@ -834,71 +987,71 @@ app.patch('/cartAddItem', (request, response) =>
 app.patch('/cartSubtractItem', (request, response) => 
 { 
 	// console.log("\n"+ "route(/cartSubtractItem) ");
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		const email = request.cookies.email; 
-		const password = request.cookies.password; 
-		const { itemId, itemQty } = request.body; 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.cartSubtractItem(email, password, itemId, itemQty); 
+		const email = request.cookies.email;
+		const password = request.cookies.password;
+		const { itemId, itemQty } = request.body;
+		const db = dbService.getDbServiceInstance();
+		const result = db.cartSubtractItem(email, password, itemId, itemQty);
 	 
 		result.then(data => 
 		{ 
-			console.log("\n" + "route(/cartSubtractItem) \t RESULTS:"); 
-			response.json({ data: data }); 
+			console.log("\n" + "route(/cartSubtractItem) \t RESULTS:");
+			response.json({ data: data });
 		})
 		.catch(err => console.log(err));
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/cartSubtractItem) \tresult.catch()"); 
-		console.log("route(/cartSubtractItem) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/cartSubtractItem) \tresult.catch()");
+		console.log("route(/cartSubtractItem) \tif loggedIn == false");
+		response.redirect('/login');
 	});
-}); 
+});
 
 // removes all items from cart AND cart_points
 // patch 
 app.patch('/cartRemoveAllItems', (request, response) => 
 {
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{ 
-		// console.log("\n"+ "route(/cartRemoveAllItems) "); 
-		const email = request.cookies.email; 
-		const password = request.cookies.password; 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.cartRemoveAllItems(email, password); 
+		// console.log("\n"+ "route(/cartRemoveAllItems) ");
+		const email = request.cookies.email;
+		const password = request.cookies.password;
+		const db = dbService.getDbServiceInstance();
+		const result = db.cartRemoveAllItems(email, password);
 	
 		result.then(data => 
 		{ 
-			// console.log("\n" + "route(/cartRemoveAllItems) \t RESULTS:"); 
-			response.json({ data: data }); 
+			// console.log("\n" + "route(/cartRemoveAllItems) \t RESULTS:");
+			response.json({ data: data });
 		}) 
-		.catch(err => console.log(err)); 
+		.catch(err => console.log(err));
 	})
 	.catch(() => 
 	{
 		// user is not logged in
-		console.log("route(/cartRemoveAllItems) \tresult.catch()"); 
-		// console.log("route(/cartRemoveAllItems) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/cartRemoveAllItems) \tresult.catch()");
+		// console.log("route(/cartRemoveAllItems) \tif loggedIn == false");
+		response.redirect('/login');
 	});
-}); 
+});
 
 // update 
 app.patch('/setCartPointsData', (request, response) => 
 {
 	// console.log("\n"+ "route(/setCartPointsData) ");
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		const email		= request.cookies.email; 
-		const password	= request.cookies.password; 
+		const email		= request.cookies.email;
+		const password	= request.cookies.password;
 		var { itemId }	= request.body;
 		var itemQty 	= 1;
-		const db = dbService.getDbServiceInstance(); 
+		const db = dbService.getDbServiceInstance();
 
 		// create user cart object
 		var cart = [[itemId, itemQty]];
@@ -908,259 +1061,259 @@ app.patch('/setCartPointsData', (request, response) =>
 		};
 		jsonObject = JSON.stringify(jsonObject);
 
-		const result = db.setCartPointsData(email, password, jsonObject); 
+		const result = db.setCartPointsData(email, password, jsonObject);
 		result.then(data => 
 		{ 
-			// console.log("\n" + "route(/setCartPointsData) \t RESULTS:"); 
-			response.json({ data: data }); 
+			// console.log("\n" + "route(/setCartPointsData) \t RESULTS:");
+			response.json({ data: data });
 		}) 
 		.catch(err => console.log(err));
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/setCartPointsData) \tresult.catch()"); 
-		console.log("route(/setCartPointsData) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/setCartPointsData) \tresult.catch()");
+		console.log("route(/setCartPointsData) \tif loggedIn == false");
+		response.redirect('/login');
 	});
-}); 
+});
 
 // patch 
 app.patch('/cartPointsRemoveAllItems', (request, response) => 
 {
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{ 
-		// console.log("\n"+ "route(/cartPointsRemoveAllItems) "); 
-		const email = request.cookies.email; 
-		const password = request.cookies.password; 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.cartPointsRemoveAllItems(email, password); 
+		// console.log("\n"+ "route(/cartPointsRemoveAllItems) ");
+		const email = request.cookies.email;
+		const password = request.cookies.password;
+		const db = dbService.getDbServiceInstance();
+		const result = db.cartPointsRemoveAllItems(email, password);
 	
 		result.then(data => 
 		{ 
-			// console.log("\n" + "route(/cartPointsRemoveAllItems) \t RESULTS:"); 
-			response.json({ data: data }); 
+			// console.log("\n" + "route(/cartPointsRemoveAllItems) \t RESULTS:");
+			response.json({ data: data });
 		}) 
-		.catch(err => console.log(err)); 
+		.catch(err => console.log(err));
 	})
 	.catch(() => 
 	{
 		// user is not logged in
-		console.log("route(/cartPointsRemoveAllItems) \tresult.catch()"); 
-		// console.log("route(/cartPointsRemoveAllItems) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/cartPointsRemoveAllItems) \tresult.catch()");
+		// console.log("route(/cartPointsRemoveAllItems) \tif loggedIn == false");
+		response.redirect('/login');
 	});
-}); 
+});
 
 // patch 
 app.patch('/cartPointsRemoveAllItems', (request, response) => 
 {
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{ 
-		console.log("\n"+ "route(/cartPointsRemoveAllItems) "); 
-		const email = request.cookies.email; 
-		const password = request.cookies.password; 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.cartPointsRemoveAllItems(email, password); 
+		console.log("\n"+ "route(/cartPointsRemoveAllItems) ");
+		const email = request.cookies.email;
+		const password = request.cookies.password;
+		const db = dbService.getDbServiceInstance();
+		const result = db.cartPointsRemoveAllItems(email, password);
 	
 		result.then(data => 
 		{ 
-			console.log("\n" + "route(/cartPointsRemoveAllItems) \t RESULTS:"); 
-			response.json({ data: data }); 
+			console.log("\n" + "route(/cartPointsRemoveAllItems) \t RESULTS:");
+			response.json({ data: data });
 		}) 
-		.catch(err => console.log(err)); 
+		.catch(err => console.log(err));
 	})
 	.catch(() => 
 	{
 		// user is not logged in
-		console.log("route(/cartPointsRemoveAllItems) \tresult.catch()"); 
-		console.log("route(/cartPointsRemoveAllItems) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/cartPointsRemoveAllItems) \tresult.catch()");
+		console.log("route(/cartPointsRemoveAllItems) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
 app.patch('/update_date_of_last_visit', (request, response) =>
 {
-	console.log("\n"+ "route(/update_date_of_last_visit) "); 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	console.log("\n"+ "route(/update_date_of_last_visit) ");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		console.log("update_date_of_last_visit(/) \tresult.then()"); 
+		console.log("update_date_of_last_visit(/) \tresult.then()");
 
-		const { new_DLOV } = request.body; 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.update_date_of_last_visit(accountAttributes.id, new_DLOV); 
+		const { new_DLOV } = request.body;
+		const db = dbService.getDbServiceInstance();
+		const result = db.update_date_of_last_visit(account_attributes.id, new_DLOV);
 		
 		console.table(request.body);
 		result.then((data) => 
 		{
-			console.log("\n" + "route(/update_date_of_last_visit) \t new_DLOV Update Success:"); 
-			response.json({ data: data }); 
+			console.log("\n" + "route(/update_date_of_last_visit) \t new_DLOV Update Success:");
+			response.json({ data: data });
 		}).catch(err => console.log(err));
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
 
 app.patch('/adminUpdateOrderStatus', (request, response) =>
 {
-	console.log("\n"+ "route(/adminUpdateOrderStatus) "); 
+	console.log("\n"+ "route(/adminUpdateOrderStatus) ");
 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		console.log("adminUpdateOrderStatus(/) \tresult.then()"); 
-		if (accountAttributes.isAdmin === 1) 
+		console.log("adminUpdateOrderStatus(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
 		{
-			const { orderId, status_id, status, user_id } = request.body; 
-			const db = dbService.getDbServiceInstance(); 
-			const result = db.adminUpdateOrderStatus(orderId, status_id, status, user_id); 
+			const { orderId, status_id, status, user_id } = request.body;
+			const db = dbService.getDbServiceInstance();
+			const result = db.adminUpdateOrderStatus(orderId, status_id, status, user_id);
 		 
 			console.table(request.body);
 
 			result.then((data) => 
 			{
-				console.log("\n" + "route(/adminUpdateOrderStatus) \t RESULTS:"); 
-				response.json({ data: data }); 
+				console.log("\n" + "route(/adminUpdateOrderStatus) \t RESULTS:");
+				response.json({ data: data });
 			}).catch(err => console.log(err));
 		} 
 		else 
 		{ 
-			response.end(); 
+			response.end();
 		} 
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
 app.patch('/userUpdateScheduledPickup', (request, response) =>
 {
-	console.log("\n"+ "route(/userUpdateScheduledPickup) "); 
+	console.log("\n"+ "route(/userUpdateScheduledPickup) ");
 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
 		console.log("userUpdateScheduledPickup(/) \tresult.then()");
-		console.log(accountAttributes);
+		console.log(account_attributes);
 
-		const { orderId, dateScheduledPickup, pickupLocation } = request.body; 
+		const { orderId, dateScheduledPickup, pickupLocation } = request.body;
 		const db = dbService.getDbServiceInstance();
-		const result = db.userUpdateScheduledPickup(orderId, dateScheduledPickup, pickupLocation); 
+		const result = db.userUpdateScheduledPickup(orderId, dateScheduledPickup, pickupLocation);
 		
 		result.then((data) => 
 		{ 
-			console.log("\n" + "route(/userUpdateScheduledPickup) \t RESULTS:"); 
-			response.json(true); 
+			console.log("\n" + "route(/userUpdateScheduledPickup) \t RESULTS:");
+			response.json(true);
 		}).catch(err => response.json(false));
 
 	})
 	.catch((error) => 
 	{ 
 		console.log(error);
-		console.log("route(/userUpdateScheduledPickup) \tresult.catch()"); 
-		console.log("route(/userUpdateScheduledPickup) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/userUpdateScheduledPickup) \tresult.catch()");
+		console.log("route(/userUpdateScheduledPickup) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
 app.patch('/adminSetPickupsDays', (request, response) =>
 {
-	console.log("\n"+ "route(/adminSetPickupsDays) "); 
+	console.log("\n"+ "route(/adminSetPickupsDays) ");
 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
 		console.log("adminSetPickupsDays(/) \tresult.then()");
-		console.log(accountAttributes);
-		if (accountAttributes.isAdmin === 1) 
+		console.log(account_attributes);
+		if (account_attributes.isAdmin == 1) 
 		{ 
-			const { available } = request.body; 
-			const db = dbService.getDbServiceInstance(); 
-			const result = db.adminSetPickupsDays(available); 
+			const { available } = request.body;
+			const db = dbService.getDbServiceInstance();
+			const result = db.adminSetPickupsDays(available);
 		 
 			result.then((data) => 
 			{ 
-				console.log("\n" + "route(/adminSetPickupsDays) \t RESULTS:"); 
-				response.json({ data: data }); 
+				console.log("\n" + "route(/adminSetPickupsDays) \t RESULTS:");
+				response.json({ data: data });
 			}).catch(err => console.log(err));
 		} 
 		else 
 		{ 
-			console.log("\n" + "route(/adminSetPickupsDays) \t FAILED, NOT ADMIN:"); 
-			response.end(); 
+			console.log("\n" + "route(/adminSetPickupsDays) \t FAILED, NOT ADMIN:");
+			response.end();
 		} 
 	})
 	.catch((error) => 
 	{ 
 		console.log(error);
-		console.log("route(/adminSetPickupsDays) \tresult.catch()"); 
-		console.log("route(/adminSetPickupsDays) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/adminSetPickupsDays) \tresult.catch()");
+		console.log("route(/adminSetPickupsDays) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
 app.patch('/adminSetPickupsTimes', (request, response) =>
 {
-	console.log("\n"+ "route(/adminSetPickupsTimes) "); 
+	console.log("\n"+ "route(/adminSetPickupsTimes) ");
 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		console.log("adminSetPickupsTimes(/) \tresult.then()"); 
-		if (accountAttributes.isAdmin === 1) 
+		console.log("adminSetPickupsTimes(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
 		{ 
-			const { available } = request.body; 
-			const db = dbService.getDbServiceInstance(); 
-			const result = db.adminSetPickupsTimes(available); 
+			const { available } = request.body;
+			const db = dbService.getDbServiceInstance();
+			const result = db.adminSetPickupsTimes(available);
 		 
 			result.then((data) => 
 			{ 
-				console.log("\n" + "route(/adminSetPickupsTimes) \t RESULTS:"); 
-				response.json({ data: data }); 
+				console.log("\n" + "route(/adminSetPickupsTimes) \t RESULTS:");
+				response.json({ data: data });
 			}).catch(err => console.log(err));
 		} 
 		else 
 		{ 
-			response.end(); 
+			response.end();
 		} 
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/adminSetPickupsTimes) \tresult.catch()"); 
-		console.log("route(/adminSetPickupsTimes) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/adminSetPickupsTimes) \tresult.catch()");
+		console.log("route(/adminSetPickupsTimes) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
  
 // create 
 app.post('/userPlaceOrder', (request, response) =>  
 {
-	console.log("\n" + "route(/userPlaceOrder) "); 
+	console.log("\n" + "route(/userPlaceOrder) ");
 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		const email = request.cookies.email; 
+		const email = request.cookies.email;
 		const password = request.cookies.password;
 	
-		const date = request.body.date; 
+		const date = request.body.date;
 	
 		// console.log(email);
 		// console.log(password);
 		// console.log(request.body);
 	
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.submitUserOrder(email, password, date); 
+		const db = dbService.getDbServiceInstance();
+		const result = db.submitUserOrder(email, password, date);
 		result 
 		.then(() =>  
 		{ 
@@ -1176,25 +1329,25 @@ app.post('/userPlaceOrder', (request, response) =>
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/) \tresult.catch()"); 
-		console.log("route(/) \tif loggedIn === false"); 
-		response.redirect('/login'); 
+		console.log("route(/) \tresult.catch()");
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
  
 // create 
 app.post('/register', (request, response) =>  
 { 
-	console.log("\n" + ".(/register) POST"); 
-	const { name, email, password, code} = request.body; 
-	console.log(request.body); 
-	const db = dbService.getDbServiceInstance(); 
-	const result = db.createUserAccount(name, password, email, code); 
+	console.log("\n" + ".(/register) POST");
+	const { name, email, password, code} = request.body;
+	console.log(request.body);
+	const db = dbService.getDbServiceInstance();
+	const result = db.createUserAccount(name, password, email, code);
  
 	result 
 	.then((result) =>  
 	{ 
-		console.log("\n" + ".then(/register) POST"); 
+		console.log("\n" + ".then(/register) POST");
 
 		var options = 
 		{ 
@@ -1206,43 +1359,43 @@ app.post('/register', (request, response) =>
 		// Set cookie 
 		response.cookie('email', email, options) // options is optional 
 		response.cookie('password', password, options) // options is optional 
-		console.log("Cookies created: name, password"); 
-		response.json(true); 
+		console.log("Cookies created: name, password");
+		response.json(true);
 	}) 
 	.catch(err => // Error: Account could not be created 
 	{ 
-		console.log("/createUserAccount " + "\n" + "Error: Account could not be created"); 
+		console.log("/createUserAccount " + "\n" + "Error: Account could not be created");
 		console.log(err) 
-		response.json(false); 
-	}); 
+		response.json(false);
+	});
 });
 
 app.post('/customerSupportEmailHelpDesk', (request, response) =>
 {
-	console.log("\n" + "route(/customerSupportEmailHelpDesk) "); 
+	console.log("\n" + "route(/customerSupportEmailHelpDesk) ");
 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{ 
-		console.log("customerSupportEmailHelpDesk(/) \tresult.then()"); 
+		console.log("customerSupportEmailHelpDesk(/) \tresult.then()");
 
-		var { orderId, description } = request.body;
+		var { order_id, description } = request.body;
 		var userEmail = request.cookies.email;
 
 		console.log(userEmail);
 		console.log(request.body);
 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.customerSupportEmailHelpDesk(userEmail, orderId, description); 
+		const db = dbService.getDbServiceInstance();
+		const result = db.customerSupportEmailHelpDesk(account_attributes, order_id, description);
 		
 		result.then((result) => 
 		{
-			console.log("\n" + "route(/customerSupportEmailHelpDesk) \t RESULTS: Success"); 
-			response.json(true); 
+			console.log("\n" + "route(/customerSupportEmailHelpDesk) \t RESULTS: Success");
+			response.json(true);
 		})
 		.catch((err) => 
 		{
-			console.log("\n" + "route(/customerSupportEmailHelpDesk) \t CATCH:"); 
+			console.log("\n" + "route(/customerSupportEmailHelpDesk) \t CATCH:");
 			console.log(err);
 			response.json(false);
 		});
@@ -1250,19 +1403,19 @@ app.post('/customerSupportEmailHelpDesk', (request, response) =>
 	.catch(() => 
 	{
 		// user is not logged in
-		console.log("route(/customerSupportEmailHelpDesk) \tresult.catch()"); 
-		response.redirect('/login'); 
+		console.log("route(/customerSupportEmailHelpDesk) \tresult.catch()");
+		response.redirect('/login');
 	});
 });
 
 app.post('/customerSupportEmailFeedback', (request, response) =>
 {
-	console.log("\n" + "route(/customerSupportEmailFeedback) "); 
+	console.log("\n" + "route(/customerSupportEmailFeedback) ");
 
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{ 
-		console.log("customerSupportEmailFeedback(/) \tresult.then()"); 
+		console.log("customerSupportEmailFeedback(/) \tresult.then()");
 
 		var { subject, description } = request.body;
 		var userEmail = request.cookies.email;
@@ -1270,17 +1423,17 @@ app.post('/customerSupportEmailFeedback', (request, response) =>
 		console.log(userEmail);
 		console.log(request.body);
 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.customerSupportEmailFeedback(userEmail, subject, description); 
+		const db = dbService.getDbServiceInstance();
+		const result = db.customerSupportEmailFeedback(userEmail, subject, description);
 		
 		result.then((result) => 
 		{
-			console.log("\n" + "route(/customerSupportEmailFeedback) \t RESULTS: Success"); 
-			response.json(true); 
+			console.log("\n" + "route(/customerSupportEmailFeedback) \t RESULTS: Success");
+			response.json(true);
 		})
 		.catch((err) => 
 		{
-			console.log("\n" + "route(/customerSupportEmailFeedback) \t CATCH:"); 
+			console.log("\n" + "route(/customerSupportEmailFeedback) \t CATCH:");
 			console.log(err);
 			response.json(false);
 		});
@@ -1288,36 +1441,36 @@ app.post('/customerSupportEmailFeedback', (request, response) =>
 	.catch(() => 
 	{
 		// user is not logged in
-		console.log("route(/customerSupportEmailFeedback) \tresult.catch()"); 
-		response.redirect('/login'); 
+		console.log("route(/customerSupportEmailFeedback) \tresult.catch()");
+		response.redirect('/login');
 	});
 });
 
 // delete 
 app.delete('/cancelOrder', (request, response) => 
 {
-	var loggedInResponse = checkIfLoggedIn(request); 
-	loggedInResponse.then((accountAttributes) => 
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{ 
-		// console.log("\n"+ "route(/cartAddItem) "); 
-		const email = request.cookies.email; 
-		const password = request.cookies.password; 
-		const { order_id } = request.body; 
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.cancelOrder(order_id, email, password); 
+		// console.log("\n"+ "route(/cartAddItem) ");
+		const email = request.cookies.email;
+		const password = request.cookies.password;
+		const { order_id } = request.body;
+		const db = dbService.getDbServiceInstance();
+		const result = db.cancelOrder(order_id, email, password);
 	
 		result.then(data => 
 		{ 
-			console.log("\n" + "route(/cancelOrder) \t RESULTS:"); 
-			response.json({ data: data }); 
+			console.log("\n" + "route(/cancelOrder) \t RESULTS:");
+			response.json({ data: data });
 		}) 
-		.catch(err => console.log(err)); 
+		.catch(err => console.log(err));
 	})
 	.catch(() => 
 	{
 		// user is not logged in
-		console.log("route(/cancelOrder) \tresult.catch()"); 
-		response.redirect('/login'); 
+		console.log("route(/cancelOrder) \tresult.catch()");
+		response.redirect('/login');
 	});
 });
  
@@ -1327,38 +1480,38 @@ function checkIfLoggedIn(request)
 { 
 	const response = new Promise((resolve, reject) => 
 	{ 
-		const email = request.cookies.email; 
-		const password = request.cookies.password; 
+		const email = request.cookies.email;
+		const password = request.cookies.password;
  
-		// console.log("email, password: "); 
-		// console.log(email); 
-		// console.log(password); 
+		// console.log("email, password: ");
+		// console.log(email);
+		// console.log(password);
  
 		// no login creds 
 		if (typeof email === 'undefined' || typeof password === 'undefined') 
 		{ 
-			console.log("loggedIn === false"); 
+			console.log("loggedIn == false");
 			reject(false);
-			return; 
+			return;
 		} 
  
-		const db = dbService.getDbServiceInstance(); 
-		const result = db.getUserData(email, password); 
+		const db = dbService.getDbServiceInstance();
+		const result = db.getUserData(email, password);
  
 		result.then((results) => // valid login 
 		{ 
-			// console.log("loggedIn === true");
+			// console.log("loggedIn == true");
 			// console.log(2222);
 			// console.log(results);
 			resolve(results);
 		})
 		.catch(() =>  // invalid login 
 		{ 
-			console.log("loggedIn === false"); 
-			reject(false); 
+			console.log("loggedIn == false");
+			reject(false);
 		});
 	});
-	return response; 
+	return response;
 }
  
  

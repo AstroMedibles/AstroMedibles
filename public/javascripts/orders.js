@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function ()
     ready();
 });
 
-const address = 'https://www.astromedibles.com';
-// const address = 'http://localhost:8080';
+// const address = 'https://www.astromedibles.com';
+const address = 'http://localhost:8080';
 var   avalibleDaysandTimes;
 
 // Update Cart Quantity
@@ -126,7 +126,7 @@ function populateUserOrders()
                 var dataAttributes = `data-order_id="${order_id}" data-status="${status}"`;
 
 
-                if (status === "Payment Required")
+                if (status == "Payment Required")
                 {
                     status = '<a href="https://account.venmo.com/pay?txn=pay&recipients=Astro-Medibles">' + status + '</a>'
                     + '<br>' + '<p>(Include your <b>Order ID</b>)</p>';
@@ -138,7 +138,7 @@ function populateUserOrders()
                     </span>`;
                 }
 
-                if (status === "Ready for Pickup")
+                if (status == "Ready for Pickup")
                 {
                     // drop down days
                     var dropDownDaysText    = 'Select day';  // 'Sunday, Dec 19'
@@ -426,9 +426,9 @@ function dropDownCustomerUpdateOrderStatusDay(event)
 
             console.log('\n\n');
 
-            var isSameDay =   (newDate.getDate()     === elementDay.getDate() 
-                            && newDate.getMonth()    === elementDay.getMonth()
-                            && newDate.getFullYear() === elementDay.getFullYear());
+            var isSameDay =   (newDate.getDate()     == elementDay.getDate() 
+                            && newDate.getMonth()    == elementDay.getMonth()
+                            && newDate.getFullYear() == elementDay.getFullYear());
 
             if (isSameDay)
             {
@@ -445,7 +445,7 @@ function dropDownCustomerUpdateOrderStatusDay(event)
                     console.log('\nlocaleTime_avalibility_datetimeobject');  // [ '12:00 AM', true, '2022-02-25T06:00:00.000Z' ]
                     console.log(localeTime_avalibility_datetimeobject);
                 
-                    if (optionAvalibility === true)
+                    if (optionAvalibility == true)
                     {
                         option = `<button class="dropdown-item" data-choice="${optionLocaleTime}" data-time="${optionDateTimeObject}" onClick="dropDownCustomerUpdateOrderStatusTime(event)">${optionLocaleTime}</button>`;
                     }
@@ -502,12 +502,12 @@ function dropDownCustomerUpdateOrderStatusTime(event)
 
         // get pickup location value
         var pickupLocation = '';
-        if (document.getElementById("radioLocation1").checked === true)
+        if (document.getElementById("radioLocation1").checked == true)
         {
             pickupLocation = 'Lazy Daze';
             
         }
-        else if (document.getElementById("radioLocation2").checked === true)
+        else if (document.getElementById("radioLocation2").checked == true)
         {
             pickupLocation = 'Apartment';
         }
