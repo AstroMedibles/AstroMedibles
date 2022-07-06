@@ -1,5 +1,5 @@
-// const address = 'https://www.astromedibles.com';
-const address = 'http://localhost:8080';
+const address = 'https://www.astromedibles.com';
+// const address = 'http://localhost:8080';
 
 function sendHelp()
 {

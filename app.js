@@ -67,11 +67,7 @@ app.get('/', function (request, response)
 	var loggedInResponse = checkIfLoggedIn(request);
 	loggedInResponse.then((account_attributes) => 
 	{
-		if (account_attributes.error_email_delivery != 0)
-		{
-			response.redirect('verification');
-		}
-		else if (account_attributes.isAdmin == 1)
+		if (account_attributes.isAdmin == 1)
 		{
 			response.redirect('admin');
 		}
@@ -135,24 +131,39 @@ app.get('/forgotPassword', (request, response) =>
 	response.render('forgot-password');
 });
 
-// Route to verification Page 
-app.get('/verification', (request, response) => 
-{ 
-	console.log("\n" + "route(/verification)");
- 
-	// expire the cookies 
-	var options = 
-	{ 
-		maxAge: 1000 * 60 * 0, // Would expire after 0.0 hours  
-		httpOnly: false, // The cookie only accessible by the web server 
-		signed: false // Indicates if the cookie should be signed 
-	} 
- 
-	// Set cookie 
-	response.cookie('email', "", options) // options is optional 
-	response.cookie('password', "", options) // options is optional 
- 
-	response.render('verification');
+// Route to verify Page 
+app.get('/verify', (request, response) => 
+{
+	console.log("\n" + "route(/verify) ");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
+	{
+		// console.log('account_attributes');
+		// console.table(account_attributes);
+
+		// only send basic attributes
+		account_attributes = 
+		{
+			name: 					account_attributes.name,
+			cart:					account_attributes.cart,
+			cart_points:			account_attributes.cart_points,
+			date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+			date_last_visited:		account_attributes.date_last_visited,
+			email_verified:	account_attributes.email_verified
+		};
+		response.render('verify',
+		{
+			account_attributes: JSON.stringify(account_attributes)
+		});
+		
+	})
+	.catch((error) =>
+	{
+		// console.log("route(/verify) \tresult.catch()");
+		// console.log("route(/verify) \tif loggedIn == false");
+		// console.log(error);
+		response.redirect('/login');
+	});
 });
 
 // Route to account Page 
@@ -162,30 +173,24 @@ app.get('/account', (request, response) =>
 	var loggedInResponse = checkIfLoggedIn(request);
 	loggedInResponse.then((account_attributes) => 
 	{
-		if (account_attributes.error_email_delivery != 0)
-		{
-			response.redirect('verification');
-		}
-		else
-		{
-			// console.log('account_attributes');
-			// console.table(account_attributes);
+		// console.log('account_attributes');
+		// console.table(account_attributes);
 
-			// only send basic attributes
-			account_attributes = 
-			{
-				name: 					account_attributes.name,
-				cart:					account_attributes.cart,
-				cart_points:			account_attributes.cart_points,
-				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
-				date_last_visited:		account_attributes.date_last_visited,
-				error_email_delivery:	account_attributes.error_email_delivery
-			};
-			response.render('account',
-			{
-				account_attributes: JSON.stringify(account_attributes)
-			});
-		}
+		// only send basic attributes
+		account_attributes = 
+		{
+			name: 					account_attributes.name,
+			cart:					account_attributes.cart,
+			cart_points:			account_attributes.cart_points,
+			date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+			date_last_visited:		account_attributes.date_last_visited,
+			email_verified:	account_attributes.email_verified
+		};
+		response.render('account',
+		{
+			account_attributes: JSON.stringify(account_attributes)
+		});
+		
 	})
 	.catch((error) =>
 	{
@@ -252,45 +257,73 @@ app.patch('/forgotPasswordGenerateCode', function(request, response)
 	});
 });
 
+app.patch('/send_verification_code', function(request, response) 
+{ 
+	console.log("\n" + "route(/send_verification_code)");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
+	{
+		const db = dbService.getDbServiceInstance();
+		const result = db.send_verification_code(account_attributes);
+		result.then(data =>
+		{
+			response.json(true);
+		})
+		.catch((error) => 
+		{ 
+			console.log("route(/send_verification_code) \tresult.catch()");
+			console.log(error);
+			response.json(false);
+		});
+
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/send_verification_code) \tresult.catch()");
+		console.log("route(/send_verification_code) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
+
 app.patch('/updateAccountAttributes', function(request, response) 
 { 
 	console.log("\n" + "route(/updateAccountAttributes)");
-	const currentEmail 		= request.cookies.email;
-	const password 			= request.cookies.password;
-
-	const newEmail 			= request.body.email;
-	const name 				= request.body.name;
-
-    console.log(currentEmail);
-	console.log(newEmail);
-    // console.log(password);
-	console.log('***');
-    console.log(name);
-
-	const db = dbService.getDbServiceInstance();
-	const result = db.updateAccountAttributes(currentEmail, newEmail, password, name);
- 
-	result.then(data =>
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
 	{
-		var options = 
-		{ 
-			maxAge: 1000 * 60 * 20160, // Would expire after two weeks (20160 minutes)
-			httpOnly: false, // The cookie only accessible by the web server 
-			signed: false // Indicates if the cookie should be signed 
-		} 
+		const new_email 			= request.body.new_email;
+		const new_name 				= request.body.new_name;
 
-		// Set cookie 
-		response.cookie('email', newEmail, options) // options is optional 
-		response.cookie('password', password, options) // options is optional 
+		const db = dbService.getDbServiceInstance();
+		const result = db.updateAccountAttributes(account_attributes, new_email, new_name);
+	
+		result.then(data =>
+		{
+			var options = 
+			{ 
+				maxAge: 1000 * 60 * 20160, // Would expire after two weeks (20160 minutes)
+				httpOnly: false, // The cookie only accessible by the web server 
+				signed: false // Indicates if the cookie should be signed 
+			} 
 
-		// response
-		response.json(true);
+			// Set cookie 
+			response.cookie('email', new_email, options) // options is optional 
+
+			// response
+			response.json(true);
+		})
+		.catch((error) => 
+		{
+			console.log("route(/updateAccountAttributes) \tresult.catch()");
+			console.log(error);
+			response.json(error);
+		});
 	})
-	.catch((error) => 
-	{
+	.catch(() => 
+	{ 
 		console.log("route(/updateAccountAttributes) \tresult.catch()");
-		console.log(error);
-		response.json(error);
+		console.log("route(/updateAccountAttributes) \tif loggedIn == false");
+		response.redirect('/login');
 	});
 });
 
@@ -319,6 +352,38 @@ app.patch('/updatePassword', function(request, response)
 		response.json(false);
 	});
 });
+
+app.patch('/submit_verification_code', function(request, response) 
+{ 
+	console.log("\n" + "route(/submit_verification_code)");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
+	{
+		const verification_code = request.body.verification_code;
+
+		const db = dbService.getDbServiceInstance();
+		const result = db.submit_verification_code(account_attributes, verification_code);
+	
+		result.then(data =>
+		{
+			response.json(true);
+		})
+		.catch((error) => 
+		{
+			console.log("route(/submit_verification_code) \tresult.catch()");
+			console.log(error);
+			response.json(false);
+		});
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/submit_verification_code) \tresult.catch()");
+		console.log("route(/submit_verification_code) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+
+});
+
  
 // render 
 app.get('/menu', function (request, response) 
@@ -327,30 +392,24 @@ app.get('/menu', function (request, response)
 	var loggedInResponse = checkIfLoggedIn(request);
 	loggedInResponse.then((account_attributes) => 
 	{
-		if (account_attributes.error_email_delivery != 0)
-		{
-			response.redirect('verification');
-		}
-		else
-		{
-			// console.log(account_attributes);
-			// console.table(account_attributes);
+		// console.log(account_attributes);
+		// console.table(account_attributes);
 
-			// only send basic attributes
-			account_attributes = 
-			{
-				name: 					account_attributes.name,
-				cart:					account_attributes.cart,
-				cart_points:			account_attributes.cart_points,
-				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
-				date_last_visited:		account_attributes.date_last_visited,
-				error_email_delivery:	account_attributes.error_email_delivery
-			};
-			response.render('menu',
-			{
-				account_attributes: JSON.stringify(account_attributes)
-			});
-		}
+		// only send basic attributes
+		account_attributes = 
+		{
+			name: 					account_attributes.name,
+			cart:					account_attributes.cart,
+			cart_points:			account_attributes.cart_points,
+			date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+			date_last_visited:		account_attributes.date_last_visited,
+			email_verified:	account_attributes.email_verified
+		};
+		response.render('menu',
+		{
+			account_attributes: JSON.stringify(account_attributes)
+		});
+		
 	})
 	.catch(() => 
 	{ 
@@ -367,12 +426,6 @@ app.get('/menu', function (request, response)
 // 	var loggedInResponse = checkIfLoggedIn(request);
 // 	loggedInResponse.then((account_attributes) => 
 // 	{
-	// if (account_attributes.error_email_delivery != 0)
-	// {
-	// 	response.redirect('verification');
-	// }
-	// else
-	// {
 
 	// 		// console.log(account_attributes);
 	// 		// console.table(account_attributes);
@@ -386,13 +439,12 @@ app.get('/menu', function (request, response)
 			// 	cart_points:			account_attributes.cart_points,
 			// 	date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
 			// 	date_last_visited:		account_attributes.date_last_visited,
-			// 	error_email_delivery:	account_attributes.error_email_delivery
+			// 	email_verified:	account_attributes.email_verified
 			// };
 			// response.render('rewards',
 			// {
 			// 	account_attributes: JSON.stringify(account_attributes)
 			// });
-	// }
 // 	})
 // 	.catch(() => 
 // 	{ 
@@ -493,27 +545,21 @@ app.get('/checkout', (request, response) =>
 	var loggedInResponse = checkIfLoggedIn(request);
 	loggedInResponse.then((account_attributes) => 
 	{
-		if (account_attributes.error_email_delivery != 0)
+		// only send basic attributes
+		account_attributes = 
 		{
-			response.redirect('verification');
-		}
-		else
+			name: 					account_attributes.name,
+			cart:					account_attributes.cart,
+			cart_points:			account_attributes.cart_points,
+			date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+			date_last_visited:		account_attributes.date_last_visited,
+			email_verified:	account_attributes.email_verified
+		};
+		response.render('checkout',
 		{
-			// only send basic attributes
-			account_attributes = 
-			{
-				name: 					account_attributes.name,
-				cart:					account_attributes.cart,
-				cart_points:			account_attributes.cart_points,
-				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
-				date_last_visited:		account_attributes.date_last_visited,
-				error_email_delivery:	account_attributes.error_email_delivery
-			};
-			response.render('checkout',
-			{
-				account_attributes: JSON.stringify(account_attributes)
-			});
-		}
+			account_attributes: JSON.stringify(account_attributes)
+		});
+		
 	})
 	.catch(() => 
 	{ 
@@ -530,27 +576,21 @@ app.get('/orders', (request, response) =>
 	var loggedInResponse = checkIfLoggedIn(request);
 	loggedInResponse.then((account_attributes) => 
 	{
-		if (account_attributes.error_email_delivery != 0)
+		// only send basic attributes
+		account_attributes = 
 		{
-			response.redirect('verification');
-		}
-		else
+			name: 					account_attributes.name,
+			cart:					account_attributes.cart,
+			cart_points:			account_attributes.cart_points,
+			date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+			date_last_visited:		account_attributes.date_last_visited,
+			email_verified:	account_attributes.email_verified
+		};
+		response.render('orders',
 		{
-			// only send basic attributes
-			account_attributes = 
-			{
-				name: 					account_attributes.name,
-				cart:					account_attributes.cart,
-				cart_points:			account_attributes.cart_points,
-				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
-				date_last_visited:		account_attributes.date_last_visited,
-				error_email_delivery:	account_attributes.error_email_delivery
-			};
-			response.render('orders',
-			{
-				account_attributes: JSON.stringify(account_attributes)
-			});
-		}
+			account_attributes: JSON.stringify(account_attributes)
+		});
+		
 	}) 
 	.catch(() => 
 	{ 
@@ -838,35 +878,29 @@ app.get('/admin', (request, response) =>
 	var loggedInResponse = checkIfLoggedIn(request);
 	loggedInResponse.then((account_attributes) => 
 	{
-		if (account_attributes.error_email_delivery != 0)
-		{
-			response.redirect('verification');
+		console.log("admin(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
+		{ 
+			// only send basic attributes
+			account_attributes = 
+			{
+				name: 					account_attributes.name,
+				cart:					account_attributes.cart,
+				cart_points:			account_attributes.cart_points,
+				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+				date_last_visited:		account_attributes.date_last_visited,
+				email_verified:	account_attributes.email_verified
+			};
+			response.render('admin',
+			{
+				account_attributes: JSON.stringify(account_attributes)
+			});
+		} 
+		else 
+		{ 
+			response.redirect('/');
 		}
-		else
-		{
-			console.log("admin(/) \tresult.then()");
-			if (account_attributes.isAdmin == 1) 
-			{ 
-				// only send basic attributes
-				account_attributes = 
-				{
-					name: 					account_attributes.name,
-					cart:					account_attributes.cart,
-					cart_points:			account_attributes.cart_points,
-					date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
-					date_last_visited:		account_attributes.date_last_visited,
-					error_email_delivery:	account_attributes.error_email_delivery
-				};
-				response.render('admin',
-				{
-					account_attributes: JSON.stringify(account_attributes)
-				});
-			} 
-			else 
-			{ 
-				response.redirect('/');
-			}
-		}
+		
 	})
 	.catch(() => 
 	{ 
@@ -885,27 +919,21 @@ app.get('/help', (request, response) =>
 	loggedInResponse.then((account_attributes) => 
 	{ 
 		console.log("help(/) \tresult.then()");
-		if (account_attributes.error_email_delivery != 0)
+		// only send basic attributes
+		account_attributes = 
 		{
-			response.redirect('verification');
-		}
-		else
+			name: 					account_attributes.name,
+			cart:					account_attributes.cart,
+			cart_points:			account_attributes.cart_points,
+			date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+			date_last_visited:		account_attributes.date_last_visited,
+			email_verified:	account_attributes.email_verified
+		};
+		response.render('help',
 		{
-			// only send basic attributes
-			account_attributes = 
-			{
-				name: 					account_attributes.name,
-				cart:					account_attributes.cart,
-				cart_points:			account_attributes.cart_points,
-				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
-				date_last_visited:		account_attributes.date_last_visited,
-				error_email_delivery:	account_attributes.error_email_delivery
-			};
-			response.render('help',
-			{
-				account_attributes: JSON.stringify(account_attributes)
-			});
-		}
+			account_attributes: JSON.stringify(account_attributes)
+		});
+		
 	})
 	.catch(() => 
 	{ 
@@ -925,27 +953,21 @@ app.get('/feedback', (request, response) =>
 	{
 		console.log("feedback(/) \tresult.then()");
 
-		if (account_attributes.error_email_delivery != 0)
+		// only send basic attributes
+		account_attributes = 
 		{
-			response.redirect('verification');
-		}
-		else
+			name: 					account_attributes.name,
+			cart:					account_attributes.cart,
+			cart_points:			account_attributes.cart_points,
+			date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
+			date_last_visited:		account_attributes.date_last_visited,
+			email_verified:	account_attributes.email_verified
+		};
+		response.render('feedback',
 		{
-			// only send basic attributes
-			account_attributes = 
-			{
-				name: 					account_attributes.name,
-				cart:					account_attributes.cart,
-				cart_points:			account_attributes.cart_points,
-				date_lastOrderPlaced:	account_attributes.date_lastOrderPlaced,
-				date_last_visited:		account_attributes.date_last_visited,
-				error_email_delivery:	account_attributes.error_email_delivery
-			};
-			response.render('feedback',
-			{
-				account_attributes: JSON.stringify(account_attributes)
-			});
-		}
+			account_attributes: JSON.stringify(account_attributes)
+		});
+		
 	})
 	.catch(() =>
 	{
@@ -1380,10 +1402,6 @@ app.post('/customerSupportEmailHelpDesk', (request, response) =>
 		console.log("customerSupportEmailHelpDesk(/) \tresult.then()");
 
 		var { order_id, description } = request.body;
-		var userEmail = request.cookies.email;
-
-		console.log(userEmail);
-		console.log(request.body);
 
 		const db = dbService.getDbServiceInstance();
 		const result = db.customerSupportEmailHelpDesk(account_attributes, order_id, description);
@@ -1420,11 +1438,8 @@ app.post('/customerSupportEmailFeedback', (request, response) =>
 		var { subject, description } = request.body;
 		var userEmail = request.cookies.email;
 
-		console.log(userEmail);
-		console.log(request.body);
-
 		const db = dbService.getDbServiceInstance();
-		const result = db.customerSupportEmailFeedback(userEmail, subject, description);
+		const result = db.customerSupportEmailFeedback(account_attributes, subject, description);
 		
 		result.then((result) => 
 		{

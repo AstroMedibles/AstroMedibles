@@ -3,36 +3,33 @@ var preorderTimer2, preorderNavbar2;
 
 var notifcationOrderPlacedSentAlready = false;
 
-var startDate = new Date('2022-06-27T05:00:00.000Z');
-var endDate   = new Date('2022-06-30T05:00:00.000Z');
+var startDate = new Date('2022-07-05T05:00:00.000Z');
+var endDate   = new Date('2022-07-09T05:00:00.000Z');
 
 var dlop, dlov, date_dlop, date_dlov;
 
 
 document.addEventListener('DOMContentLoaded', function () 
 {
-  preorderTimer  = document.getElementById('preorderTimer');
-  preorderNavbar = document.getElementById('preorderNavbar');
+    preorderTimer  = document.getElementById('preorderTimer');
+    preorderNavbar = document.getElementById('preorderNavbar');
 
-  preorderTimer2  = document.getElementById('preorderTimer2');
-  preorderNavbar2 = document.getElementById('preorderNavbar2');
-
-
-
+    preorderTimer2  = document.getElementById('preorderTimer2');
+    preorderNavbar2 = document.getElementById('preorderNavbar2');
 
     // get account attributes
     var div_account_attributes  = document.getElementById('div_account_attributes');
     var account_attributes      = JSON.parse(div_account_attributes.getAttribute('data-account_attributes'));
-    // var error_email_delivery    = account_attributes.error_email_delivery;
+    var email_verified    = account_attributes.email_verified;
 
     // console.table(account_attributes);
-    // console.log(account_attributes.error_email_delivery);
+    // console.log(account_attributes.email_verified);
 
     // if email delivery failure is true
-    // if (error_email_delivery != 0)
-    // {
-    //   $('#errorNavbar').removeAttr('hidden'); 
-    // }
+    if (email_verified == 0)
+    {
+      $('#errorNavbar').removeAttr('hidden'); 
+    }
 
 
   // rewrite this to use accont_attributes

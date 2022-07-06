@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', function ()
     // get account attributes
     var div_account_attributes  = document.getElementById('div_account_attributes');
     var account_attributes      = JSON.parse(div_account_attributes.getAttribute('data-account_attributes'));
-    var error_email_delivery    = account_attributes.error_email_delivery;
+    var email_verified    = account_attributes.email_verified;
 
     console.table(account_attributes);
-    console.log(account_attributes.error_email_delivery);
+    console.log(account_attributes.email_verified);
 
     // if email delivery failure is true
-    // if (error_email_delivery != 0)
-    if (error_email_delivery == 1000)
+    // if (email_verified != 0)
+    if (email_verified == 1000)
     {
         var modal_title = document.getElementById('modal_title');
         var modal_body = document.getElementById('modal_body');
