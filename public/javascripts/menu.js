@@ -21,9 +21,9 @@ function loadMenuCards(data)
 {
     try
     {
-        if (data.length === 0)
+        if (data.length == 0)
         {
-            // console.log("data.length === 0");
+            // console.log("data.length == 0");
             return;
         }
     } catch (error)

@@ -8,48 +8,55 @@
 
 <body>
 
-  <%- include('./navbar') %>
+    <%- include('./navbar', {account_attributes: account_attributes}); %>
 
-  <main class="page login-page">
-    <section class="clean-block clean-form dark">
-        <div class="container" >
+    <main class="page login-page">
+        <section class="clean-block clean-form dark">
+            <div class="container" >
 
-            <div class="block-heading">
-                <h2 class="text-info">My Account</h2>
-                <p id="directionsLabel">Change your account information here</p>
+                <div class="block-heading">
+                    <h2 class="text-info">My Account</h2>
+                    <p id="directionsLabel">Change your account information here</p>
+                </div>
+
+                <form>
+                    <div id="nameDiv" class="mb-3">
+                        <label class="form-label" for="name">Name</label>
+                        <input  class="form-control item" type="text" id="inputName" maxlength="30" >
+                    </div>
+
+                    <div id="emailDiv" class="mb-3">
+                        <label class="form-label" for="email">Email</label>
+                        <input  class="form-control item" type="email" id="inputEmail" maxlength="100" >
+                        <br>
+                        <button hidden id='button_verify_email' class="btn btn-warning rounded-pill w-100" type="button" onclick="send_verification_code()">Verify Email</button>
+                    </div>
+
+
+                    <br><br>
+                    <a href="/forgotPassword">Forgot password</a>
+
+                    <!-- <div id="birthdayDiv" class="mb-3">
+                        <label class="form-label" for="name">Birthday</label>
+                        <input readonly class="form-control item" type="text" id="inputBirthday">
+                    </div> -->
+                    
+                    <!-- <button disabled id="1"  type="button" class="btn btn-primary rounded-pill w-100 mb-3" onclick="">Change Password</button> -->
+        
+                    <br><br>
+                    <button  id="buttonUpdate"  type="button" class="btn btn-primary rounded-pill w-100" onclick="updateAccountAttributes()">Update</button>
+
+                </form>
+
+                <%- include('./modal') %>
+
             </div>
-
-            <form>
-                <div id="nameDiv" class="mb-3">
-                    <label class="form-label" for="name">Name</label>
-                    <input  class="form-control item" type="text" id="inputName" maxlength="30" >
-                </div>
-
-                <div id="emailDiv" class="mb-3">
-                    <label class="form-label" for="email">Email</label>
-                    <input  class="form-control item" type="email" id="inputEmail" maxlength="100" >
-                </div>
-
-
-                <a href="/forgotPassword">Forgot password</a>
-
-                <!-- <div id="birthdayDiv" class="mb-3">
-                    <label class="form-label" for="name">Birthday</label>
-                    <input readonly class="form-control item" type="text" id="inputBirthday">
-                </div> -->
-                
-                <!-- <button disabled id="1"  type="button" class="btn btn-primary rounded-pill w-100 mb-3" onclick="">Change Password</button> -->
-    
-                <br><br>
-                <button  id="buttonUpdate"  type="button" class="btn btn-primary rounded-pill w-100" onclick="updateAccountAttributes()">Update</button>
-
-            </form>
-        </div>
-    </section>
-</main>
+        </section>
+    </main>
 
 
     <%- include('./footer') %>
-    <script type="text/javascript" src="../javascripts/account.js"></script>
+    <script type="text/javascript" src="../javascripts/account.js?v=1.0.2"></script>
+    <!-- <script type="text/javascript" src="../javascripts/account_email_delivery_popup.js?v=1.0.0"></script> -->
 </body>
 </html>

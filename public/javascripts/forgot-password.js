@@ -9,7 +9,7 @@ togglePasswordButton.addEventListener('click', togglePassword);
 
 function togglePassword()
 {
-    if (passwordInput.type === 'password') {
+    if (passwordInput.type == 'password') {
       passwordInput.type = 'text';
       togglePasswordButton.textContent = 'Hide';
       togglePasswordButton.setAttribute('aria-label',

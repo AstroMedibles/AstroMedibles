@@ -1,5 +1,5 @@
-// const address = 'https://www.astromedibles.com';
-const address = 'http://localhost:8080';
+const address = 'https://www.astromedibles.com';
+// const address = 'http://localhost:8080';
 
 // user points
 var user_points = 0;
@@ -28,9 +28,9 @@ function loadMenuCards(data)
     try
     {
         // console.table(data);
-        if (data.length === 0)
+        if (data.length == 0)
         {
-            console.log("data.length === 0");
+            console.log("data.length == 0");
             return;
         }
     } catch (error)

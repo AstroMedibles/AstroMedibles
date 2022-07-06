@@ -3,21 +3,36 @@ var preorderTimer2, preorderNavbar2;
 
 var notifcationOrderPlacedSentAlready = false;
 
-var startDate = new Date('2022-06-27T05:00:00.000Z');
-var endDate   = new Date('2022-06-30T05:00:00.000Z');
+var startDate = new Date('2022-07-05T05:00:00.000Z');
+var endDate   = new Date('2022-07-09T05:00:00.000Z');
 
 var dlop, dlov, date_dlop, date_dlov;
 
 
 document.addEventListener('DOMContentLoaded', function () 
 {
-  preorderTimer  = document.getElementById('preorderTimer');
-  preorderNavbar = document.getElementById('preorderNavbar');
+    preorderTimer  = document.getElementById('preorderTimer');
+    preorderNavbar = document.getElementById('preorderNavbar');
 
-  preorderTimer2  = document.getElementById('preorderTimer2');
-  preorderNavbar2 = document.getElementById('preorderNavbar2');
+    preorderTimer2  = document.getElementById('preorderTimer2');
+    preorderNavbar2 = document.getElementById('preorderNavbar2');
+
+    // get account attributes
+    var div_account_attributes  = document.getElementById('div_account_attributes');
+    var account_attributes      = JSON.parse(div_account_attributes.getAttribute('data-account_attributes'));
+    var email_verified    = account_attributes.email_verified;
+
+    // console.table(account_attributes);
+    // console.log(account_attributes.email_verified);
+
+    // if email delivery failure is true
+    if (email_verified == 0)
+    {
+      $('#errorNavbar').removeAttr('hidden'); 
+    }
 
 
+  // rewrite this to use accont_attributes
   // get user attributes
   fetch(address + '/getUserData')
   .then(response => response.json())
@@ -64,6 +79,8 @@ document.addEventListener('DOMContentLoaded', function ()
 
 function startTime()
 {
+  $('#preorderNavbar').removeAttr('hidden'); 
+
   var todayDate = new Date();
 
   var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
@@ -147,8 +164,7 @@ function startTime()
 
     preorderTimer.innerHTML =  `Next Sale 🚀 ${d1} days, ${h1} hrs, ${m1} min, ${s1} sec 🚀`;
 
-    $('#preorderNavbar2').removeAttr('hidden'); 
-
+    $('#preorderNavbar2').removeAttr('hidden');
     preorderTimer2.innerHTML =  openForText;
     
     setTimeout(startTime, 500);

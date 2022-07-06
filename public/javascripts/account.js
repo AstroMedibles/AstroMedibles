@@ -8,6 +8,41 @@ const address = 'https://www.astromedibles.com';
 // const address = 'http://localhost:8080';
 
 
+function send_verification_code()
+{
+    // disable button
+    $('#button_send_code').addClass('disabled');
+
+    // generate and email sec code
+    fetch(address + '/send_verification_code',
+    {
+        credentials: "include",
+        method: 'PATCH',
+        headers:
+        {
+            'Content-type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then((data) => 
+    {
+        // Send user to verify page
+        window.location.replace('/verify');
+    }).catch((error => 
+    {
+        console.log("send_verification_code  catch:" + error);
+
+        // Notification
+        const message       =  'Error, could not send'; 
+        const alertType     = 'danger';
+        const iconChoice    = 3;
+        alertNotify(message, alertType, iconChoice, 3);
+
+        // disable button
+        $('#button_send_code').removeClass('disabled');
+    }));
+}
+
 function ready()
 {
     // get cart total
@@ -21,6 +56,21 @@ function ready()
 
         $('#inputName').val(data['data'].name);
         $('#inputEmail').val(data['data'].email);
+
+
+        // get account attributes
+        var div_account_attributes  = document.getElementById('div_account_attributes');
+        var account_attributes      = JSON.parse(div_account_attributes.getAttribute('data-account_attributes'));
+        var email_verified    = account_attributes.email_verified;
+
+        // console.table(account_attributes);
+        // console.log(account_attributes.email_verified);
+
+        // if email is not verified
+        if (email_verified == 0)
+        {
+            $('#button_verify_email').removeAttr('hidden'); 
+        }
 
     });
 }
@@ -90,9 +140,8 @@ function updateAccountAttributes()
         },
         body: JSON.stringify
             ({
-                email: email,
-                password: password,
-                name: name
+                new_email: email,
+                new_name: name
             })
     })
     .then(response => response.json())
@@ -127,7 +176,7 @@ function updateAccountAttributes()
             const message       =  error; 
             const alertType     = 'danger';
             const iconChoice    = 3;
-            alertNotify(message, alertType, iconChoice, 3);
+            alertNotify(message, alertType, iconChoice, 5);
 
             return;
         }

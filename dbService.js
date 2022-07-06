@@ -2,6 +2,7 @@ const CryptoJS = require("crypto-js");
 const dotenv = require('dotenv');
 const mysql = require('mysql2');
 const nodemailer = require('nodemailer');
+const { resolve } = require("path");
 
 
 var instance = null;
@@ -784,7 +785,7 @@ class DbService
                 </p>
                 `;
                 
-                db.sendEmail(userData.email, subject, html);
+                db.sendEmail_old(userData.email, subject, html);
             });
 
 
@@ -869,7 +870,7 @@ class DbService
                                 </p>
                                 `;
                                 
-                                db.sendEmail(email, subject, html);
+                                db.sendEmail_old(email, subject, html);
                                 
                                 console.log('Account Created!');
                                 resolve([result.insertId, result.affectedRows]);
@@ -946,189 +947,11 @@ class DbService
             catch (error)
             {
                 console.log(error);
-                reject();
+                reject(error);
             }
         });
         return response;
     }
-
-    // async adminEmailAllUsers()
-    // {
-    //     const response = new Promise((resolve, reject) =>
-    //     {
-    //         // console.log(order_id);
-    //         const db = DbService.getDbServiceInstance();
-    //         var html;
-
-
-    //         const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " WHERE status_id = ? ORDER BY date_created DESC;";
-    //         const statusID = 3;
-    //         connection.query(sql, [statusID], (error, results) =>
-    //         {
-    //             if (error)
-    //             {
-    //                 reject(err.message);
-    //             }
-    //             else
-    //             {
-    //                 var county1 = 0;
-    //                 var county2 = 0;
-
-    //                 for (let i = 0; i < results.length; i++)
-    //                 {
-
-    //                         // status_id        : results[i].status_id,
-    //                         // status           : results[i].status,
-    //                         // order_id         : results[i].order_id,
-    //                         // name             : results[i].name,
-    //                         // email            : results[i].email,
-    //                         // status           : results[i].status,
-    //                         // cart             : results[i].cart,
-    //                         // total            : results[i].total,
-    //                         // date_created     : results[i].date_created,
-    //                         // pickup_scheduled : results[i].pickup_scheduled
-
-    //                     var subject = `Order ${results[i].order_id}, Status: ${results[i].status}`;
-
-
-    //                     var orderIdEmailSentAlready = 
-    //                     [
-    //                         '9GRST9', 'UOAX57', 'XY9MLE', '2L0F7K', 'J1IREU', '382OB3', '6ACYL5', '6O4TDD',
-    //                         'HDOM3K', '6PCGHT', 'GCYDCY', '4VLIQ1', 'PI9GN8', '2PBTCC', 'IJ4ADO', 'K2JL0S', 
-    //                         'K2GJ8L', '0EHOUX', '29MZKS', 'XJ9EBM', 'C9QFKO','9H2QCI', '3ZN6ZU', 'QYR2ND', 
-    //                         '5R3VU6', 'ZVKZRZ', 'OLTO0E', 
-    //                         'L5R8J2', 'JY2Q7E', 'CNRKIN', 'B3H8BE', 'M9SIAT', 'YOL4YN', 'X9TPVD', '0Z8THE',
-    //                         '8LG00A', 'FFX88Q', 'AG6CHS', '3SWMFY', 'FJYJQ6', '9MUIZA', 'QX5LYT', 'HEJ75H',
-    //                         'KFU5YY', '7HFQ6R', 'LB1V4L', 'BMBL5V'
-    //                     ];
-
-    //                     console.log('Remaining emails to be sent' + (results.length - orderIdEmailSentAlready.length));
-
-
-
-    //                     // console.log('results.order_id: ' + results[i].order_id);
-    //                     // console.log('orderIdEmailSentAlready');
-    //                     // console.log(orderIdEmailSentAlready);
-
-    //                     console.log('county1' + county1);
-    //                     county1 += 1;
-
-    //                     if (orderIdEmailSentAlready.includes(results[i].order_id))
-    //                     {
-    //                         console.log('order_id:' + results[i].order_id + "  SKIPPED");
-    //                         console.log('county2' + county2);
-    //                         county2 += 1;
-    //                         continue;
-    //                     }
-
-    //                     else
-    //                     {
-    //                         if (results[i].status_id === 1) // === 'Payment Required')
-    //                         {
-    //                             // console.log('Status Case: 1');
-        
-                                
-    //                         } else if (results[i].status_id === 2) //(status === 'Preparing Order')
-    //                         {
-    //                             // console.log('Status Case: 2');
-    //                             html = 
-    //                             `
-    //                             <h3>Your Order Status has been updated to ${results[i].status}</h3>
-    //                             <p>
-    //                             This means that we have confirmed your payment, and your order is being prepared.
-    //                             <br>
-    //                             You will recieve a notification once your order status has been updated to 'Ready for Pickup'.
-    //                             <br>
-    //                             When your order is Ready for Pickup, you will be able to select your scheduled pick up day & time. Along with directions and an address.
-    //                             <br>
-    //                             <br>
-    //                             Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
-    //                             <br>
-    //                             <br>
-    //                             This is an automated message.
-    //                             </p>
-    //                             `;
-    //                         } else if (results[i].status_id === 3) //(status === 'Ready for Pickup')
-    //                         {
-    //                             // console.log('Status Case: 3');
-        
-    //                             html = 
-    //                             `
-    //                             <h3>Step 1: Select Pickup Day & Time</h3>
-    //                             <p>
-    //                             First, confirm your pickup time & location at <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a>.
-    //                             <br>
-    //                             After you have selected your confirmed pickup time, follow these directions for pickup.
-    //                             </p>
-    //                             <br>
-    //                             <h3>Step 2: Pickup At Location</h3>
-    //                             <p>
-    //                             <b>Directions for Pickup 77504 (Lazy Daze)</b>
-    //                             <br>
-    //                             <a href="https://goo.gl/maps/yG57sXc9Mt3jaQMr8">4416 Fairmont Pkwy Ste 103, Pasadena, TX 77504</a>
-    //                             <br>
-    //                             Lazy Daze is avalible for pickup anytime within their business hours.
-    //                             <br><br>
-        
-    //                             <b>Directions for Pickup 77598 (Apartment)</b>
-    //                             <br>
-    //                             <a href="https://goo.gl/maps/jQcvTGmZJdWFp3q16">18833 Town Ridge Ln, Webster, TX 77598</a>
-    //                             <br>
-    //                             Do not enter the apartment complex. Please park on the side on the street, closer to Retail Rd. Park on any side of the street.
-    //                             <br>
-    //                             Let me know you have arrived.
-    //                             <br>
-        
-    //                             <br>
-    //                             Message me here: <a href="https://twitter.com/AMedibles">AstroMedibles Twitter</a>
-    //                             <br>
-    //                             <br>
-    //                             Visit <a href="https://www.astromedibles.com/orders">www.astromedibles.com/orders</a> to see your order status.
-    //                             <br>
-    //                             <br>
-    //                             This is an automated message.
-    //                             </p>
-    //                             `;
-        
-        
-    //                         } else if (results[i].status_id === 4) // (status === 'Complete')
-    //                         {
-    //                             // console.log('Status Case: 4');
-    //                             html = 
-    //                             `
-    //                             <p>
-    //                             We confirmed you have picked up your order, and we hope you enjoy! 🚀
-    //                             <br>
-    //                             <b>Thank you for choosing AstroMedibles! 👩‍🚀</b>
-    //                             <br>
-    //                             <br>
-    //                             If you have any concerns, you can ask us at our <a href="https://www.astromedibles.com/help">Help Desk</a>.
-    //                             <br>
-    //                             Or if you just wanted to give some feedback, you can do that at our <a href="https://www.astromedibles.com/feedback">Send Feedback</a> page. 👩
-    //                             <br>
-    //                             <br>
-    //                             This is an automated message.
-    //                             </p>
-    //                             `;
-    //                         }
-    //                         console.table([
-    //                             ['order_id',  results[i].order_id],
-    //                             ['status_id', results[i].status_id],
-    //                             ['name',      results[i].name],
-    //                             ['email',     results[i].email]]
-    //                             );
-    //                             db.sendEmail(results[i].email, subject, html);
-    //                             // console.log(html)
-    //                     }
-
-                        
-    //                 }
-    //             }
-    //             console.log('All Emails Sent');
-    //         });
-    //     });
-    //     return response;
-    // }
 
     async update_date_of_last_visit(user_id, new_DLOV)
     {
@@ -1164,7 +987,7 @@ class DbService
                 ${error.stack}
                 </p>`;
                 const db = DbService.getDbServiceInstance();
-                db.sendEmail(process.env.AM_USER_DEV01, subject, html);
+                db.sendEmail_old(process.env.AM_USER_DEV01, subject, html);
             }
         });
         return response;
@@ -1227,12 +1050,12 @@ class DbService
                                         `;
                     
                     
-                                        if (status === 'Payment Required')
+                                        if (status == 'Payment Required')
                                         {
                                             // console.log('Status Case: 1');
                     
                                             
-                                        } else if (status === 'Preparing Order')
+                                        } else if (status == 'Preparing Order')
                                         {
                                             // console.log('Status Case: 2');
                                             html = 
@@ -1252,7 +1075,7 @@ class DbService
                                             This is an automated message.
                                             </p>
                                             `;
-                                        } else if (status === 'Ready for Pickup')
+                                        } else if (status == 'Ready for Pickup')
                                         {
                                             // console.log('Status Case: 3');
                     
@@ -1295,7 +1118,7 @@ class DbService
                                             `;
                     
                     
-                                        } else if (status === 'Complete')
+                                        } else if (status == 'Complete')
                                         {
                                             // console.log('Status Case: 4');
                                             html = 
@@ -1315,7 +1138,7 @@ class DbService
                                             </p>
                                             `;
                                         }
-                                        db.sendEmail(userEmail, subject, html);
+                                        db.sendEmail_old(userEmail, subject, html);
                                     } catch (error2)
                                     {
                                         // Send Dev Error
@@ -1334,7 +1157,7 @@ class DbService
                                         Tried to search info from user_id: ${user_id}
                                         </p>`;
                                         const db = DbService.getDbServiceInstance();
-                                        db.sendEmail(process.env.AM_USER_DEV01, subject, html);
+                                        db.sendEmail_old(process.env.AM_USER_DEV01, subject, html);
                                     }
                 
                                     resolve(result.affectedRows);
@@ -1343,7 +1166,7 @@ class DbService
                         }
                     });
                 }
-                else // status_id === 0 for delete
+                else // status_id == 0 for delete
                 {
                     const query = "DELETE FROM " + process.env.TABLE_ORDERS + " WHERE (order_id = ?);";
                     connection.query(query, [orderId], (err, result1) =>
@@ -1373,7 +1196,7 @@ class DbService
                 ${error.stack}
                 </p>`;
                 const db = DbService.getDbServiceInstance();
-                db.sendEmail(process.env.AM_USER_DEV01, subject, html);
+                db.sendEmail_old(process.env.AM_USER_DEV01, subject, html);
             }
         });
         return response;
@@ -1430,7 +1253,7 @@ class DbService
                                 </p>
                                 `;
                                 
-                                db.sendEmail(userEmail, subject, html);
+                                db.sendEmail_old(userEmail, subject, html);
 
                                 resolve([result1.affectedRows, result2.affectedRows]);
                             }
@@ -1698,7 +1521,7 @@ class DbService
                         var suggestedDate = new Date(customerDate.getFullYear(), customerDate.getMonth(), customerDate.getDate() + i);
 
                         // if suggested day is not available on admin options, skip
-                        if (pickupDays[suggestedDate.getDay()].available === 0)
+                        if (pickupDays[suggestedDate.getDay()].available == 0)
                         {
                             continue;
                         }
@@ -1711,7 +1534,7 @@ class DbService
                         for (var j = 0; j < pickupTimes.length; j++)
                         {
                             // if suggested time is not available on admin options, skip
-                            if (pickupTimes[j].available === 0)
+                            if (pickupTimes[j].available == 0)
                             {
                                 continue;
                             }
@@ -1815,9 +1638,9 @@ class DbService
                                 // console.log('element2:');
                                 // console.log(element2.toISOString());
 
-                                var isSameDay =   (element1.getDate()     === element2.getDate() 
-                                                && element1.getMonth()    === element2.getMonth()
-                                                && element1.getFullYear() === element2.getFullYear());
+                                var isSameDay =   (element1.getDate()     == element2.getDate() 
+                                                && element1.getMonth()    == element2.getMonth()
+                                                && element1.getFullYear() == element2.getFullYear());
 
                                 if (isSameDay)
                                 {
@@ -1827,7 +1650,7 @@ class DbService
                                         var element3 = avalibleDaysandTimes[i][k]; // [locale string, AvalibleYesOrNo, date]
                                         var element3Date = new Date(element3[2]);
 
-                                        var isSameTime = (element3Date.getHours() === element2.getHours());
+                                        var isSameTime = (element3Date.getHours() == element2.getHours());
 
                                         if (isSameTime)
                                         {
@@ -1911,7 +1734,7 @@ class DbService
                                 // This is an automated message.
                                 // </p>
                                 // `;
-                                // db.sendEmail(userEmail, subject, html);
+                                // db.sendEmail_old(userEmail, subject, html);
                                 resolve(result2.affectedRows);
                             }
                         });
@@ -2058,7 +1881,7 @@ class DbService
                     `;
                     
                     const db = DbService.getDbServiceInstance();
-                    db.sendEmail(email, subject, html);
+                    db.sendEmail_old(email, subject, html);
 
                     resolve(result.affectedRows);
                 }
@@ -2067,84 +1890,112 @@ class DbService
         return response;
     }
 
-    async updateAccountAttributes(currentEmail, newEmail, password, name)
+    async send_verification_code(account_attributes)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            var verification_code  = Math.random().toString(36).toUpperCase().substr(2,8); // Random 8 char alphanumeric - uppercase only
+
+            const query = "UPDATE " + process.env.TABLE_NAMES + " SET verificationCode = ? WHERE id = ?";
+            connection.query(query, [verification_code, account_attributes.id], (err, result) =>
+            {
+                if (err)
+                {
+                    reject(err.message);
+                    return;
+                }
+                else
+                {
+                    if (result.affectedRows <= 0)
+                    {
+                        var error = 'send_verification_code(email) ERROR: Email could not be found.';
+                        reject(error);
+                        return;
+                    }
+
+                    console.log(`send_verification_code Email: ${account_attributes.email} : ${verification_code} verification code sent!`);
+                    var subject = 'Verify Email';
+                    var html = 
+                    `
+                    <h3>Verifcation Code: <b>${verification_code}</b></h3>
+                    <p>
+                    Please enter this code to verify your account.
+                    <br>
+                    This is an automated message.
+                    </p>
+                    `;
+                    
+                    // Send email
+                    const db = DbService.getDbServiceInstance();
+                    var send_email_result = db.sendEmail(account_attributes, subject, html);
+                    send_email_result.then((result) => 
+                    {
+                        // console.table(result);
+                        // console.table(result.response);
+                        resolve(result.affectedRows);
+                    })
+                    .catch((result) =>
+                    {
+                        console.log('Email Delivery Failed');
+                        console.log(result);
+                        reject(result);
+                    });
+                }
+            });
+        });
+        return response;
+    }
+
+    async updateAccountAttributes(account_attributes, new_email, new_name)
     {
         const response = await new Promise((resolve, reject) => 
         {
-            try
-            {
-                currentEmail = currentEmail.toLowerCase();
-                newEmail = newEmail.toLowerCase();
+            new_email = new_email.toLowerCase();
+            var sql_statement, values;
 
-                const query = "SELECT * FROM " + process.env.TABLE_NAMES + " WHERE email = ?";
-                connection.query(query, [currentEmail, password], (err, results) =>
+            console.log('account_attributes.email: ' + account_attributes.email);
+            console.log('new_email: ' + new_email);
+
+            console.log('new_name: ' + new_name);
+
+
+            // if the user sent a new email
+            if (account_attributes.email != new_email)
+            {
+                console.log('case 1');
+                sql_statement = 'UPDATE ' + process.env.TABLE_NAMES + ' SET name = ?, email = ?, email_verified = ? WHERE id = ?;';
+                values = [new_name, new_email, 0, account_attributes.id];
+            }
+            else // if only the name is new
+            {
+                console.log('case 2');
+                sql_statement = 'UPDATE ' + process.env.TABLE_NAMES + ' SET name = ? WHERE id = ?;';
+                values = [new_name, account_attributes.id];
+            }
+
+            connection.query(sql_statement, values, (err, results) =>
+            {
+                if (err) 
                 {
-                    if (err) 
-                    {
-                        reject(new Error("dbService.js updateAccountAttributes(currentEmail, newEmail, password, name) ERROR\n" + err.message));
-                    }
-
-                    if (results.length > 0)
-                    {
-                        var decryptedText = CryptoJS.AES.decrypt(results[0].password, process.env.KEY).toString(CryptoJS.enc.Utf8);
-
-                        // console.log('OriginalText: ' + password);
-                        // console.log('decryptedText: ' + decryptedText);
-
-                        if (password == decryptedText)
-                        {
-                            // console.log('Login success!');
-                            // console.log("results[0]");
-                            // console.log(results[0]);
-                            const id = results[0].id;
-
-                            // console.log(id);
-                            // console.log(name);
-                            // console.log(newEmail);
-                            const query = "UPDATE " + process.env.TABLE_NAMES + " SET name = ?, email = ? WHERE id = ?;";
-                            connection.query(query, [name, newEmail, id], (err, results2) =>
-                            {
-                                if (err) 
-                                {
-                                    reject(new Error("dbService.js getUserData(email, password) ERROR\n" + err.message));
-                                }
-
-                                resolve(results2.affectedRows);
-                                console.log(`UpdateAccountAttributes Email: ${newEmail} : Name: ${name} user account update sent!`);
-                                var subject = 'Updated Account Information';
-                                var html = 
-                                `
-                                <h3>Your account information has been updated at astromedibles.com</b></h3>
-                                <p>
-                                This is an automated message.
-                                </p>
-                                `;
-                                
-                                const db = DbService.getDbServiceInstance();
-                                db.sendEmail(newEmail, subject, html);
-                                console.log('Account Update Success!');
-                                return;
-                            });
-                        }
-                        else
-                        {
-                            reject('Wrong password');
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        reject('Wrong email.');
-                        return;
-                    }
-                });
-            }
-            catch (error)
-            {
-                console.log(error);
-
-                reject(error);
-            }
+                    reject("dbService.js getUserData(email, password) ERROR\n" + err.message);
+                }
+                else
+                {
+                    console.log(`UpdateAccountAttributes Email: ${new_email} : Name: ${new_name} user account update sent!`);
+                    var subject = 'Updated Account Information';
+                    var html = 
+                    `
+                    <h3>Your account information has been updated at astromedibles.com</b></h3>
+                    <p>
+                    This is an automated message.
+                    </p>
+                    `;
+                    
+                    const db = DbService.getDbServiceInstance();
+                    db.sendEmail_old(new_email, subject, html);
+                    resolve(results.affectedRows);
+                }
+            });
         });
         return response;
     }
@@ -2181,7 +2032,7 @@ class DbService
                     </p>
                     `;
                     const db = DbService.getDbServiceInstance();
-                    db.sendEmail(email, subject, html);
+                    db.sendEmail_old(email, subject, html);
                     resolve(result.affectedRows);
                 }
             })
@@ -2189,14 +2040,42 @@ class DbService
         return response;
     }
 
-    async customerSupportEmailFeedback(userEmail, subject, description)
+    async submit_verification_code(account_attributes, verification_code)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+
+            const query = "UPDATE " + process.env.TABLE_NAMES + " SET email_verified = ? WHERE id = ? AND verificationCode = ?;";
+            connection.query(query, [1, account_attributes.id, verification_code], (err, result) =>
+            {
+                if (err)
+                {
+                    console.log(err);
+                    reject(err.message);
+                }
+                else if (result.affectedRows == 0)
+                {
+                    console.log("No record match found");
+                    reject("No record match found");
+                }
+                else
+                {
+                    console.log('account verified!');
+                    resolve(result.affectedRows);
+                }
+            })
+        });
+        return response;
+    }
+
+    async customerSupportEmailFeedback(account_attributes, subject, description)
     {
         const response = new Promise((resolve, reject) =>
         {
             try
             {
                 // send to both astromedibles@gmail, and user email
-                var toEmail = `${process.env.AM_USER}, ${userEmail}`;
+                var toEmail = `${process.env.AM_USER}, ${account_attributes.email}`;
 
                 subject = `[Feedback] ${subject}`;
                 // <img style="width: 700px;" src="cid:header"/>
@@ -2212,7 +2091,7 @@ class DbService
                 
                 // Send email
                 const db = DbService.getDbServiceInstance();
-                db.sendEmail(toEmail, subject, html);
+                db.sendEmail_old(toEmail, subject, html);
                 resolve(true);
 
             } catch (error)
@@ -2223,16 +2102,16 @@ class DbService
         return response;
     }
 
-    async customerSupportEmailHelpDesk(userEmail, orderId, description)
+    async customerSupportEmailHelpDesk(account_attributes, order_id, description)
     {
         const response = new Promise((resolve, reject) =>
         {
             try
             {
                 // send to both astromedibles@gmail, and user email
-                var toEmail = `${process.env.AM_USER}, ${userEmail}`;
+                var toEmail = `${process.env.AM_USER}, ${account_attributes.email}`;
 
-                var subject = `[Help Desk] Order: ${orderId}`;
+                var subject = `[Help Desk] Order: ${order_id}`;
                 var html = 
                 `
                 <h3>Help Desk Response:</h3>
@@ -2245,7 +2124,7 @@ class DbService
                 
                 // Send email
                 const db = DbService.getDbServiceInstance();
-                db.sendEmail(toEmail, subject, html);
+                db.sendEmail_old(toEmail, subject, html);
                 resolve(true);
 
             } catch (error)
@@ -2256,7 +2135,106 @@ class DbService
         return response;
     }
 
-    async sendEmail(toEmail, subject, html)
+    /*
+    sendEmail(user_id, toEmail, subject, html, email_verified)
+        try
+            send email
+
+            if email_verified != 0
+                email_verified = 0
+        
+        catch(error)
+            mysql_setEmailDeliveryFalse(user_id)
+        
+        woohoo
+    */
+
+    async sendEmail(account_attributes, subject, html)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            // console.table(account_attributes);
+
+            var transporter = nodemailer.createTransport(
+            {
+                service: 'gmail',
+                auth:
+                {
+                    user: process.env.AM_USER,
+                    pass: process.env.AM_PASSWORD
+                }
+            });
+            
+            var mailOptions =
+            {
+                from:    process.env.AM_USER,
+                to:      account_attributes.email,
+                subject: subject,
+                html:    html
+                // attachments:
+                // [{
+                //     filename: 'header.png',
+                //     path: __dirname +'/public/images/email/header.png', 
+                //     cid: 'header' //same cid value as in the html img src
+                // }]
+            };
+            
+            transporter.sendMail(mailOptions, function (error, info)
+            {
+                // if error, set email delivery status on user account to failed (email_verified = 1)
+                if (error)
+                {
+                    // console.log(error);
+                    console.log('Error: 111');
+                    reject(error);
+
+                    // const query = "UPDATE " + process.env.TABLE_NAMES + " SET email_verified = ? WHERE id = ?;";
+                    // connection.query(query, [1, account_attributes.id], (err, results) =>
+                    // {
+                    //     if (err) 
+                    //     {
+                    //         console.log('Error: 222');
+                    //         console.log('async sendEmail2(account_attributes, subject, html) SQL ERROR \n' + err);
+                    //         reject();
+                    //     }
+                    //     else
+                    //     {
+                    //         console.log('Rows affected 1:', results.affectedRows);
+                    //         reject();
+                    //     }
+                    // });
+                }
+                else
+                {
+                    // console.log('Email sent: ' + info.response);
+                    // console.table(info);
+
+
+                    // if (account_attributes.email_verified != 0)
+                    // {
+                    //     const query = "UPDATE " + process.env.TABLE_NAMES + " SET email_verified = ? WHERE id = ?;";
+                    //     connection.query(query, [0, account_attributes.id], (err, results) =>
+                    //     {
+                    //         if (err) 
+                    //         {
+                    //             console.log('Error: 444');
+                    //             console.log('async sendEmail2(account_attributes, subject, html) SQL ERROR \n' + err);
+                    //         }
+                    //         else
+                    //         {
+                    //             console.log('Rows affected 2:', results.affectedRows);
+                    //             results.affectedRows;     // Save SQL changes
+                    //         }
+                    //     });
+                    // }
+                    resolve(info);
+                }
+            });
+        });
+        return response;
+    }
+
+    async sendEmail_old(toEmail, subject, html)
     {
         var transporter = nodemailer.createTransport(
         {
