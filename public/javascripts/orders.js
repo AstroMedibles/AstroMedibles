@@ -614,8 +614,6 @@ function buttonCancelOrder(event)
         .then(response => response.json())
         .then(() => 
         {
-            // window.location.href = '/MyOrders'; // might not need?
-
             var parentDiv = button.parentNode.parentNode.parentNode.parentNode.parentNode;
             parentDiv.remove();
             // console.log("cancelOrder(event) complete");
