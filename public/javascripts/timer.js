@@ -3,8 +3,8 @@ var preorderTimer2, preorderNavbar2;
 
 var notifcationOrderPlacedSentAlready = false;
 
-var startDate = new Date('2022-07-06T05:00:00.000Z');
-var endDate   = new Date('2022-07-09T05:00:00.000Z');
+var startDate = new Date('2022-07-14T05:00:00.000Z');
+var endDate   = new Date('2022-07-16T05:00:00.000Z');
 
 var dlop, dlov, date_dlop, date_dlov;
 
@@ -271,17 +271,16 @@ function startTime()
     // console.log('Difference_In_Time: ' + Difference_In_Time / (1000 * 60 * 60));
     // if user logs in less than one hour after sale has ended, place their order
     // else clear their cart
-    if ((Difference_In_Time2 / (1000 * 60 * 60) ) > -1 && $("#cart-quantity").text() != 0)
-    {
-      userPlaceOrder();
-      // console.log('ORDER PLACED AUTOMATICALLY');
-    }
-    else
-    {
+    // if ((Difference_In_Time2 / (1000 * 60 * 60) ) > -1 && $("#cart-quantity").text() != 0)
+    // {
+    //   userPlaceOrder();
+    //   // console.log('ORDER PLACED AUTOMATICALLY');
+    // }
+    // else
+    // {
       cartRemoveAllItems();
-      // console.log('CART EMPTIED AUTOMATICALLY');
-    }
-    // setTimeout(startTime, 500);
+    //    // console.log('CART EMPTIED AUTOMATICALLY');
+    // }
   }
 }
 

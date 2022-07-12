@@ -778,7 +778,7 @@ class DbService
                 ${cartText}
                 Total:  $${total.toFixed(2)}<br>
                 <br>
-                To cancel your order, go to <a href="${address}/MyOrders">My Orders</a>.<br>
+                To cancel your order, go to <a href="${address}/orders">My Orders</a>.<br>
                 After we confirm your payment, your order status will be updated and you will be notified.
                 <br>
                 This is an automated message.

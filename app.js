@@ -9,7 +9,7 @@ dotenv.config();
 const cookieParser = require('cookie-parser');
 const dbService = require('./dbService');
 // no cache saving
-const nocache = require('nocache');
+// const nocache = require('nocache');
 
  
 // express object 
@@ -45,7 +45,7 @@ app.use(session(
 app.use(cookieParser("MY SECRET"));
 
 // no cache
-app.use(nocache());
+// app.use(nocache());
 // no ETag
 app.set('etag', false);
 
