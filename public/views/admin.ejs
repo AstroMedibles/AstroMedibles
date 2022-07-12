@@ -18,20 +18,24 @@
                         <!-- Radio Button Group -->
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
 
-                            <label id="radioOrders" class="btn btn-secondary active">
+                            <label id="radioOrders" class="btn btn-secondary active" style="font-size: .8rem;">
                               <input type="radio" autocomplete="off" onclick="radioOrdersClick()" checked> Orders
                             </label>
 
-                            <label id="radioCodes" class="btn btn-secondary">
+                            <label id="radioCodes" class="btn btn-secondary" style="font-size: .8rem;">
                               <input type="radio" autocomplete="off" onclick="radioCodesClick()"> Codes
                             </label>
 
-                            <label id="radioChart" class="btn btn-secondary">
+                            <label id="radioChart" class="btn btn-secondary" style="font-size: .8rem;">
                                 <input type="radio" autocomplete="off" onclick="radioChartClick()"> Chart
                             </label>
 
-                            <label id="radioPickups" class="btn btn-secondary">
+                            <label id="radioPickups" class="btn btn-secondary" style="font-size: .8rem;">
                                 <input type="radio" autocomplete="off" onclick="radioPickupsClick()"> Pickups
+                            </label>
+
+                            <label id="radio" class="btn btn-secondary" style="font-size: .8rem;">
+                                <input type="radio" autocomplete="off" onclick="radio_sale_click()"> Sale
                             </label>
 
                         </div>
@@ -40,7 +44,7 @@
 
                     <div class="row content">
                         <div class="col-md-12">
-
+                            <!-- ORDERS -->
                             <div id="orders-items-outer" class="items w-100" style="padding: 0px;">
                                 <!-- ORDERS SECTION -->
                                 <div class="product">
@@ -68,7 +72,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+                            <!-- CODES -->
                             <div id="codes-items" class="items w-100" hidden style="padding: 0px;">
 
                                 <!-- CODES -->
@@ -106,7 +110,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <!-- CHART -->
                             <div id="chart-items" class="items w-100" hidden style="padding: 0px;">
 
                                 <!-- CHART -->
@@ -150,7 +154,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <!-- PICKUPS -->
                             <div id="pickups-items" class="items w-100" hidden style="padding: 0px;">
 
                                 <!-- PICKUPS -->
@@ -465,7 +469,42 @@
                                 </div>
 
                             </div>
+                            <!-- SALE -->
+                            <div id="sale-items" class="items w-100" hidden style="padding: 0px;">
+                                <!-- SALE -->
+                                <div class="product">
+                                    <div class="row product-image d-flex justify-content-between align-items-start" style="padding: 15px 0px 15px 0px;">  
+                                        
+                                        <h4 style="text-align: center;">Configure Sale Settings</h4>
+                                        <!-- <p style="text-align: center;">Share these codes with new customers to allow them to create an account</p> -->
+                                                     
+                                        <div class="col-md-6 product-info ">
+                                            <div class="product-specs d-flex flex-column  align-items-center">
 
+                                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                                    <span>Start / End Sale</span>
+                                                    <br>
+                                                    <span class="value">Start sale on 7/19/2020 12:00AM</span>
+                                                </div>
+                                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                                    <button type="button" class="btn btn-primary rounded-pill" onClick="generateAccessCodes()"  >Generate Codes</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 product-info">
+                                            <div class="product-specs d-flex flex-column  align-items-center">
+                                                <div style="padding: 0px 0px 15px 0px; text-align: center;">
+                                                    <span>Menu</span>
+                                                    <br>
+                                                    <textarea readonly class="form-control" id="textarea_menu" rows="10" style="text-align: center;"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
