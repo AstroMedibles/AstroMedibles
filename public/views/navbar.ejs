@@ -1,4 +1,4 @@
-
+<!-- Main Navbar -->
 <nav class="navbar navbar-light navbar-expand-md fixed-top bg-white clean-navbar">
     <div class="container" style="display: flex; flex-direction: row; align-content: normal;">
 
@@ -32,25 +32,34 @@
     </div>
 </nav>
 
-<br><br><br><br>
+<!-- Main Navbar White Space -->
+<div style="height: 5.5rem;"></div>
 
 <div hidden id='div_account_attributes' data-account_attributes="<%= account_attributes %>"></div>
 
-<nav hidden id='preorderNavbar' class="navbar bg-primary navbar-expand-md " style="color: white;  padding: 5px; max-height: 50px;">
+<!-- Birthday -->
+<nav class="navbar bg-success navbar-expand-md " style="color: white;">
+    <div class="container" style="display: flex; justify-content: center;">
+        <h6 style="font-size: .95rem;">🔥🥳 BIRTHDAY SALE DEALS 🥳🔥</h6>
+    </div>
+</nav>
+
+
+<nav hidden id='preorderNavbar' class="navbar bg-primary navbar-expand-md " style="color: white;">
     <div class="container" style="display: flex; justify-content: center;">
         <!-- Pre Order Timer -->
         <h6 style="font-size: .95rem;" id="preorderTimer"></h6>
     </div>
 </nav>
 
-<nav hidden id='preorderNavbar2' class="navbar bg-dark navbar-expand-md " style="color: white;  padding: 5px; max-height: 50px;">
+<nav hidden id='preorderNavbar2' class="navbar bg-dark navbar-expand-md " style="color: white;">
     <div class="container" style="display: flex; justify-content: center;">
         <!-- Pre Order Timer -->
         <h6 style="font-size: .95rem;" id="preorderTimer2"></h6>
     </div>
 </nav>
 
-<nav hidden id='errorNavbar' class="navbar bg-warning navbar-expand-md " style="color: white;  padding: 5px; max-height: 50px;">
+<nav hidden id='errorNavbar' class="navbar bg-warning navbar-expand-md " style="color: white;">
     <div class="container" style="display: flex; justify-content: center;">
         <!-- Error Text -->
         <h6 id="errorTimer" style="font-size: .95rem;"><a style="color:Black;" href="/account">Action Required: Verify Email</a></h6>
@@ -77,6 +86,7 @@
 <style>
     .navbar
     {
-      padding: 5px;
+        padding-top: .5rem;
+        padding-bottom: 0rem;
     }
 </style>
