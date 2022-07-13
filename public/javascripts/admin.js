@@ -1359,5 +1359,12 @@ function ready()
 
 function send_sale_start_end_times()
 {
+    console.table();
+    document.getElementById('input_start_date');
+    document.getElementById('input_start_time');
+    document.getElementById('label_start_result');
 
+    document.getElementById('input_end_date');
+    document.getElementById('input_end_time');
+    document.getElementById('label_end_result');
 }
