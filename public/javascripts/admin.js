@@ -674,8 +674,6 @@ function radioOrdersClick()
     document.getElementById("radioPickups").classList.remove("active"); 
     document.getElementById("radio_sale").classList.remove("active");
 
-
-
     populateUserOrders(); 
 } 
  
@@ -700,10 +698,6 @@ function radioCodesClick()
     .then(response => response.json()) 
     .then((response) => 
     { 
-        // var text =  
-        // [ 
-        //     'Work in Progress \n' 
-        // ] 
         $('#activeAccessCodes').val(response['data']); 
     }) 
     .catch(() => 
@@ -1356,15 +1350,46 @@ function ready()
     } 
 } 
 
-
 function send_sale_start_end_times()
 {
-    console.table();
-    document.getElementById('input_start_date');
-    document.getElementById('input_start_time');
-    document.getElementById('label_start_result');
+    console.table([
+        document.getElementById('input_start_date').value,
+        document.getElementById('input_start_time').value,
+        document.getElementById('label_start_result').innerText
+        ]);
 
-    document.getElementById('input_end_date');
-    document.getElementById('input_end_time');
-    document.getElementById('label_end_result');
+    // console.table([
+    //     document.getElementById('input_end_date').value,
+    //     document.getElementById('input_end_time').value,
+    //     document.getElementById('label_end_result').innerText
+    //     ]);
+
+    var start_date  = new Date();
+    var end_date    = new Date();
+
+    // console.table([
+    //     start_date.toISOString(),
+    //     end_date.toISOString()
+    //     ]);
+
+    console.log('ISO String from Input');
+    console.log(document.getElementById('input_start_date').value + 'T' + document.getElementById('input_start_time').value);
+    console.log();
+    
+    var string_time_split   = document.getElementById('input_start_time').value.split(':');
+    var hour_with_offset    = parseInt(string_time_split[0]) + 5;
+    // console.log('hour_with_offset: ' + hour_with_offset);
+    // var string_new_time     = hour_with_offset + ':' + string_time_split[1];
+
+    var new_date = new Date(document.getElementById('input_start_date').value);
+    new_date.setUTCHours(hour_with_offset);
+    new_date.setUTCMinutes(string_time_split[1]);
+    console.log('ISO String with offset fix');
+    console.log(new_date.toISOString());
+
+    console.log();
+    console.log('Target Date');
+    console.log(new Date().toISOString());
+
+
 }
