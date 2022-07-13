@@ -672,7 +672,10 @@ function radioOrdersClick()
     document.getElementById("radioCodes").classList.remove("active"); 
     document.getElementById("radioChart").classList.remove("active"); 
     document.getElementById("radioPickups").classList.remove("active"); 
- 
+    document.getElementById("radio_sale").classList.remove("active");
+
+
+
     populateUserOrders(); 
 } 
  
@@ -690,7 +693,8 @@ function radioCodesClick()
     document.getElementById("radioOrders").classList.remove("active"); 
     document.getElementById("radioChart").classList.remove("active"); 
     document.getElementById("radioPickups").classList.remove("active"); 
- 
+    document.getElementById("radio_sale").classList.remove("active");
+
  
     fetch(address + '/adminGetAccessCodes') 
     .then(response => response.json()) 
@@ -724,7 +728,10 @@ function radioChartClick()
     document.getElementById("radioOrders").classList.remove("active"); 
     document.getElementById("radioCodes").classList.remove("active"); 
     document.getElementById("radioPickups").classList.remove("active"); 
- 
+    document.getElementById("radio_sale").classList.remove("active");
+
+
+
     // update chart 
     fetch(address + '/adminGetUserOrders') 
     .then(response => response.json()) 
@@ -910,9 +917,11 @@ function radioPickupsClick()
     // set radioChart active 
     document.getElementById("radioPickups").classList.add("active"); 
  
-    document.getElementById("radioOrders").classList.remove("active"); 
-    document.getElementById("radioCodes").classList.remove("active"); 
-    document.getElementById("radioChart").classList.remove("active"); 
+    document.getElementById("radioOrders").classList.remove("active");
+    document.getElementById("radioCodes").classList.remove("active");
+    document.getElementById("radioChart").classList.remove("active");
+    document.getElementById("radio_sale").classList.remove("active");
+
  
     // console.log('/adminGetUserPickups'); 
  
@@ -1072,20 +1081,21 @@ function radioPickupsClick()
  
 function radio_sale_click() 
 { 
-    $('#orders-items-outer').attr('hidden', ''); 
-    $('#codes-items').attr('hidden', ''); 
-    $('#chart-items').attr('hidden', ''); 
-    $('#pickups-items').attr('hidden', ''); 
+    $('#orders-items-outer').attr('hidden', '');
+    $('#codes-items').attr('hidden', '');
+    $('#chart-items').attr('hidden', '');
+    $('#pickups-items').attr('hidden', '');
  
-    $('#sale-items').removeAttr('hidden'); 
+    $('#sale-items').removeAttr('hidden');
  
  
     // set radioOrders active 
-    document.getElementById("radioOrders").classList.add("active"); 
- 
-    document.getElementById("radioCodes").classList.remove("active"); 
-    document.getElementById("radioChart").classList.remove("active"); 
-    document.getElementById("radioPickups").classList.remove("active"); 
+    document.getElementById("radio_sale").classList.add("active");
+
+    document.getElementById("radioOrders").classList.remove("active");
+    document.getElementById("radioCodes").classList.remove("active");
+    document.getElementById("radioChart").classList.remove("active");
+    document.getElementById("radioPickups").classList.remove("active");
  
     populateUserOrders(); 
 } 
@@ -1345,4 +1355,9 @@ function ready()
         console.log(error); 
     } 
 } 
- 
+
+
+function send_sale_start_end_times()
+{
+
+}
