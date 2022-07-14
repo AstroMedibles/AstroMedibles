@@ -1042,8 +1042,7 @@ function radioPickupsClick()
                 checks[i].parentNode.setAttribute("style","font-weight: bold"); 
                 checks[i].checked = true; 
             } 
-        } 
- 
+        }
     }); 
  
     fetch(address + '/getPickupAvailabilityTimes') 
@@ -1074,12 +1073,14 @@ function radioPickupsClick()
 } 
  
 function radio_sale_click() 
-{ 
+{
+    // hide other sections
     $('#orders-items-outer').attr('hidden', '');
     $('#codes-items').attr('hidden', '');
     $('#chart-items').attr('hidden', '');
     $('#pickups-items').attr('hidden', '');
- 
+
+    // show selected section
     $('#sale-items').removeAttr('hidden');
  
  
@@ -1090,8 +1091,27 @@ function radio_sale_click()
     document.getElementById("radioCodes").classList.remove("active");
     document.getElementById("radioChart").classList.remove("active");
     document.getElementById("radioPickups").classList.remove("active");
- 
-    populateUserOrders(); 
+
+    // get, and display config settings
+    fetch(address + '/admin_get_admin_config') 
+    .then(response => response.json()) 
+    .then(data =>   
+    {
+        // console.table(data);
+        
+        // grab inputs
+        var start_date  = new Date(data.sale_start);
+        var end_date    = new Date(data.sale_end);
+
+        // display locale date_time result on Label
+        var locale_options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        var string_result1 = start_date.toLocaleTimeString([], locale_options);
+        var string_result2 = end_date.toLocaleTimeString([], locale_options);
+
+        document.getElementById('label_start_result').innerText = string_result1;
+        document.getElementById('label_end_result').innerText   = string_result2;
+
+    }); 
 } 
  
 function generateAccessCodes() 
@@ -1181,8 +1201,8 @@ function updateDaysSchedule(event)
     }).catch((error =>  
     { 
         console.log("updateDaysSchedule(event)  catch:" + error); 
-    })); 
-} 
+    }));
+}
  
 function updateTimesSchedule(event) 
 { 
@@ -1350,46 +1370,129 @@ function ready()
     } 
 } 
 
-function send_sale_start_end_times()
+// pair with admin_set_sale_times()
+function validate_date_inputs()
 {
-    console.table([
-        document.getElementById('input_start_date').value,
-        document.getElementById('input_start_time').value,
-        document.getElementById('label_start_result').innerText
-        ]);
-
-    // console.table([
-    //     document.getElementById('input_end_date').value,
-    //     document.getElementById('input_end_time').value,
-    //     document.getElementById('label_end_result').innerText
-    //     ]);
-
-    var start_date  = new Date();
-    var end_date    = new Date();
-
-    // console.table([
-    //     start_date.toISOString(),
-    //     end_date.toISOString()
-    //     ]);
-
-    console.log('ISO String from Input');
-    console.log(document.getElementById('input_start_date').value + 'T' + document.getElementById('input_start_time').value);
-    console.log();
+    // console.log(document.getElementById('input_start_date').value);
+    // console.log(document.getElementById('input_end_date').value);
+    // console.log(document.getElementById('input_start_time').value);
+    // console.log(document.getElementById('input_end_time').value);
     
-    var string_time_split   = document.getElementById('input_start_time').value.split(':');
-    var hour_with_offset    = parseInt(string_time_split[0]) + 5;
-    // console.log('hour_with_offset: ' + hour_with_offset);
-    // var string_new_time     = hour_with_offset + ':' + string_time_split[1];
+    
+    // grab inputs
+    var start_date  = new Date(document.getElementById('input_start_date').value);
+    var end_date    = new Date(document.getElementById('input_end_date').value);
+    
+    // console.log(document.getElementById('input_start_date').value);
+    // console.log(document.getElementById('input_start_time').value);
 
-    var new_date = new Date(document.getElementById('input_start_date').value);
-    new_date.setUTCHours(hour_with_offset);
-    new_date.setUTCMinutes(string_time_split[1]);
-    console.log('ISO String with offset fix');
-    console.log(new_date.toISOString());
+    // add timezone offset
+    var string_time_split1   = document.getElementById('input_start_time').value.split(':');
+    var string_time_split2   = document.getElementById('input_end_time').value.split(':');
 
-    console.log();
-    console.log('Target Date');
-    console.log(new Date().toISOString());
+    var hour_with_offset1    = parseInt(string_time_split1[0]) + 5;
+    var hour_with_offset2    = parseInt(string_time_split2[0]) + 5;
+
+    start_date.setUTCHours(hour_with_offset1);
+    start_date.setMinutes(string_time_split1[1]);
+
+    end_date.setUTCHours(hour_with_offset2);
+    end_date.setMinutes(string_time_split2[1]);
+    
+    // case 1 today date is before start date 
+    var Difference_In_Time = start_date.getTime() - end_date.getTime();
+    console.log('Difference_In_Time: ' + Difference_In_Time);
+    if (Difference_In_Time < 0)
+    {
+        console.log(true);
+        // display locale date_time result on Label
+        var locale_options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        var string_result1 = start_date.toLocaleTimeString([], locale_options);
+        var string_result2 = end_date.toLocaleTimeString([], locale_options);
+
+        document.getElementById('label_start_result').innerText = string_result1;
+        document.getElementById('label_end_result').innerText   = string_result2;
+        document.getElementById('button_update_sale_times').disabled = false;
+
+        document.getElementById('label_start_result').style.fontWeight = 'normal';
+        document.getElementById('label_end_result').style.fontWeight   = 'normal';
+    }
+    else
+    {
+        console.log(false);
+        document.getElementById('button_update_sale_times').disabled = true;
+    }
+}
+
+// pair with validate_date_inputs()
+function admin_set_sale_times()
+{
+    if (!confirm('Update Sale Times?')) return;
+
+    // console.table([
+    //     document.getElementById('input_start_date').value,
+    //     document.getElementById('input_start_time').value,
+    //     document.getElementById('label_start_result').innerText
+    //     ]);
+
+    // grab inputs
+    var start_date  = new Date(document.getElementById('input_start_date').value);
+    var end_date    = new Date(document.getElementById('input_end_date').value);
+    
+    console.log(document.getElementById('input_start_date').value);
+    console.log(document.getElementById('input_start_time').value);
+
+    // add timezone offset
+    var string_time_split1   = document.getElementById('input_start_time').value.split(':');
+    var string_time_split2   = document.getElementById('input_end_time').value.split(':');
+
+    var hour_with_offset1    = parseInt(string_time_split1[0]) + 5;
+    var hour_with_offset2    = parseInt(string_time_split2[0]) + 5;
+
+    start_date.setUTCHours(hour_with_offset1);
+    start_date.setMinutes(string_time_split1[1]);
+
+    end_date.setUTCHours(hour_with_offset2);
+    end_date.setMinutes(string_time_split2[1]);
 
 
+    fetch(address + '/admin_set_sale_times', 
+    { 
+        credentials: "include", 
+        method: 'PATCH', 
+        headers: 
+        { 
+            'Content-type': 'application/json' 
+        }, 
+        body: JSON.stringify 
+            ({ 
+                start_date: start_date,
+                end_date:   end_date
+            }) 
+    }) 
+    .then(response => response.json()) 
+    .then((data) =>  
+    {
+        // display locale date_time result on Label
+        var locale_options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        var string_result1 = start_date.toLocaleTimeString([], locale_options);
+        var string_result2 = end_date.toLocaleTimeString([], locale_options);
+
+        document.getElementById('label_start_result').innerText = string_result1;
+        document.getElementById('label_end_result').innerText   = string_result2;
+
+        document.getElementById('label_start_result').style.fontWeight = 'bold';
+        document.getElementById('label_end_result').style.fontWeight   = 'bold';
+
+        // Notification 
+        const message       = `Update Success!`; 
+        const alertType     = 'success'; 
+        const iconChoice    = 2; 
+        const duration      = 3; 
+        alertNotify(message, alertType, iconChoice, duration); 
+
+    }).catch((error =>  
+    { 
+        console.log("admin_set_sale_times()  catch:" + error); 
+    }));
 }

@@ -1265,6 +1265,26 @@ class DbService
         });
     }
     
+    async admin_get_admin_config()
+    {
+        const response = await new Promise((resolve, reject) =>
+        {
+            const sql = "SELECT * FROM " + process.env.TABLE_ADMIN_CONFIG + ";";
+            connection.query(sql, [], (error, results) =>
+            {
+                if (error)
+                {
+                    reject("/admin_get_admin_config ERROR:\n" + error);
+                }
+                else
+                {
+                    resolve(results[0]);
+                }
+            });
+        });
+        return response;
+    }
+
     async adminGetUserOrders()
     {
         const response = await new Promise((resolve, reject) => 
@@ -1395,9 +1415,6 @@ class DbService
                             // skip no pickup_scheduled order
                         }
                     }
-
-                    // console.log('pickups');
-                    // console.log(pickups);
                     resolve(pickups);
                 })
             }
@@ -1845,6 +1862,33 @@ class DbService
         return response;
     }
 
+    async admin_set_sale_times(start_date, end_date)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            try
+            {
+                const query  = "UPDATE " + process.env.TABLE_ADMIN_CONFIG  + " SET `sale_start` = ?, `sale_end` = ? WHERE (`id` = '1');";
+                connection.query(query, [start_date, end_date], (err, results) =>
+                {
+                    if (err)
+                    {
+                        reject(err.message);
+                    }
+                    else
+                    {
+                        resolve(results.affectedRows);
+                    }
+                });
+            }
+            catch (error)
+            {
+                reject('ERROR /admin_set_sale_times() \n' + error);
+            }
+        });
+        return response;
+    }
+
     async forgotPasswordGenerateCode(email)
     {
         const response = new Promise((resolve, reject) =>
@@ -1863,7 +1907,7 @@ class DbService
                 {
                     if (result.affectedRows <= 0)
                     {
-                        var error = 'forgotPasswordGenerateCode(email) ERROR: Email could not be found.';
+                        var error = 'forgotPasswordGenerateCode(email) ERROR: Email could not be found: ' + email;
                         reject(error);
                         return;
                     }
@@ -2184,49 +2228,11 @@ class DbService
                 // if error, set email delivery status on user account to failed (email_verified = 1)
                 if (error)
                 {
-                    // console.log(error);
                     console.log('Error: 111');
                     reject(error);
-
-                    // const query = "UPDATE " + process.env.TABLE_NAMES + " SET email_verified = ? WHERE id = ?;";
-                    // connection.query(query, [1, account_attributes.id], (err, results) =>
-                    // {
-                    //     if (err) 
-                    //     {
-                    //         console.log('Error: 222');
-                    //         console.log('async sendEmail2(account_attributes, subject, html) SQL ERROR \n' + err);
-                    //         reject();
-                    //     }
-                    //     else
-                    //     {
-                    //         console.log('Rows affected 1:', results.affectedRows);
-                    //         reject();
-                    //     }
-                    // });
                 }
                 else
                 {
-                    // console.log('Email sent: ' + info.response);
-                    // console.table(info);
-
-
-                    // if (account_attributes.email_verified != 0)
-                    // {
-                    //     const query = "UPDATE " + process.env.TABLE_NAMES + " SET email_verified = ? WHERE id = ?;";
-                    //     connection.query(query, [0, account_attributes.id], (err, results) =>
-                    //     {
-                    //         if (err) 
-                    //         {
-                    //             console.log('Error: 444');
-                    //             console.log('async sendEmail2(account_attributes, subject, html) SQL ERROR \n' + err);
-                    //         }
-                    //         else
-                    //         {
-                    //             console.log('Rows affected 2:', results.affectedRows);
-                    //             results.affectedRows;     // Save SQL changes
-                    //         }
-                    //     });
-                    // }
                     resolve(info);
                 }
             });

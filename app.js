@@ -691,6 +691,39 @@ app.get('/adminGetUserOrders', (request, response) =>
 });
 
 // read  
+app.get('/admin_get_admin_config', (request, response) => 
+{
+	console.log("/admin_get_admin_config");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) =>
+	{
+		console.log("admin(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
+		{
+			console.log("/admin_get_admin_config ADMIN TRUE");
+			const db = dbService.getDbServiceInstance();
+			const result = db.admin_get_admin_config();
+			
+			result.then(data =>  
+			{
+				response.json(data);
+			})
+			.catch(err => console.log(err));			
+		}
+		else 
+		{
+			console.log("/admin_get_admin_config ADMIN FALSE");
+			response.end();
+		}
+	})
+	.catch(() => 
+	{
+		console.log("route(/) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
+
+// read  
 app.get('/adminGetUserPickups', (request, response) => 
 {
 	console.log("/adminGetUserPickups");
@@ -1311,12 +1344,44 @@ app.patch('/adminSetPickupsTimes', (request, response) =>
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/adminSetPickupsTimes) \tresult.catch()");
 		console.log("route(/adminSetPickupsTimes) \tif loggedIn == false");
 		response.redirect('/login');
 	});
 });
- 
+
+// modify
+app.patch('/admin_set_sale_times', (request, response) =>
+{
+	console.log("\n"+ "route(/admin_set_sale_times) ");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
+	{
+		console.log("admin_set_sale_times(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
+		{ 
+			const { start_date, end_date } = request.body;
+			const db = dbService.getDbServiceInstance();
+			const result = db.admin_set_sale_times(start_date, end_date);
+		 
+			result.then((data) => 
+			{ 
+				console.log("\n" + "route(/admin_set_sale_times) Update Success:");
+				console.table(request.body);
+				response.json(data);
+			}).catch(err => console.log(err));
+		} 
+		else 
+		{ 
+			response.end();
+		} 
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/admin_set_sale_times) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
+
 // create 
 app.post('/userPlaceOrder', (request, response) =>  
 {

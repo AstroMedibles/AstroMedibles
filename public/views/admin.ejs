@@ -482,12 +482,12 @@
                                                     <h5 class="mb-3">Start Sale</h5>
                                                     <div class="input-group mb-3">
                                                         <label style='margin: auto 1rem auto 0px;' >Date</label>
-                                                        <input id='input_start_date' style='margin: auto auto auto 0px;' type="date">
+                                                        <input id='input_start_date' style='margin: auto auto auto 0px;' type="date" autocomplete="off" onchange="validate_date_inputs()" >
                                                     </div>
                                                     <div class="input-group ">
                                                         <label style='margin: auto .90rem auto 0px;' >Time</label>
-                                                        <input id='input_start_time' style='margin: auto auto auto 0px;' type="time">
-                                                        <label id='label_start_result' style='margin: auto 0px auto auto;' >7/15/2022, 12:00AM</label>
+                                                        <input id='input_start_time' style='margin: auto auto auto 0px;' type="time" autocomplete="off" onchange="validate_date_inputs()">
+                                                        <label id='label_start_result' style='margin: auto 0px auto auto;' ></label>
                                                     </div>
                                                 </div>
 
@@ -495,16 +495,16 @@
                                                     <h5 class="mb-3">End Sale</h5>
                                                     <div class="input-group mb-3">
                                                         <label style='margin: auto 1rem auto 0px;' >Date</label>
-                                                        <input id='input_end_date' style='margin: auto auto auto 0px;' type="date">
+                                                        <input id='input_end_date' style='margin: auto auto auto 0px;' type="date" autocomplete="off" onchange="validate_date_inputs()">
                                                     </div>
                                                     <div class="input-group ">
                                                         <label style='margin: auto .90rem auto 0px;' >Time</label>
-                                                        <input id='input_end_time' style='margin: auto auto auto 0px;' type="time">
-                                                        <label id='label_end_result' style='margin: auto 0px auto auto;' >7/15/2022, 12:00AM</label>
+                                                        <input id='input_end_time' style='margin: auto auto auto 0px;' type="time" autocomplete="off" onchange="validate_date_inputs()">
+                                                        <label id='label_end_result' style='margin: auto 0px auto auto;' ></label>
                                                     </div>
                                                 </div>
 
-                                                <button type="button" class="btn btn-primary" onclick="send_sale_start_end_times()">Set Sale</button>
+                                                <button id='button_update_sale_times' type="button" class="btn btn-primary" disabled onclick="admin_set_sale_times()">Update Sale Times</button>
                                         </div>
                                     </div>
                                 </div>
