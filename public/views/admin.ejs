@@ -16,7 +16,7 @@
                         <h2 class="text-info">Admin Panel</h2>
 
                         <!-- Radio Button Group -->
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
 
                             <label id="radioOrders" class="btn btn-secondary active">
                               <input type="radio" autocomplete="off" onclick="radioOrdersClick()" checked> Orders
@@ -34,13 +34,16 @@
                                 <input type="radio" autocomplete="off" onclick="radioPickupsClick()"> Pickups
                             </label>
 
-                        </div>
+                            <label id="radio_sale" class="btn btn-secondary">
+                                <input type="radio" autocomplete="off" onclick="radio_sale_click()"> Sale
+                            </label>
 
+                        </div>
                     </div>
 
                     <div class="row content">
                         <div class="col-md-12">
-
+                            <!-- ORDERS -->
                             <div id="orders-items-outer" class="items w-100" style="padding: 0px;">
                                 <!-- ORDERS SECTION -->
                                 <div class="product">
@@ -68,7 +71,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+                            <!-- CODES -->
                             <div id="codes-items" class="items w-100" hidden style="padding: 0px;">
 
                                 <!-- CODES -->
@@ -106,7 +109,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <!-- CHART -->
                             <div id="chart-items" class="items w-100" hidden style="padding: 0px;">
 
                                 <!-- CHART -->
@@ -150,7 +153,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <!-- PICKUPS -->
                             <div id="pickups-items" class="items w-100" hidden style="padding: 0px;">
 
                                 <!-- PICKUPS -->
@@ -465,7 +468,47 @@
                                 </div>
 
                             </div>
+                            <!-- SALE -->
+                            <div id="sale-items" class="items w-100" hidden style="padding: 0px;">
+                                <!-- SALE -->
+                                <div class="product">
+                                    <div class="row product-image d-flex justify-content-between align-items-start" style="padding: 15px 0px 15px 0px;">  
+                                        <!--- Start / End Sale Div -->
+                                        <h4 class='mb-5' style="text-align: center;">Configure Sale Settings</h4>
+                                        <div style="max-width: 500px; margin: auto;">
+                                            <div style='border: 2px solid #f0f0f0; padding: 15px;'>
 
+                                                <div class="mb-3">
+                                                    <h5 class="mb-3">Start Sale</h5>
+                                                    <div class="input-group mb-3">
+                                                        <label style='margin: auto 1rem auto 0px;' >Date</label>
+                                                        <input id='input_start_date' style='margin: auto auto auto 0px;' type="date" autocomplete="off" onchange="validate_date_inputs()" >
+                                                    </div>
+                                                    <div class="input-group ">
+                                                        <label style='margin: auto .90rem auto 0px;' >Time</label>
+                                                        <input id='input_start_time' style='margin: auto auto auto 0px;' type="time" autocomplete="off" onchange="validate_date_inputs()">
+                                                        <label id='label_start_result' style='margin: auto 0px auto auto;' ></label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <h5 class="mb-3">End Sale</h5>
+                                                    <div class="input-group mb-3">
+                                                        <label style='margin: auto 1rem auto 0px;' >Date</label>
+                                                        <input id='input_end_date' style='margin: auto auto auto 0px;' type="date" autocomplete="off" onchange="validate_date_inputs()">
+                                                    </div>
+                                                    <div class="input-group ">
+                                                        <label style='margin: auto .90rem auto 0px;' >Time</label>
+                                                        <input id='input_end_time' style='margin: auto auto auto 0px;' type="time" autocomplete="off" onchange="validate_date_inputs()">
+                                                        <label id='label_end_result' style='margin: auto 0px auto auto;' ></label>
+                                                    </div>
+                                                </div>
+
+                                                <button id='button_update_sale_times' type="button" class="btn btn-primary" disabled onclick="admin_set_sale_times()">Update Sale Times</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -476,13 +519,7 @@
 
         <%- include('./footer') %>
 
-
-        
-        <script type="text/javascript" src="../javascripts/admin.js?v=1.0.5"></script>
-
-
-        <!-- <script type="text/javascript" src="../javascripts/admin1.js?v=1"></script> -->
-
+        <script type="text/javascript" src="../javascripts/admin.js?v=1.0.6"></script>
 
     </body>
 </html>
