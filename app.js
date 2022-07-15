@@ -691,6 +691,29 @@ app.get('/adminGetUserOrders', (request, response) =>
 });
 
 // read  
+app.get('/get_sale_times', (request, response) => 
+{
+	console.log("/get_sale_times");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) =>
+	{
+		console.log("/get_sale_times ADMIN TRUE");
+		const db = dbService.getDbServiceInstance();
+		const result = db.admin_get_admin_config();
+		result.then(data =>  
+		{
+			response.json(data);
+		})
+		.catch(err => console.log(err));
+	})
+	.catch(() => 
+	{
+		console.log("route(/get_sale_times) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
+
+// read  
 app.get('/admin_get_admin_config', (request, response) => 
 {
 	console.log("/admin_get_admin_config");
@@ -718,7 +741,7 @@ app.get('/admin_get_admin_config', (request, response) =>
 	})
 	.catch(() => 
 	{
-		console.log("route(/) \tif loggedIn == false");
+		console.log("route(/admin_get_admin_config) \tif loggedIn == false");
 		response.redirect('/login');
 	});
 });
@@ -751,8 +774,8 @@ app.get('/adminGetUserPickups', (request, response) =>
 	})
 	.catch(() => 
 	{
-		console.log("route(/) \tresult.catch()");
-		console.log("route(/) \tif loggedIn == false");
+		console.log("route(/adminGetUserPickups) \tresult.catch()");
+		console.log("route(/adminGetUserPickups) \tif loggedIn == false");
 		response.redirect('/login');
 	});
 });

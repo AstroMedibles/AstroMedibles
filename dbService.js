@@ -1265,6 +1265,31 @@ class DbService
         });
     }
     
+    async get_sale_times()
+    {
+        const response = await new Promise((resolve, reject) =>
+        {
+            const sql = "SELECT * FROM " + process.env.TABLE_ADMIN_CONFIG + ";";
+            connection.query(sql, [], (error, results) =>
+            {
+                if (error)
+                {
+                    reject("/admin_get_admin_config ERROR:\n" + error);
+                }
+                else
+                {
+                    var data = 
+                    {
+                        sale_start : results[0].sale_start,
+                        sale_end   : results[0].sale_end
+                    }
+                    resolve(data);
+                }
+            });
+        });
+        return response;
+    }
+
     async admin_get_admin_config()
     {
         const response = await new Promise((resolve, reject) =>

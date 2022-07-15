@@ -12,17 +12,24 @@ var startDate     = new Date('2022-07-15T05:00:00.000Z');
 var startDate2    = new Date('2022-07-15T05:00:00.000Z');
 
 
-for (var i = 0; i < 26; i++)
-{
-    console.log('i: ' + i + '\n');
-    startDate.setHours(i);
-    startDate2.setUTCHours(i);
-    console.log(startDate.toISOString());
-    console.log(startDate2.toISOString() + '\n\n');
+// for (var i = 0; i < 26; i++)
+// {
+//     console.log('i: ' + i + '\n');
+//     startDate.setHours(i);
+//     startDate2.setUTCHours(i);
+//     console.log(startDate.toISOString());
+//     console.log(startDate2.toISOString() + '\n\n');
 
+// }
+
+var sale_times = 
+{
+    sale_start : '1. yyyy/mm/dd',
+    sale_end : '2. yyyy/mm/dd'
 }
 
-
+console.log(sale_times.sale_end);
+console.log(sale_times.sale_start);
 
 
 // var date1 = new Date('2022-04-07T00:42:00.000Z');
