@@ -1,6 +1,6 @@
 
-const address = 'https://www.astromedibles.com';
-// const address = 'http://localhost:8080';
+var address = 'https://www.astromedibles.com';
+// var address = 'http://localhost:8080';
 
 const passwordInput = document.getElementById('inputPassword');
 const togglePasswordButton = document.getElementById('toggle-password');

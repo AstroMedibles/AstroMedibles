@@ -16,27 +16,22 @@
                         <h2 class="text-info">Admin Panel</h2>
 
                         <!-- Radio Button Group -->
-                        <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
 
-                            <label id="radioOrders" class="btn btn-secondary active">
-                              <input type="radio" autocomplete="off" onclick="radioOrdersClick()" checked> Orders
-                            </label>
+                            <input id="radio1" type="radio" class="btn-check" autocomplete="off" onclick="radioOrdersClick()" name="options-outlined"> 
+                            <label id="radioOrders" class="btn btn-outline-primary active" for="radio1">Orders</label>
 
-                            <label id="radioCodes" class="btn btn-secondary">
-                              <input type="radio" autocomplete="off" onclick="radioCodesClick()"> Codes
-                            </label>
+                            <input id="radio2" type="radio" class="btn-check" autocomplete="off" onclick="radioCodesClick()" name="options-outlined">
+                            <label id="radioCodes" class="btn btn-outline-primary" for="radio2">Codes</label>
 
-                            <label id="radioChart" class="btn btn-secondary">
-                                <input type="radio" autocomplete="off" onclick="radioChartClick()"> Chart
-                            </label>
+                            <input id="radio3" type="radio" class="btn-check" autocomplete="off" onclick="radioChartClick()" name="options-outlined">
+                            <label id="radioChart" class="btn btn-outline-primary" for="radio3">Chart</label>
+                            
+                            <input id="radio4" type="radio" class="btn-check" autocomplete="off" onclick="radioPickupsClick()" name="options-outlined">
+                            <label id="radioPickups" class="btn btn-outline-primary" for="radio4">Pickups</label>
 
-                            <label id="radioPickups" class="btn btn-secondary">
-                                <input type="radio" autocomplete="off" onclick="radioPickupsClick()"> Pickups
-                            </label>
-
-                            <label id="radio_sale" class="btn btn-secondary">
-                                <input type="radio" autocomplete="off" onclick="radio_sale_click()"> Sale
-                            </label>
+                            <input id="radio5" type="radio" class="btn-check" autocomplete="off" onclick="radio_sale_click()" name="options-outlined">
+                            <label id="radio_sale" class="btn btn-outline-primary" for="radio5">Sale</label>
 
                         </div>
                     </div>
@@ -111,25 +106,22 @@
                             </div>
                             <!-- CHART -->
                             <div id="chart-items" class="items w-100" hidden style="padding: 0px;">
-
                                 <!-- CHART -->
-
                                 <div class="product">
                                     <div class="row product-image d-flex justify-content-between align-items-start" style="padding: 15px 0px 15px 0px;">
                                         <h4 style="text-align: center;">What items to bake?</h4>
                                         <p style="text-align: center;">This table shows what items customers have ordered</p>
 
-                                        
                                         <div class="col-md-12 product-info">
                                             <div class="d-flex flex-column  align-items-center" style="padding: 0px 0px 15px 0px; text-align: center;">
                                                 <br>
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
-                                                            <th scope="col" style="font-weight: normal;">Item</th>
-                                                            <th scope="col" style="font-weight: normal;">Payment Required</th>
-                                                            <th scope="col" style="font-weight: normal;">Payment Recieved</th>
-                                                            <th scope="col" style="font-weight: normal;">Total</th>
+                                                            <th style="font-weight: normal;">Item</th>
+                                                            <th style="font-weight: normal;">Payment Required</th>
+                                                            <th style="font-weight: normal;">Payment Recieved</th>
+                                                            <th style="font-weight: normal;">Total</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="chartTable" style="font-weight: normal;" >
@@ -141,13 +133,7 @@
                                                         </tr> -->
                                                     </tbody>
                                                 </table>
-
                                                 <br>
-                                                <p id='chartMapPaymentRequired'></p>
-                                                <br>
-                                                <p id='chartMapPaymentRecieved'></p>
-                                                <br>
-                                                <p id='chartMapTotal'></p>
                                             </div>
                                         </div>
                                     </div>
@@ -155,9 +141,7 @@
                             </div>
                             <!-- PICKUPS -->
                             <div id="pickups-items" class="items w-100" hidden style="padding: 0px;">
-
                                 <!-- PICKUPS -->
-
                                 <div class="product">
                                     <div class="row product-image flex justify-content-between align-items-start" style="padding: 15px 0px 15px 0px;">
                                         <h4 style="text-align: center;">Upcoming Customer Pickups</h4>
@@ -170,10 +154,10 @@
                                                 <table class="table">
                                                     <thead>
                                                         <tr  style="font-size: small;">
-                                                            <th scope="col" style="font-weight: normal;" >Date</th>
-                                                            <th scope="col" style="font-weight: normal;" >Name</th>
-                                                            <th scope="col" style="font-weight: normal;" >Order ID</th>
-                                                            <th scope="col" style="font-weight: normal;" >Location</th>
+                                                            <th style="font-weight: normal;" >Date</th>
+                                                            <th style="font-weight: normal;" >Name</th>
+                                                            <th style="font-weight: normal;" >Order ID</th>
+                                                            <th style="font-weight: normal;" >Location</th>
                                                         </tr>
                                                     </thead>
 
@@ -474,39 +458,81 @@
                                 <div class="product">
                                     <div class="row product-image d-flex justify-content-between align-items-start" style="padding: 15px 0px 15px 0px;">  
                                         <!--- Start / End Sale Div -->
-                                        <h4 class='mb-5' style="text-align: center;">Configure Sale Settings</h4>
-                                        <div style="max-width: 500px; margin: auto;">
-                                            <div style='border: 2px solid #f0f0f0; padding: 15px;'>
-
-                                                <div class="mb-3">
-                                                    <h5 class="mb-3">Start Sale</h5>
-                                                    <div class="input-group mb-3">
-                                                        <label style='margin: auto 1rem auto 0px;' >Date</label>
-                                                        <input id='input_start_date' style='margin: auto auto auto 0px;' type="date" autocomplete="off" onchange="validate_date_inputs()" >
-                                                    </div>
-                                                    <div class="input-group ">
-                                                        <label style='margin: auto .90rem auto 0px;' >Time</label>
-                                                        <input id='input_start_time' style='margin: auto auto auto 0px;' type="time" autocomplete="off" onchange="validate_date_inputs()">
-                                                        <label id='label_start_result' style='margin: auto 0px auto auto;' ></label>
-                                                    </div>
+                                        <h4 class='mb-3' style="text-align: center;">Configure Sale Settings</h4>
+                                        <div style="border: 2px solid #f0f0f0; max-width: 500px; margin: auto; padding: 15px;">
+                                            <div class="mb-3">
+                                                <h6 class="mb-3"><b>Start Sale</b></h6>
+                                                <div class="input-group mb-3">
+                                                    <label style='margin: auto 1rem auto 0px;' >Date</label>
+                                                    <input id='input_start_date' style='margin: auto auto auto 0px;' type="date" autocomplete="off" onchange="validate_date_inputs()" >
                                                 </div>
-
-                                                <div class="mb-3">
-                                                    <h5 class="mb-3">End Sale</h5>
-                                                    <div class="input-group mb-3">
-                                                        <label style='margin: auto 1rem auto 0px;' >Date</label>
-                                                        <input id='input_end_date' style='margin: auto auto auto 0px;' type="date" autocomplete="off" onchange="validate_date_inputs()">
-                                                    </div>
-                                                    <div class="input-group ">
-                                                        <label style='margin: auto .90rem auto 0px;' >Time</label>
-                                                        <input id='input_end_time' style='margin: auto auto auto 0px;' type="time" autocomplete="off" onchange="validate_date_inputs()">
-                                                        <label id='label_end_result' style='margin: auto 0px auto auto;' ></label>
-                                                    </div>
+                                                <div class="input-group ">
+                                                    <label style='margin: auto .90rem auto 0px;' >Time</label>
+                                                    <input id='input_start_time' style='margin: auto auto auto 0px;' type="time" autocomplete="off" onchange="validate_date_inputs()">
+                                                    <label id='label_start_result' style='margin: auto 0px auto auto;' ></label>
                                                 </div>
+                                            </div>
 
-                                                <button id='button_update_sale_times' type="button" class="btn btn-primary" disabled onclick="admin_set_sale_times()">Update Sale Times</button>
+                                            <div class="mb-3">
+                                                <h6 class="mb-3"><b>End Sale</b></h6>
+                                                <div class="input-group mb-3">
+                                                    <label style='margin: auto 1rem auto 0px;' >Date</label>
+                                                    <input id='input_end_date' style='margin: auto auto auto 0px;' type="date" autocomplete="off" onchange="validate_date_inputs()">
+                                                </div>
+                                                <div class="input-group ">
+                                                    <label style='margin: auto .90rem auto 0px;' >Time</label>
+                                                    <input id='input_end_time' style='margin: auto auto auto 0px;' type="time" autocomplete="off" onchange="validate_date_inputs()">
+                                                    <label id='label_end_result' style='margin: auto 0px auto auto;' ></label>
+                                                </div>
+                                            </div>
+                                            <button id='button_update_sale_times' type="button" class="btn btn-primary" disabled onclick="admin_set_sale_times()">Update Sale Times</button>
                                         </div>
+                                        <!--- END Start / End Sale Div -->
+                                        
+                                        <hr style="margin-top: 2rem; margin-bottom: 2rem;">
+
+
+                                        <!--  https://stackoverflow.com/questions/34057595/allow-2-decimal-places-in-input-type-number -->
+                                        <!--- Manage Menu Div -->
+                                        <!-- <h4 class='mb-3' style="text-align: center;">Manage Menu</h4>
+                                        <div class="container">
+                                            <div class="table-responsive" style="text-align: center;">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="font-weight: normal;">#</th>
+                                                            <th style="font-weight: normal;">Name</th>
+                                                            <th style="font-weight: normal;">Price</th>
+                                                            <th style="font-weight: normal;">Description</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="font-weight: normal;" >
+                                                        <tr>
+                                                            <td>
+                                                                2
+                                                            </td>
+                                                            <td>
+                                                                NAME NAME NAME
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text">$</span>
+                                                                    <input type="text" class="form-control" placeholder="00.00">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <input  type="text" value="DESC DESC DESC">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <button id='button_update_menu' type="button" class="btn btn-primary" style='margin: auto auto auto 1rem; max-width: 200px;' disabled onclick="admin_set_menu()">Save Changes</button>
+                                        </div> -->
+                                        <!--- END Manage Menu Div -->
                                     </div>
+
+
                                 </div>
                             </div>
 
@@ -519,7 +545,7 @@
 
         <%- include('./footer') %>
 
-        <script type="text/javascript" src="../javascripts/admin.js?v=1.0.6"></script>
+        <script type="text/javascript" src="../javascripts/admin.js?v=1.0.7"></script>
 
     </body>
 </html>

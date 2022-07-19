@@ -53,7 +53,7 @@ console.log("\n" + "Server Started:");
 // console.log(process.env.DB_PORT);
 console.log("\n");
 
-const address = 'https://astromedibles.com';
+var address = 'https://astromedibles.com';
 
 class DbService
 {
@@ -1316,7 +1316,7 @@ class DbService
         {
             try
             {
-                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " ORDER BY status_id ASC, date_created DESC;";
+                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " ORDER BY status_id ASC, date_created DESC LIMIT 100;";
                 connection.query(sql, [], (error, results) =>
                 {
                     if (error)
