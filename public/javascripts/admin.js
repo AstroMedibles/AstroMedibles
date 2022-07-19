@@ -659,6 +659,7 @@ function dropDownUpdateOrderStatus(event)
  
 function radioOrdersClick() 
 { 
+    // console.log('hello');
     $('#codes-items').attr('hidden', ''); 
     $('#chart-items').attr('hidden', ''); 
     $('#pickups-items').attr('hidden', ''); 
@@ -884,7 +885,7 @@ function radioChartClick()
             tableHTML += 
                     ` 
                     <tr style="font-size: small;"> 
-                        <th scope="row" style="font-weight: normal;">${value.name}</th> 
+                        <th style="font-weight: normal;">${value.name}</th> 
                         <td class="table-danger"  >${quantityRequired}</td> 
                         <td class="table-primary" >${quantityRecieved}</td> 
                         <td style="font-weight: bold;">${value.quantity}</td> 
@@ -949,10 +950,10 @@ function radioPickupsClick()
                 tableHTML += 
                 ` 
                 <tr> 
-                    <th class="table" style="width: 40%;" >${date.getFullYear()}</th> 
-                    <th class="table" style="width: 20%;" ></th> 
-                    <th class="table" style="width: 20%;" ></th> 
-                    <th class="table" style="width: 20%;" ></th> 
+                    <th style="width: 40%;" >${date.getFullYear()}</th> 
+                    <th style="width: 20%;" ></th> 
+                    <th style="width: 20%;" ></th> 
+                    <th style="width: 20%;" ></th> 
                 </tr> 
                 `; 
                 lastYear = date.getFullYear(); 
@@ -969,10 +970,10 @@ function radioPickupsClick()
                 ` 
                 <!-- Date --> 
                 <tr> 
-                    <th class="table" style="width: 40%;" >${dateLocaleString}</th> 
-                    <th class="table" style="width: 20%;" ></th> 
-                    <th class="table" style="width: 20%;" ></th> 
-                    <th class="table" style="width: 20%;" ></th> 
+                    <th style="width: 40%;" >${dateLocaleString}</th> 
+                    <th style="width: 20%;" ></th> 
+                    <th style="width: 20%;" ></th> 
+                    <th style="width: 20%;" ></th> 
                 </tr> 
                 `; 
                 lastDate = date; 
@@ -1015,10 +1016,10 @@ function radioPickupsClick()
             ` 
             <!-- Time, Name, Order ID, Location --> 
             <tr style="font-size: small;"> 
-                <td class="table" style="width: 40%;" >${timeString}</td> 
-                <td class="table" style="width: 20%;" >${pickups[i].name}</td> 
-                <td class="table" style="width: 20%;" >${pickups[i].order_id}</td> 
-                <td class="table" style="width: 20%;" >${pickups[i].pickup_location}</td> 
+                <td style="width: 40%;" >${timeString}</td> 
+                <td style="width: 20%;" >${pickups[i].name}</td> 
+                <td style="width: 20%;" >${pickups[i].order_id}</td> 
+                <td style="width: 20%;" >${pickups[i].pickup_location}</td> 
             </tr> 
             ` 
         } 

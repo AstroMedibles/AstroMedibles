@@ -1316,7 +1316,7 @@ class DbService
         {
             try
             {
-                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " ORDER BY status_id ASC, date_created DESC;";
+                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " ORDER BY status_id ASC, date_created DESC LIMIT 100;";
                 connection.query(sql, [], (error, results) =>
                 {
                     if (error)
