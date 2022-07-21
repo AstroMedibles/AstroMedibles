@@ -514,11 +514,11 @@ app.post('/auth', function (request, response)
 });
 
 // read 
-app.get('/getMenuData', (request, response) => 
+app.get('/get_menu', (request, response) => 
 { 
-	// console.log("\n" + "route(/getMenuData) ");
+	// console.log("\n" + "route(/get_menu) ");
 	const db = dbService.getDbServiceInstance();
-	const result = db.getMenuData();
+	const result = db.get_menu();
  
 	var loggedInResponse = checkIfLoggedIn(request);
 	loggedInResponse.then((account_attributes) => 
@@ -532,8 +532,8 @@ app.get('/getMenuData', (request, response) =>
 	}) 
 	.catch(() => 
 	{ 
-		console.log("route(/getMenuData) \tresult.catch()");
-		console.log("route(/getMenuData) \tif loggedIn == false");
+		console.log("route(/get_menu) \tresult.catch()");
+		console.log("route(/get_menu) \tif loggedIn == false");
 		response.redirect('/login');
 	});
 });
@@ -745,6 +745,7 @@ app.get('/admin_get_admin_config', (request, response) =>
 		response.redirect('/login');
 	});
 });
+
 
 // read  
 app.get('/adminGetUserPickups', (request, response) => 
@@ -1401,6 +1402,43 @@ app.patch('/admin_set_sale_times', (request, response) =>
 	.catch(() => 
 	{ 
 		console.log("route(/admin_set_sale_times) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
+
+// modify
+app.patch('/admin_set_menu', (request, response) =>
+{
+	console.log("\n"+ "route(/admin_set_menu) ");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
+	{
+		console.log("admin_set_menu(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1)
+		{ 
+			const { new_menu } = request.body;
+			const db = dbService.getDbServiceInstance();
+			const result = db.admin_set_menu(new_menu);
+		 
+			result.then((data) =>
+			{
+				console.log("\n" + "route(/admin_set_menu) Update Success:");
+				console.table(request.body);
+				response.json(true);
+			}).catch((err) => 
+			{
+				response.json(false);
+				console.log(err)
+			});
+		}
+		else
+		{
+			response.end();
+		} 
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/admin_set_menu) \tif loggedIn == false");
 		response.redirect('/login');
 	});
 });

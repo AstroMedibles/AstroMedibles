@@ -46,8 +46,7 @@ function loadCartTotal(data)
 
 function getCartDetails(userCart)
 {
-
-    fetch(address + '/getMenuData')
+    fetch(address + '/get_menu')
     .then(response => response.json())
     .then(data =>  
     {

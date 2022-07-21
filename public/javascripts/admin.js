@@ -1112,9 +1112,61 @@ function radio_sale_click()
         document.getElementById('label_start_result').innerText = string_result1;
         document.getElementById('label_end_result').innerText   = string_result2;
 
-    }); 
-} 
- 
+    });
+
+    // HTML paired with table_menu function add_row
+    fetch(address + '/get_menu') 
+    .then(response => response.json()) 
+    .then(data =>   
+    {
+        data = data['data'];
+        console.table(data);
+        var html_row;
+        for (var i = 0; i < data.length; i++)
+        {
+            html_row +=
+            `
+            <tr> <!-- Row -->
+                <td > <!-- Cell 'X' -->
+                    <div class="input-group">
+                        <button type="button" class="btn btn-secondary btn-sm" style="margin: auto;" onclick="button_table_menu_remove_row(this)">X</button>
+                    </div>
+                </td>
+                <td > <!-- Cell Name -->
+                    <div class="input-group">
+                        <input name='cell-name' type="text" class="form-control" style="font-size: smaller;" placeholder="Treat" onchange="validate_table_menu()" autocomplete="off" maxlength="60" value='${data[i].name}'>
+                    </div>
+                </td>
+                <td style="max-width: 10rem;"> <!-- Cell Price -->
+                    <div class="input-group">
+                        <span class="input-group-text" style="font-size: smaller;">$</span>
+                        <input name='cell-price' type="number" class="form-control" style="font-size: smaller;" placeholder="0.00" step="0.01" min="0" max="9999" onchange="validate_table_menu()" autocomplete="off" value='${data[i].price}'>
+                    </div>
+                </td>
+            </tr>
+            `;
+        }
+    
+        // add the new row to the table
+        $('#table_body').append(html_row);
+    
+        // select newly added row
+        var rows = document.querySelectorAll('input[name="cell-price"]');
+    
+        for(var i = 0; i < rows.length; i++)
+        {
+            // select currency input from new row
+            var input_currency = rows[i];
+        
+            // Apply input restriction to currency input cell
+            setInputFilter(input_currency, function(value)
+            { 
+                return /^((\d+(\.\d*)?)|(\.\d+))$/.test(value);
+            }, "Must be a currency value");
+        }
+    });
+}
+
 function generateAccessCodes() 
 { 
     if (confirm('This action will create (10) more access codes. Are you sure?')) 
@@ -1371,14 +1423,16 @@ function ready()
     } 
 } 
 
-// pair with admin_set_sale_times()
+// SALE FUNCTIONS //
+
+
+// paired with admin_set_sale_times()
 function validate_date_inputs()
 {
     // console.log(document.getElementById('input_start_date').value);
     // console.log(document.getElementById('input_end_date').value);
     // console.log(document.getElementById('input_start_time').value);
     // console.log(document.getElementById('input_end_time').value);
-    
     
     // grab inputs
     var start_date  = new Date(document.getElementById('input_start_date').value);
@@ -1425,7 +1479,7 @@ function validate_date_inputs()
     }
 }
 
-// pair with validate_date_inputs()
+// paired with validate_date_inputs()
 function admin_set_sale_times()
 {
     if (!confirm('Update Sale Times?')) return;
@@ -1486,14 +1540,255 @@ function admin_set_sale_times()
         document.getElementById('label_end_result').style.fontWeight   = 'bold';
 
         // Notification 
-        const message       = `Update Success!`; 
-        const alertType     = 'success'; 
+        const message       = `Sale Times Updated!`; 
+        const alertType     = 'success';
         const iconChoice    = 2; 
         const duration      = 3; 
         alertNotify(message, alertType, iconChoice, duration); 
+        document.getElementById('button_update_sale_times').disabled = true;
+
 
     }).catch((error =>  
     { 
         console.log("admin_set_sale_times()  catch:" + error); 
     }));
+}
+
+function validate_table_menu()
+{
+    var table_data_valid = false;
+
+    // get table
+    var table_menu = document.getElementById('table_menu');
+
+    // get table data
+    var table_menu_length = table_menu.rows.length - 1;
+    var list_names        = document.getElementsByName('cell-name');
+    var list_price        = document.getElementsByName('cell-price');
+    // var list_description  = document.getElementsByName('cell-description');
+
+    // loop through data 
+    try
+    {
+        for (var i = 0; i < table_menu_length; i++)
+        {
+            var cell_name        = list_names[i].value;
+            var cell_price       = list_price[i].value;
+            // var cell_description = list_description[i].value;
+    
+            // if all cells on row are not empty
+            if (cell_name.length > 0 && cell_price.length > 0)
+            {
+                // table data valid
+                table_data_valid = true;
+            }
+            else
+            {
+                // table data not valid
+                table_data_valid = false;
+                break;
+            }
+            console.table([cell_name, cell_price]);
+        }
+    }
+    catch (error)
+    {
+        table_data_valid = false;
+    }
+
+    // console.log('table_data_valid: ' + table_data_valid);
+    if (table_data_valid == true)
+    {
+        // if table data is valid, enable button
+        document.getElementById('button_update_menu').disabled = false;
+    }
+    else
+    {
+        // if table data is not valid, disable button
+        document.getElementById('button_update_menu').disabled = true;
+    }
+}
+
+// HTML paired with panel button button_sale on load
+function button_menu_add_row()
+{
+    var html_row =
+    `
+    <tr> <!-- Row -->
+        <td > <!-- Cell 'X' -->
+            <div class="input-group">
+                <button type="button" class="btn btn-secondary btn-sm" style="margin: auto;" onclick="button_table_menu_remove_row(this)">X</button>
+            </div>
+        </td>
+        <td > <!-- Cell Name -->
+            <div class="input-group">
+                <input name='cell-name' type="text" class="form-control" style="font-size: smaller;" placeholder="Treat" onchange="validate_table_menu()" autocomplete="off" maxlength="60">
+            </div>
+        </td>
+        <td style="max-width: 10rem;"> <!-- Cell Price -->
+            <div class="input-group">
+                <span class="input-group-text" style="font-size: smaller;">$</span>
+                <input name='cell-price' type="number" class="form-control" style="font-size: smaller;" placeholder="0.00" step="0.01" min="0" max="9999" onchange="validate_table_menu()" autocomplete="off">
+            </div>
+        </td>
+    </tr>
+    `;
+/*
+<td > <!-- Cell Description -->
+    <div class="input-group">
+        <input name='cell-description' type="text" class="form-control" placeholder="tasty" onchange="validate_table_menu()" autocomplete="off" maxlength="200">
+    </div>
+</td>
+*/
+
+
+    // Disable Save Menu Button, since blank row is added
+    document.getElementById('button_update_menu').disabled = true;
+
+    // add the new row to the table
+    $('#table_body').append(html_row);
+
+    // select newly added row
+    var last_row = document.querySelectorAll('input[name="cell-price"]');
+
+    // select currency input from new row
+    var input_currency = last_row[last_row.length-1];
+
+    // Apply input restriction to currency input cell
+    setInputFilter(input_currency, function(value)
+    { 
+        return /^((\d+(\.\d*)?)|(\.\d+))$/.test(value);
+    }, "Must be a currency value");
+}
+
+function button_table_menu_remove_row(button)
+{
+    button.parentNode.parentNode.parentNode.remove();
+    validate_table_menu();
+}
+
+function admin_set_menu()
+{
+    if (!confirm('Confirm: Press OK to update menu')) return;
+
+    // get table
+    var table_menu = document.getElementById('table_menu');
+
+    // get table data
+    var table_menu_length = table_menu.rows.length - 1;
+    var list_names        = document.getElementsByName('cell-name');
+    var list_price        = document.getElementsByName('cell-price');
+    // var list_description  = document.getElementsByName('cell-description');
+
+    var new_menu = [];
+
+    // loop through data 
+    for (var i = 0; i < table_menu_length; i++)
+    {
+        var cell_name        = list_names[i].value;
+        var cell_price       = list_price[i].value;
+        // var cell_description = list_description[i].value;
+
+        // new_menu.push([cell_name, cell_price, cell_description]);
+        // empty description to prevent 'null' text on menu
+        new_menu.push([cell_name, cell_price, ' ']);
+        // console.table([cell_name, cell_price, cell_description]);
+    }
+    console.table(new_menu);
+
+
+    fetch(address + '/admin_set_menu', 
+    { 
+        credentials: "include", 
+        method: 'PATCH', 
+        headers: 
+        { 
+            'Content-type': 'application/json' 
+        }, 
+        body: JSON.stringify 
+        ({ 
+            new_menu: new_menu
+        }) 
+    })
+    .then(response => response.json()) 
+    .then((result) =>  
+    {
+        if (result == true)
+        {
+            // Notification 
+            const message       = `Menu Updated!`; 
+            const alertType     = 'success'; 
+            const iconChoice    = 2; 
+            const duration      = 3; 
+            alertNotify(message, alertType, iconChoice, duration);
+        }
+        else
+        {
+            // Notification 
+            const message       = `Something went wrong!`; 
+            const alertType     = 'danger'; 
+            const iconChoice    = 2; 
+            const duration      = 4;
+            alertNotify(message, alertType, iconChoice, duration);
+        }
+
+    }).catch((error =>  
+    { 
+        console.log("admin_set_menu()  catch:" + error);
+        // Notification 
+        const message       = `Something went wrong!`; 
+        const alertType     = 'danger'; 
+        const iconChoice    = 2; 
+        const duration      = 4;
+        alertNotify(message, alertType, iconChoice, duration); 
+    }));
+
+    // disable button 
+    document.getElementById('button_update_menu').disabled = true;
+}
+
+
+
+// Restricts user input for the given textbox to the given inputFilter.
+function setInputFilter(textbox, inputFilter, errMsg)
+{
+    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop", "focusout"].forEach(function(event)
+    {
+        textbox.addEventListener(event, function(e)
+        {
+            try
+            {
+                if (inputFilter(this.value))
+                {
+                    // Accepted value
+                    if (["keydown","mousedown","focusout"].indexOf(e.type) >= 0)
+                    {
+                        this.classList.remove("input-error");
+                        this.setCustomValidity("");
+                    }
+                    this.oldValue = this.value;
+                    this.oldSelectionStart = this.selectionStart;
+                    this.oldSelectionEnd = this.selectionEnd;
+                } 
+                else if (this.hasOwnProperty("oldValue"))
+                {
+                    // Rejected value - restore the previous one
+                    this.classList.add("input-error");
+                    this.setCustomValidity(errMsg);
+                    this.reportValidity();
+                    this.value = this.oldValue;
+                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                } 
+                else
+                {
+                    // Rejected value - nothing to restore
+                    this.value = "";
+                }
+                }
+                catch (error)
+                {
+   
+                }
+        });
+    });
 }

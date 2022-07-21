@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function ()
         .then(() => 
         {
             // load menu data
-            fetch(address + '/getMenuData')
+            fetch(address + '/get_menu')
             .then(response => response.json())
             .then(data => loadMenuCards(data['data']));
         });
