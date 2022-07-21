@@ -147,7 +147,7 @@ class DbService
         return response;
     }
 
-    async getMenuData()
+    async get_menu()
     {
         const response = await new Promise((resolve, reject) => 
         {
@@ -156,15 +156,21 @@ class DbService
                 const sql = "SELECT * FROM " + process.env.TABLE_ITEMS + ";";
                 connection.query(sql, (err, results) =>
                 {
-                    if (err) reject(new Error("dbService.js ERROR\n" + err.message));
-                    // console.log("\n" + "getMenuData()  Results:");
+                    if (err) 
+                    {
+                        reject(new Error("dbService.js ERROR\n" + err.message));
+                    }
+                    else
+                    {
+                    // console.log("\n" + "get_menu()  Results:");
                     // console.log(results);
                     resolve(results);
-                })
+                    }
+                });
             } catch (error)
             {
                 console.log(error);
-                reject();
+                reject(error);
             }
         });
         return response;
@@ -542,7 +548,7 @@ class DbService
             var cartTotal = 0;
             // copy cart to cartItems
             // var cartItems    = [...cart];
-            var menuData = db.getMenuData();
+            var menuData = db.get_menu();
             menuData.then(data => 
             {
                 // console.log(data);
@@ -1274,7 +1280,7 @@ class DbService
             {
                 if (error)
                 {
-                    reject("/admin_get_admin_config ERROR:\n" + error);
+                    reject("/get_sale_times ERROR:\n" + error);
                 }
                 else
                 {
@@ -1913,6 +1919,50 @@ class DbService
         });
         return response;
     }
+
+    async admin_set_menu(new_menu)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            try
+            {
+                var sql_statement, values = new String();
+
+                // delete previous menu
+                sql_statement = 
+                `
+                SET SQL_SAFE_UPDATES = 0;
+                DELETE FROM ${process.env.TABLE_ITEMS};
+                SET SQL_SAFE_UPDATES = 1;
+                INSERT INTO ${process.env.TABLE_ITEMS} (name, price, description) VALUES ?;
+                `;
+                // INSERT INTO ${process.env.TABLE_ITEMS} (name, price, description) VALUES ?;
+
+                // insert new menu
+                values = new_menu;
+                console.log('New Menu:');
+                console.log(values);
+
+                connection.query(sql_statement, [values], (err, results) =>
+                {
+                    if (err)
+                    {
+                        reject(err.message);
+                    }
+                    else
+                    {
+                        resolve(results.affectedRows);
+                    }
+                });
+            }
+            catch (error)
+            {
+                reject('ERROR /admin_set_menu() \n' + error);
+            }
+        });
+        return response;
+    }
+
 
     async forgotPasswordGenerateCode(email)
     {

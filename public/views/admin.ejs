@@ -479,56 +479,43 @@
                                                     <label style='margin: auto 1rem auto 0px;' >Date</label>
                                                     <input id='input_end_date' style='margin: auto auto auto 0px;' type="date" autocomplete="off" onchange="validate_date_inputs()">
                                                 </div>
-                                                <div class="input-group ">
+                                                <div class="input-group">
                                                     <label style='margin: auto .90rem auto 0px;' >Time</label>
                                                     <input id='input_end_time' style='margin: auto auto auto 0px;' type="time" autocomplete="off" onchange="validate_date_inputs()">
                                                     <label id='label_end_result' style='margin: auto 0px auto auto;' ></label>
                                                 </div>
                                             </div>
-                                            <button id='button_update_sale_times' type="button" class="btn btn-primary" disabled onclick="admin_set_sale_times()">Update Sale Times</button>
+                                            <button id='button_update_sale_times' type="button" class="btn btn-primary rounded-pill" disabled onclick="admin_set_sale_times()">Update Sale Times</button>
                                         </div>
                                         <!--- END Start / End Sale Div -->
                                         
                                         <hr style="margin-top: 2rem; margin-bottom: 2rem;">
 
 
-                                        <!--  https://stackoverflow.com/questions/34057595/allow-2-decimal-places-in-input-type-number -->
                                         <!--- Manage Menu Div -->
-                                        <!-- <h4 class='mb-3' style="text-align: center;">Manage Menu</h4>
+                                        <h4 class='mb-3' style="text-align: center;">Manage Menu</h4>
                                         <div class="container">
                                             <div class="table-responsive" style="text-align: center;">
-                                                <table class="table">
+                                                <table id='table_menu' class="table table-bordered table-sm ">
                                                     <thead>
                                                         <tr>
-                                                            <th style="font-weight: normal;">#</th>
+                                                            <th style="font-weight: normal;">   </th>
                                                             <th style="font-weight: normal;">Name</th>
                                                             <th style="font-weight: normal;">Price</th>
-                                                            <th style="font-weight: normal;">Description</th>
+                                                            <!-- <th style="font-weight: normal;">Description</th> -->
                                                         </tr>
                                                     </thead>
-                                                    <tbody style="font-weight: normal;" >
-                                                        <tr>
-                                                            <td>
-                                                                2
-                                                            </td>
-                                                            <td>
-                                                                NAME NAME NAME
-                                                            </td>
-                                                            <td>
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text">$</span>
-                                                                    <input type="text" class="form-control" placeholder="00.00">
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <input  type="text" value="DESC DESC DESC">
-                                                            </td>
-                                                        </tr>
+                                                    <tbody id='table_body' style="font-weight: normal;" >
+                                                        <!-- Rows -->
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <button id='button_update_menu' type="button" class="btn btn-primary" style='margin: auto auto auto 1rem; max-width: 200px;' disabled onclick="admin_set_menu()">Save Changes</button>
-                                        </div> -->
+                                        </div>
+                                        <div class="input-group">
+                                            <button id='button_menu_add_row' type="button" class="btn btn-primary rounded-pill" style='margin: auto auto auto 0px;' onclick="button_menu_add_row()">+</button>
+                                            <button id='button_update_menu' type="button" class="btn btn-primary rounded-pill" style='margin: auto 0px auto auto;' disabled onclick="admin_set_menu()">Update Menu</button>    
+                                        </div>
+
                                         <!--- END Manage Menu Div -->
                                     </div>
 
@@ -545,7 +532,7 @@
 
         <%- include('./footer') %>
 
-        <script type="text/javascript" src="../javascripts/admin.js?v=1.0.7"></script>
+        <script type="text/javascript" src="../javascripts/admin.js?v=1.1.0"></script>
 
     </body>
 </html>
