@@ -1114,6 +1114,8 @@ function radio_sale_click()
 
     });
 
+    $("#table_body tr").remove();
+
     // HTML paired with table_menu function add_row
     fetch(address + '/get_menu') 
     .then(response => response.json()) 

@@ -1934,6 +1934,7 @@ class DbService
                 SET SQL_SAFE_UPDATES = 0;
                 DELETE FROM ${process.env.TABLE_ITEMS};
                 SET SQL_SAFE_UPDATES = 1;
+                ALTER TABLE ${process.env.TABLE_ITEMS} AUTO_INCREMENT = 1;
                 INSERT INTO ${process.env.TABLE_ITEMS} (name, price, description) VALUES ?;
                 `;
                 // INSERT INTO ${process.env.TABLE_ITEMS} (name, price, description) VALUES ?;
