@@ -95,7 +95,7 @@ class DbService
             try
             {
                 email = email.toLowerCase();
-                const query = "SELECT * FROM " + process.env.TABLE_NAMES + " WHERE email = ?";
+                const query = "SELECT * FROM " + process.env.TABLE_NAMES + " WHERE email = ?;";
                 connection.query(query, [email, password], (err, results) =>
                 {
                     if (err) 
@@ -630,7 +630,7 @@ class DbService
             // values = [values];
             // console.log("values");
             // console.log(values);
-            const sql = "INSERT INTO " + process.env.TABLE_CODES + " (code) VALUES ?";
+            const sql = "INSERT INTO " + process.env.TABLE_CODES + " (code) VALUES ?;";
             connection.query(sql, [values], (err, result) =>
             {
                 if (err) 
@@ -653,10 +653,12 @@ class DbService
 
         const response = await new Promise((resolve, reject) => 
         {
-            console.log(`/generateAccessCodes(${code})`);
+            console.log(`/generateAccountCreationSingleCode(${code})`);
 
-            const sql = "INSERT INTO " + process.env.TABLE_CODES + " (code) VALUES ?";
-            connection.query(sql, [code], (err, result) =>
+            const sql = "INSERT INTO " + process.env.TABLE_CODES + " (code) VALUES (?);";
+            var values = [];
+            values.push(code);
+            connection.query(sql, [values], (err, result) =>
             {
                 if (err) 
                 {
@@ -664,7 +666,6 @@ class DbService
                 }
                 else
                 {    
-
                     resolve(result.insertId);
                 }
             });
@@ -822,71 +823,87 @@ class DbService
 
     async createUserAccount(name, password, email, accessCode)
     {
-        accessCode = accessCode.toUpperCase();
-        email = email.toLowerCase();
-        const isAdmin = 0;
-        var date_created = new Date().toISOString();
-        password = CryptoJS.AES.encrypt(password, process.env.KEY).toString();
-
-        var cart =
-        {
-            cart: [[0, 0]]
-        }
-        cart = JSON.stringify(cart);
-
         const db = DbService.getDbServiceInstance();
-        const insertId = new Promise((resolve, reject) =>
+        const response = new Promise((resolve, reject) =>
         {
-            const query = "DELETE FROM " + process.env.TABLE_CODES + " WHERE (code = ?);";
-            connection.query(query, [accessCode], (err, result) =>
+            try
             {
-                if (err)
+                // setup default account attributes
+                accessCode = accessCode.toUpperCase();
+                email = email.toLowerCase();
+                const isAdmin = 0;
+                var date_created = new Date().toISOString();
+                password = CryptoJS.AES.encrypt(password, process.env.KEY).toString();
+                var cart =
                 {
-                    reject(err);
-                }
-                else // else, no error
-                {
-                    if (result.affectedRows == 0)
-                    {
-                        reject('No code consumed, account NOT created.');
-                    }
-                    else
-                    {
-                        console.log(`Access Code: ${accessCode} CONSUMED`);
+                    cart: [[0, 0]]
+                };
+                cart = JSON.stringify(cart);
+        
 
-                        var query2 = "INSERT INTO " + process.env.TABLE_NAMES + " (isAdmin, name, password, cart, email, date_created, verificationCode, date_lastOrderPlaced) VALUES (?,?,?,?,?,?,?,?);";
-                        connection.query(query2, [isAdmin, name, password, cart, email, date_created, accessCode, ''], (err, result) =>
-                        {
-                            if (err) 
-                            {
-                                // If there was an error, add the unique code back to the DB
-                                db.generateAccountCreationSingleCode(accessCode);
-                                reject(err);
-                            }
-                            else
-                            {
-                                var subject = "Welcome " + name + "! Your account has been created! 🚀";
-                                var html = 
-                                `
-                                <h3>Welcome to the new website!</h3>
-                                <p>
-                                Head over to <a href="${address}">AstroMedibles.com</a> to start your order.
-                                <br>
-                                This is an automated message.
-                                </p>
-                                `;
-                                
-                                db.sendEmail_old(email, subject, html);
-                                
-                                console.log('Account Created!');
-                                resolve([result.insertId, result.affectedRows]);
-                            }
-                        });
+
+                const query = "DELETE FROM " + process.env.TABLE_CODES + " WHERE (code = ?);";
+                connection.query(query, [accessCode], (err, result) =>
+                {
+                    if (err)
+                    {
+                        reject(err);
                     }
-                }
-            });
+                    else // else, no error
+                    {
+                        if (result.affectedRows == 0)
+                        {
+                            reject('No code consumed, account NOT created.');
+                        }
+                        else
+                        {
+                            console.log(`Access Code: ${accessCode} CONSUMED`);
+    
+                            var query2 = "INSERT INTO " + process.env.TABLE_NAMES + " (isAdmin, name, password, cart, email, date_created, verificationCode, date_lastOrderPlaced) VALUES (?,?,?,?,?,?,?,?);";
+                            connection.query(query2, [isAdmin, name, password, cart, email, date_created, accessCode, ''], (err, result) =>
+                            {
+                                if (err) 
+                                {
+                                    // If there was an error, add the unique code back to the DB
+                                    db.generateAccountCreationSingleCode(accessCode)
+                                    .then(results => 
+                                    {
+                                        reject(err);
+                                    }).catch((error) =>
+                                    {
+                                        console.log(error);
+                                        reject(err);
+                                    });
+                                }
+                                else
+                                {
+                                    var subject = "Welcome " + name + "! Your account has been created! 🚀";
+                                    var html = 
+                                    `
+                                    <h3>Welcome to the new website!</h3>
+                                    <p>
+                                    Head over to <a href="${address}">AstroMedibles.com</a> to start your order.
+                                    <br>
+                                    This is an automated message.
+                                    </p>
+                                    `;
+                                    
+                                    db.sendEmail_old(email, subject, html);
+                                    
+                                    console.log('Account Created!');
+                                    resolve([result.insertId, result.affectedRows]);
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+            catch (error)
+            {
+                reject('ERROR DB /createUserAccount() \n' + error);
+            }
         });
-        return insertId;
+        return response;
     }
 
     async getUserOrders0(email, password)
@@ -1971,7 +1988,7 @@ class DbService
         {
             email = email.toLowerCase();
             const verificationCode  = Math.random().toString(36).substr(2,10); // Random 10 char alphanumeric
-            const query = "UPDATE " + process.env.TABLE_NAMES + " SET verificationCode = ? WHERE email = ?";
+            const query = "UPDATE " + process.env.TABLE_NAMES + " SET verificationCode = ? WHERE email = ?;";
             connection.query(query, [verificationCode, email], (err, result) =>
             {
                 if (err)
