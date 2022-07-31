@@ -1,0 +1,45 @@
+<body>
+    <html>
+
+
+        
+    <div class="container">
+        <p class="draggable" draggable="true">1</p>
+        <p class="draggable" draggable="true">2</p>
+    </div>
+    <div class="container">
+        <p class="draggable" draggable="true">3</p>
+        <p class="draggable" draggable="true">4</p>
+    </div>
+
+
+
+<style>
+
+body {
+  margin: 0;
+}
+
+.container {
+  background-color: #333;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.draggable {
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid black;
+  cursor: move;
+}
+
+.draggable.dragging {
+  opacity: .5;
+}
+
+</style>
+
+<script type="text/javascript" src="/drag.js"></script>
+
+</body>
+</html>

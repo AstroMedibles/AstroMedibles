@@ -53,7 +53,7 @@ console.log("\n" + "Server Started:");
 // console.log(process.env.DB_PORT);
 console.log("\n");
 
-const address = 'https://astromedibles.com';
+var address = 'https://astromedibles.com';
 
 class DbService
 {
@@ -147,7 +147,7 @@ class DbService
         return response;
     }
 
-    async getMenuData()
+    async get_menu()
     {
         const response = await new Promise((resolve, reject) => 
         {
@@ -156,15 +156,21 @@ class DbService
                 const sql = "SELECT * FROM " + process.env.TABLE_ITEMS + ";";
                 connection.query(sql, (err, results) =>
                 {
-                    if (err) reject(new Error("dbService.js ERROR\n" + err.message));
-                    // console.log("\n" + "getMenuData()  Results:");
+                    if (err) 
+                    {
+                        reject(new Error("dbService.js ERROR\n" + err.message));
+                    }
+                    else
+                    {
+                    // console.log("\n" + "get_menu()  Results:");
                     // console.log(results);
                     resolve(results);
-                })
+                    }
+                });
             } catch (error)
             {
                 console.log(error);
-                reject();
+                reject(error);
             }
         });
         return response;
@@ -542,7 +548,7 @@ class DbService
             var cartTotal = 0;
             // copy cart to cartItems
             // var cartItems    = [...cart];
-            var menuData = db.getMenuData();
+            var menuData = db.get_menu();
             menuData.then(data => 
             {
                 // console.log(data);
@@ -1265,13 +1271,58 @@ class DbService
         });
     }
     
+    async get_sale_times()
+    {
+        const response = await new Promise((resolve, reject) =>
+        {
+            const sql = "SELECT * FROM " + process.env.TABLE_ADMIN_CONFIG + ";";
+            connection.query(sql, [], (error, results) =>
+            {
+                if (error)
+                {
+                    reject("/get_sale_times ERROR:\n" + error);
+                }
+                else
+                {
+                    var data = 
+                    {
+                        sale_start : results[0].sale_start,
+                        sale_end   : results[0].sale_end
+                    }
+                    resolve(data);
+                }
+            });
+        });
+        return response;
+    }
+
+    async admin_get_admin_config()
+    {
+        const response = await new Promise((resolve, reject) =>
+        {
+            const sql = "SELECT * FROM " + process.env.TABLE_ADMIN_CONFIG + ";";
+            connection.query(sql, [], (error, results) =>
+            {
+                if (error)
+                {
+                    reject("/admin_get_admin_config ERROR:\n" + error);
+                }
+                else
+                {
+                    resolve(results[0]);
+                }
+            });
+        });
+        return response;
+    }
+
     async adminGetUserOrders()
     {
         const response = await new Promise((resolve, reject) => 
         {
             try
             {
-                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " ORDER BY status_id ASC, date_created DESC;";
+                const sql = "SELECT * FROM " + process.env.TABLE_ORDERS + " ORDER BY status_id ASC, date_created DESC LIMIT 100;";
                 connection.query(sql, [], (error, results) =>
                 {
                     if (error)
@@ -1395,9 +1446,6 @@ class DbService
                             // skip no pickup_scheduled order
                         }
                     }
-
-                    // console.log('pickups');
-                    // console.log(pickups);
                     resolve(pickups);
                 })
             }
@@ -1845,6 +1893,78 @@ class DbService
         return response;
     }
 
+    async admin_set_sale_times(start_date, end_date)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            try
+            {
+                const query  = "UPDATE " + process.env.TABLE_ADMIN_CONFIG  + " SET `sale_start` = ?, `sale_end` = ? WHERE (`id` = '1');";
+                connection.query(query, [start_date, end_date], (err, results) =>
+                {
+                    if (err)
+                    {
+                        reject(err.message);
+                    }
+                    else
+                    {
+                        resolve(results.affectedRows);
+                    }
+                });
+            }
+            catch (error)
+            {
+                reject('ERROR /admin_set_sale_times() \n' + error);
+            }
+        });
+        return response;
+    }
+
+    async admin_set_menu(new_menu)
+    {
+        const response = new Promise((resolve, reject) =>
+        {
+            try
+            {
+                var sql_statement, values = new String();
+
+                // delete previous menu
+                sql_statement = 
+                `
+                SET SQL_SAFE_UPDATES = 0;
+                DELETE FROM ${process.env.TABLE_ITEMS};
+                SET SQL_SAFE_UPDATES = 1;
+                ALTER TABLE ${process.env.TABLE_ITEMS} AUTO_INCREMENT = 1;
+                INSERT INTO ${process.env.TABLE_ITEMS} (name, price, description) VALUES ?;
+                `;
+                // INSERT INTO ${process.env.TABLE_ITEMS} (name, price, description) VALUES ?;
+
+                // insert new menu
+                values = new_menu;
+                console.log('New Menu:');
+                console.log(values);
+
+                connection.query(sql_statement, [values], (err, results) =>
+                {
+                    if (err)
+                    {
+                        reject(err.message);
+                    }
+                    else
+                    {
+                        resolve(results.affectedRows);
+                    }
+                });
+            }
+            catch (error)
+            {
+                reject('ERROR /admin_set_menu() \n' + error);
+            }
+        });
+        return response;
+    }
+
+
     async forgotPasswordGenerateCode(email)
     {
         const response = new Promise((resolve, reject) =>
@@ -1863,7 +1983,7 @@ class DbService
                 {
                     if (result.affectedRows <= 0)
                     {
-                        var error = 'forgotPasswordGenerateCode(email) ERROR: Email could not be found.';
+                        var error = 'forgotPasswordGenerateCode(email) ERROR: Email could not be found: ' + email;
                         reject(error);
                         return;
                     }
@@ -2184,49 +2304,11 @@ class DbService
                 // if error, set email delivery status on user account to failed (email_verified = 1)
                 if (error)
                 {
-                    // console.log(error);
                     console.log('Error: 111');
                     reject(error);
-
-                    // const query = "UPDATE " + process.env.TABLE_NAMES + " SET email_verified = ? WHERE id = ?;";
-                    // connection.query(query, [1, account_attributes.id], (err, results) =>
-                    // {
-                    //     if (err) 
-                    //     {
-                    //         console.log('Error: 222');
-                    //         console.log('async sendEmail2(account_attributes, subject, html) SQL ERROR \n' + err);
-                    //         reject();
-                    //     }
-                    //     else
-                    //     {
-                    //         console.log('Rows affected 1:', results.affectedRows);
-                    //         reject();
-                    //     }
-                    // });
                 }
                 else
                 {
-                    // console.log('Email sent: ' + info.response);
-                    // console.table(info);
-
-
-                    // if (account_attributes.email_verified != 0)
-                    // {
-                    //     const query = "UPDATE " + process.env.TABLE_NAMES + " SET email_verified = ? WHERE id = ?;";
-                    //     connection.query(query, [0, account_attributes.id], (err, results) =>
-                    //     {
-                    //         if (err) 
-                    //         {
-                    //             console.log('Error: 444');
-                    //             console.log('async sendEmail2(account_attributes, subject, html) SQL ERROR \n' + err);
-                    //         }
-                    //         else
-                    //         {
-                    //             console.log('Rows affected 2:', results.affectedRows);
-                    //             results.affectedRows;     // Save SQL changes
-                    //         }
-                    //     });
-                    // }
                     resolve(info);
                 }
             });

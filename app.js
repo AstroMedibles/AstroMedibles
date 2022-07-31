@@ -514,11 +514,11 @@ app.post('/auth', function (request, response)
 });
 
 // read 
-app.get('/getMenuData', (request, response) => 
+app.get('/get_menu', (request, response) => 
 { 
-	// console.log("\n" + "route(/getMenuData) ");
+	// console.log("\n" + "route(/get_menu) ");
 	const db = dbService.getDbServiceInstance();
-	const result = db.getMenuData();
+	const result = db.get_menu();
  
 	var loggedInResponse = checkIfLoggedIn(request);
 	loggedInResponse.then((account_attributes) => 
@@ -532,8 +532,8 @@ app.get('/getMenuData', (request, response) =>
 	}) 
 	.catch(() => 
 	{ 
-		console.log("route(/getMenuData) \tresult.catch()");
-		console.log("route(/getMenuData) \tif loggedIn == false");
+		console.log("route(/get_menu) \tresult.catch()");
+		console.log("route(/get_menu) \tif loggedIn == false");
 		response.redirect('/login');
 	});
 });
@@ -691,6 +691,63 @@ app.get('/adminGetUserOrders', (request, response) =>
 });
 
 // read  
+app.get('/get_sale_times', (request, response) => 
+{
+	console.log("/get_sale_times");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) =>
+	{
+		console.log("/get_sale_times ADMIN TRUE");
+		const db = dbService.getDbServiceInstance();
+		const result = db.admin_get_admin_config();
+		result.then(data =>  
+		{
+			response.json(data);
+		})
+		.catch(err => console.log(err));
+	})
+	.catch(() => 
+	{
+		console.log("route(/get_sale_times) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
+
+// read  
+app.get('/admin_get_admin_config', (request, response) => 
+{
+	console.log("/admin_get_admin_config");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) =>
+	{
+		console.log("admin(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
+		{
+			console.log("/admin_get_admin_config ADMIN TRUE");
+			const db = dbService.getDbServiceInstance();
+			const result = db.admin_get_admin_config();
+			
+			result.then(data =>  
+			{
+				response.json(data);
+			})
+			.catch(err => console.log(err));			
+		}
+		else 
+		{
+			console.log("/admin_get_admin_config ADMIN FALSE");
+			response.end();
+		}
+	})
+	.catch(() => 
+	{
+		console.log("route(/admin_get_admin_config) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
+
+
+// read  
 app.get('/adminGetUserPickups', (request, response) => 
 {
 	console.log("/adminGetUserPickups");
@@ -718,8 +775,8 @@ app.get('/adminGetUserPickups', (request, response) =>
 	})
 	.catch(() => 
 	{
-		console.log("route(/) \tresult.catch()");
-		console.log("route(/) \tif loggedIn == false");
+		console.log("route(/adminGetUserPickups) \tresult.catch()");
+		console.log("route(/adminGetUserPickups) \tif loggedIn == false");
 		response.redirect('/login');
 	});
 });
@@ -1311,12 +1368,81 @@ app.patch('/adminSetPickupsTimes', (request, response) =>
 	})
 	.catch(() => 
 	{ 
-		console.log("route(/adminSetPickupsTimes) \tresult.catch()");
 		console.log("route(/adminSetPickupsTimes) \tif loggedIn == false");
 		response.redirect('/login');
 	});
 });
- 
+
+// modify
+app.patch('/admin_set_sale_times', (request, response) =>
+{
+	console.log("\n"+ "route(/admin_set_sale_times) ");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
+	{
+		console.log("admin_set_sale_times(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1) 
+		{ 
+			const { start_date, end_date } = request.body;
+			const db = dbService.getDbServiceInstance();
+			const result = db.admin_set_sale_times(start_date, end_date);
+		 
+			result.then((data) => 
+			{ 
+				console.log("\n" + "route(/admin_set_sale_times) Update Success:");
+				console.table(request.body);
+				response.json(data);
+			}).catch(err => console.log(err));
+		} 
+		else 
+		{ 
+			response.end();
+		} 
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/admin_set_sale_times) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
+
+// modify
+app.patch('/admin_set_menu', (request, response) =>
+{
+	console.log("\n"+ "route(/admin_set_menu) ");
+	var loggedInResponse = checkIfLoggedIn(request);
+	loggedInResponse.then((account_attributes) => 
+	{
+		console.log("admin_set_menu(/) \tresult.then()");
+		if (account_attributes.isAdmin == 1)
+		{ 
+			const { new_menu } = request.body;
+			const db = dbService.getDbServiceInstance();
+			const result = db.admin_set_menu(new_menu);
+		 
+			result.then((data) =>
+			{
+				console.log("\n" + "route(/admin_set_menu) Update Success:");
+				console.table(request.body);
+				response.json(true);
+			}).catch((err) => 
+			{
+				response.json(false);
+				console.log(err)
+			});
+		}
+		else
+		{
+			response.end();
+		} 
+	})
+	.catch(() => 
+	{ 
+		console.log("route(/admin_set_menu) \tif loggedIn == false");
+		response.redirect('/login');
+	});
+});
+
 // create 
 app.post('/userPlaceOrder', (request, response) =>  
 {

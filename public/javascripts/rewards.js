@@ -1,5 +1,5 @@
-const address = 'https://www.astromedibles.com';
-// const address = 'http://localhost:8080';
+var address = 'https://www.astromedibles.com';
+// var address = 'http://localhost:8080';
 
 // user points
 var user_points = 0;
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function ()
         .then(() => 
         {
             // load menu data
-            fetch(address + '/getMenuData')
+            fetch(address + '/get_menu')
             .then(response => response.json())
             .then(data => loadMenuCards(data['data']));
         });

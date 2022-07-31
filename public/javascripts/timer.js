@@ -1,16 +1,28 @@
+
+
+var address = 'https://www.astromedibles.com'; 
+// var address = 'http://localhost:8080';
+
 var preorderTimer, preorderNavbar;
 var preorderTimer2, preorderNavbar2;
 
 var notifcationOrderPlacedSentAlready = false;
 
-var startDate = new Date('2022-07-14T05:00:00.000Z');
-var endDate   = new Date('2022-07-16T05:00:00.000Z');
+var start_date, end_date;
 
 var dlop, dlov, date_dlop, date_dlov;
 
-
 document.addEventListener('DOMContentLoaded', function () 
 {
+  // get sale info
+  fetch(address + '/get_sale_times')
+  .then(response => response.json())
+  .then(data => 
+  {
+    start_date = new Date(String(data.sale_start));
+    end_date   = new Date(String(data.sale_end));
+
+    // grab UI elements
     preorderTimer  = document.getElementById('preorderTimer');
     preorderNavbar = document.getElementById('preorderNavbar');
 
@@ -20,8 +32,10 @@ document.addEventListener('DOMContentLoaded', function ()
     // get account attributes
     var div_account_attributes  = document.getElementById('div_account_attributes');
     var account_attributes      = JSON.parse(div_account_attributes.getAttribute('data-account_attributes'));
-    var email_verified    = account_attributes.email_verified;
+    var email_verified          = account_attributes.email_verified;
 
+    dlop = String(account_attributes.date_lastOrderPlaced);
+    dlov = String(account_attributes.date_last_visited);
     // console.table(account_attributes);
     // console.log(account_attributes.email_verified);
 
@@ -31,51 +45,60 @@ document.addEventListener('DOMContentLoaded', function ()
       $('#errorNavbar').removeAttr('hidden'); 
     }
 
+    date_dlop = new Date(dlop);
 
-  // rewrite this to use accont_attributes
-  // get user attributes
-  fetch(address + '/getUserData')
+    // if user possibly has old items in cart from previous sale, remove them
+    try
+    {
+
+      date_dlov = new Date(dlov);
+    
+      console.table(['date_dlov', date_dlov.toISOString()]);
+
+      var start_date_dlov_difference = start_date.getTime() - date_dlov.getTime();
+
+      // if the last time the user visited was before the current sale, reset their cart
+      if (start_date_dlov_difference > 0)
+      {
+        // console.log('Reseting cart');
+        cartRemoveAllItems();
+        // update dlov to now
+        update_date_of_last_visit();
+      }
+      else
+      {
+        // console.log('Cart good');
+      }
+    } catch (error)
+    {
+      console.log(error + "(DLOV)");
+      // update dlov to now
+      update_date_of_last_visit();
+      cartRemoveAllItems();
+    }
+    startTime();
+    check_sale_times();
+  })
+  .catch((error) =>
+  {
+    console.log(error);
+  });
+});
+
+function check_sale_times()
+{
+  // get sale info
+  fetch(address + '/get_sale_times')
   .then(response => response.json())
   .then(data => 
   {
-      dlop = String(data['data'].date_lastOrderPlaced);
-      dlov = String(data['data'].date_last_visited);
+    start_date = new Date(String(data.sale_start));
+    end_date   = new Date(String(data.sale_end));
 
-
-      date_dlop = new Date(dlop);
-
-      try
-      {
-        date_dlov = new Date(dlov);
-      
-        console.table(['date_dlov', date_dlov.toISOString()]);
-
-        var startDate_dlov_difference = startDate.getTime() - date_dlov.getTime();
-
-        // if the last time the user visited was before the current sale, reset their cart
-        if (startDate_dlov_difference > 0)
-        {
-          console.log('Reseting cart');
-          cartRemoveAllItems();
-          // update dlov to now
-          update_date_of_last_visit();
-        }
-        else
-        {
-          console.log('Cart good');
-        }
-      } catch (error)
-      {
-        console.log(error + "(DLOV)");
-        // update dlov to now
-        update_date_of_last_visit();
-        cartRemoveAllItems();
-      }
-
-
-      startTime();
-      });
-});
+    // check every 30 seconds (30,000 ms)
+    setTimeout(check_sale_times, 30000);
+  });
+}
 
 function startTime()
 {
@@ -83,12 +106,12 @@ function startTime()
 
   var todayDate = new Date();
 
-  var Difference_In_Time1 = startDate.getTime() - todayDate.getTime();
-  var Difference_In_Time2 = endDate.getTime() - todayDate.getTime();
+  var Difference_In_Time1 = start_date.getTime() - todayDate.getTime();
+  var Difference_In_Time2 = end_date.getTime() - todayDate.getTime();
   
-  var Difference_In_Time3 = endDate.getTime() - startDate.getTime();
+  var Difference_In_Time3 = end_date.getTime() - start_date.getTime();
 
-  // var Difference_In_Time3 = endDate.getTime() - startDate.getTime();
+  // var Difference_In_Time3 = end_date.getTime() - start_date.getTime();
   // console.log('Difference_In_Time3: ' + Difference_In_Time3);
   
 
@@ -198,54 +221,49 @@ function startTime()
     //   m = checkTime(m);
     //   s = checkTime(s);
 
-
-      var addToCartButtons = document.getElementsByName('shop-item-button');
-      for (var i = 0; i < addToCartButtons.length; i++)
+    var addToCartButtons = document.getElementsByName('shop-item-button');
+    for (var i = 0; i < addToCartButtons.length; i++)
+    {
+      try
       {
-        try
+        // console.log('notifcationOrderPlacedSentAlready: ' + notifcationOrderPlacedSentAlready);
+        if (!notifcationOrderPlacedSentAlready)
         {
-          // console.log('notifcationOrderPlacedSentAlready: ' + notifcationOrderPlacedSentAlready);
-          if (!notifcationOrderPlacedSentAlready)
+          // console.log('dlop: ' + dlop);
+          var Difference_In_Time1 = start_date.getTime() - date_dlop.getTime();
+
+          // console.log('Difference_In_Time1: ' + Difference_In_Time1);
+          // console.log();
+
+          // if DLOP is before the start of the new sale, allow purchase
+          if (isNaN(Difference_In_Time1) || Difference_In_Time1 > 1 )
           {
-            // console.log('dlop: ' + dlop);
-    
-            var Difference_In_Time1 = startDate.getTime() - date_dlop.getTime();
-    
-    
-            // console.log('Difference_In_Time1: ' + Difference_In_Time1);
-            // console.log();
-
-
-
-            // if DLOP is before the start of the new sale, allow purchase
-            if (isNaN(Difference_In_Time1) || Difference_In_Time1 > 1 )
-            {
-              // console.log('Purchase is old enough, new one valid');
-              var button = addToCartButtons[i];
-              button.addEventListener('click', addToCartClicked);
-              button.classList.remove('disabled');
-            }
-            else
-            {
-              // console.log('Purchase too recent, cannot place additional one')
-              // Notification
-              const message = "Order already placed";
-              const alertType     = 'info';
-              const iconChoice    = 2;
-              alertNotify(message, alertType, iconChoice, 9999);
-              notifcationOrderPlacedSentAlready = true;
-            }
+            // console.log('Purchase is old enough, new one valid');
+            var button = addToCartButtons[i];
+            button.addEventListener('click', addToCartClicked);
+            button.classList.remove('disabled');
           }
-        } catch (error)
-        {
-          var button = addToCartButtons[i];
-          button.addEventListener('click', addToCartClicked);
-          button.classList.remove('disabled');
-          console.log(error);
-        } 
+          else
+          {
+            // console.log('Purchase too recent, cannot place additional one')
+            // Notification
+            const message = "Order already placed";
+            const alertType     = 'info';
+            const iconChoice    = 2;
+            alertNotify(message, alertType, iconChoice, 9999);
+            notifcationOrderPlacedSentAlready = true;
+          }
+        }
+      } catch (error)
+      {
+        var button = addToCartButtons[i];
+        button.addEventListener('click', addToCartClicked);
+        button.classList.remove('disabled');
+        console.log(error);
+      } 
     }
     preorderTimer.innerHTML =  `Pre Order Sale 🚀 ${d} days, ${h} hrs, ${m} min, ${s} sec 🚀`;
-
+    // $('#preorderNavbar2').removeAttr('hidden');
     setTimeout(startTime, 500);
   }
   // case 3 today date is after start date && today date is after end date
@@ -267,20 +285,10 @@ function startTime()
     preorderNavbar.classList.add('bg-dark');
     // preorderTimer.innerHTML =  'Pre-Order Sale: '+ h + " hrs  " + m + " min  " + s + ' sec';
     preorderTimer.innerHTML =  'Pre Order Sale Over 🚀 See your <a href="/orders">Order Status</a> 🚀'
-    
-    // console.log('Difference_In_Time: ' + Difference_In_Time / (1000 * 60 * 60));
-    // if user logs in less than one hour after sale has ended, place their order
-    // else clear their cart
-    // if ((Difference_In_Time2 / (1000 * 60 * 60) ) > -1 && $("#cart-quantity").text() != 0)
-    // {
-    //   userPlaceOrder();
-    //   // console.log('ORDER PLACED AUTOMATICALLY');
-    // }
-    // else
-    // {
-      cartRemoveAllItems();
-    //    // console.log('CART EMPTIED AUTOMATICALLY');
-    // }
+    $('#preorderNavbar2').attr('hidden', ''); 
+
+    cartRemoveAllItems();
+    setTimeout(startTime, 1000);
   }
 }
 
@@ -292,50 +300,6 @@ function checkTime(i)
     i = "0" + i;
   };  
   return i;
-}
-
-function userPlaceOrder()
-{
-  fetch(address + '/userPlaceOrder',
-  {
-      credentials: "include",
-      method: 'POST',
-      headers:
-      {
-          'Content-type': 'application/json'
-      },
-      body: JSON.stringify
-      ({
-          date: new Date()
-      })
-  })
-  .then(response => response.json())
-  .then((response) =>
-  {
-
-    $("#cart-quantity").text(0);
-
-    // Notification
-    const message = 'Thank you! Your order has been placed!';
-    const alertType     = 'success';
-    const iconChoice    = 1;
-    alertNotify(message, alertType, iconChoice, 3);
-
-    setTimeout(function ()
-    { // this will automatically close the alert in 2 secs
-        window.location.replace('/orders');
-    }, 3000);
-  })
-  .catch((error) =>
-  {
-    console.log(error);
-
-    // Notification
-    const message = "Oops. Your order could not be placed.";
-    const alertType     = 'danger';
-    const iconChoice    = 3;
-    alertNotify(message, alertType, iconChoice, 3);
-  });
 }
 
 function cartRemoveAllItems()
@@ -359,7 +323,7 @@ function cartRemoveAllItems()
 
 function update_date_of_last_visit()
 {
-  console.log('route/update_date_of_last_visit()');
+  // console.log('route/update_date_of_last_visit()');
   fetch(address + '/update_date_of_last_visit',
   {
       credentials: "include",
@@ -376,8 +340,7 @@ function update_date_of_last_visit()
   .then(response => response.json())
   .then((data) => 
   {
-    console.log('DLOV Updated')
-      // console.log("dropDownUpdateOrderStatus(event) complete");
+    // console.log('DLOV Updated');
   }).catch((error) => 
   {
       console.log("update_date_of_last_visit() ERROR: \n" + error);
@@ -386,32 +349,32 @@ function update_date_of_last_visit()
 
 function alertNotify(message, alertType, iconChoice, duration)
 {
-    if (iconChoice == 1)      // ✔
-        iconChoice = 'check-circle-fill';
-    else if (iconChoice == 2) // i
-        iconChoice = 'info-fill';
-    else if (iconChoice == 3) // !
-        iconChoice = 'exclamation-triangle-fill';
+  if (iconChoice == 1)      // ✔
+      iconChoice = 'check-circle-fill';
+  else if (iconChoice == 2) // i
+      iconChoice = 'info-fill';
+  else if (iconChoice == 3) // !
+      iconChoice = 'exclamation-triangle-fill';
 
-    var iconHTML = `<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="${alertType}}:"><use xlink:href="#${iconChoice}"/></svg>`;
-    alertType = `alert-${alertType}`;
+  var iconHTML = `<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="${alertType}}:"><use xlink:href="#${iconChoice}"/></svg>`;
+  alertType = `alert-${alertType}`;
 
-    var html = 
-    `
-    <div id="alertNotification" class="alert ${alertType}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
-        <span>
-            ${iconHTML}
-            ${message}
-        </span>
-    </div>
-    `;
+  var html = 
+  `
+  <div id="alertNotification" class="alert ${alertType}  text-center  col-auto" style="margin: 0 auto; align-text: center;" role="alert">
+      <span>
+          ${iconHTML}
+          ${message}
+      </span>
+  </div>
+  `;
 
-    // show pop up
-    $('#notification').append(html);
-    
-    duration *= 1000;
-    setTimeout(function ()
-    { // this will automatically close the alert in 2 secs
-        $("#alertNotification").remove();
-    }, duration);
+  // show pop up
+  $('#notification').append(html);
+  
+  duration *= 1000;
+  setTimeout(function ()
+  { // this will automatically close the alert in 2 secs
+      $("#alertNotification").remove();
+  }, duration);
 }

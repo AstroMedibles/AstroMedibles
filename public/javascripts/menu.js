@@ -1,3 +1,7 @@
+var address = 'https://www.astromedibles.com';
+// var address = 'http://localhost:8080';
+
+
 document.addEventListener('DOMContentLoaded', function () 
 {
     // load user data
@@ -7,14 +11,12 @@ document.addEventListener('DOMContentLoaded', function ()
         .then(() => 
         {
             // load menu data
-            fetch(address + '/getMenuData')
+            fetch(address + '/get_menu')
             .then(response => response.json())
             .then(data => loadMenuCards(data['data']));
         });
 });
 
-const address = 'https://www.astromedibles.com';
-// const address = 'http://localhost:8080';
 
 
 function loadMenuCards(data)
